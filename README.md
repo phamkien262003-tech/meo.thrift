@@ -68,9 +68,10 @@ Yêu cầu gói hosting **có hỗ trợ Node.js** (Business/Premium Web Hosting
 
 4. **Kéo code & cài đặt**
    - Dùng tính năng Git trong hPanel (hoặc SSH) để pull code từ GitHub vào Application root.
-   - Chạy `npm install --production` rồi `npm run build:css` trong terminal hPanel/SSH.
-   - Chạy `npm run migrate` (nếu tách riêng) hoặc để `app.js` tự tạo schema khi khởi động.
+   - Chạy `npm install --production` trong terminal hPanel/SSH (schema SQLite được `app.js` tự tạo khi khởi động, không cần bước riêng).
    - Bấm **Restart** trong hPanel Node.js App.
+
+   > **Lưu ý về CSS:** file `public/css/output.css` (đã build sẵn) được commit thẳng vào repo — vì các nền tảng hosting tự động triển khai qua GitHub thường chỉ chạy `npm install` + khởi động app, không tự chạy `npm run build:css`. Nếu bạn sửa `public/css/input.css` hoặc thêm class Tailwind mới trong views, nhớ chạy `npm run build:css` ở máy local rồi commit + push lại file `output.css`.
 
 5. **Gắn domain & SSL** — trỏ domain vào Application, bật SSL miễn phí trong hPanel.
 

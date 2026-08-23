@@ -25,6 +25,19 @@
   <div class="flex-1 min-w-0">
     <header class="lg:hidden sticky top-0 z-30 bg-espresso text-cream flex items-center justify-between px-4 h-16">
       <a href="/admin" class="font-serif text-lg">teo.mhrift · Quản trị</a>
-      <form action="/admin/dang-xuat" method="POST"><button type="submit" class="p-2"><%- icon('logout', 'w-5 h-5') %></button></form>
+      <div class="flex items-center gap-1">
+        <form action="/admin/dang-xuat" method="POST"><button type="submit" class="p-2" aria-label="Đăng xuất"><%- icon('logout', 'w-5 h-5') %></button></form>
+        <button type="button" id="admin-menu-btn" class="p-2" aria-label="Mở menu" aria-expanded="false" aria-controls="admin-menu">
+          <%- icon('menu', 'w-5 h-5') %>
+        </button>
+      </div>
     </header>
+    <nav id="admin-menu" class="lg:hidden hidden bg-espresso text-cream/90 px-3 py-3 space-y-1 text-sm border-t border-cream/10">
+      <a href="/admin" class="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-cream/10 transition-colors duration-250 <%= currentPath === '/admin' ? 'bg-cream/10 text-rose' : '' %>"><%- icon('dashboard', 'w-4 h-4') %> Bảng điều khiển</a>
+      <a href="/admin/san-pham" class="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-cream/10 transition-colors duration-250 <%= currentPath.startsWith('/admin/san-pham') ? 'bg-cream/10 text-rose' : '' %>"><%- icon('bag', 'w-4 h-4') %> Sản phẩm</a>
+      <a href="/admin/don-hang" class="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-cream/10 transition-colors duration-250 <%= currentPath.startsWith('/admin/don-hang') ? 'bg-cream/10 text-rose' : '' %>"><%- icon('box', 'w-4 h-4') %> Đơn hàng</a>
+      <a href="/admin/nhat-ky" class="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-cream/10 transition-colors duration-250 <%= currentPath.startsWith('/admin/nhat-ky') ? 'bg-cream/10 text-rose' : '' %>"><%- icon('sparkle', 'w-4 h-4') %> Nhật ký</a>
+      <a href="/admin/cai-dat" class="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-cream/10 transition-colors duration-250 <%= currentPath.startsWith('/admin/cai-dat') ? 'bg-cream/10 text-rose' : '' %>"><%- icon('pencil', 'w-4 h-4') %> Cài đặt</a>
+      <a href="/" class="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-cream/10 transition-colors duration-250 border-t border-cream/10 mt-1 pt-3"><%- icon('chevronLeft', 'w-4 h-4') %> Xem website</a>
+    </nav>
     <main class="p-4 sm:p-8 max-w-6xl">

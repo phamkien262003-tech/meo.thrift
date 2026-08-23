@@ -41,4 +41,26 @@ function ensureDatabase() {
   return database;
 }
 
-module.exports = { getDb, ensureDatabase, runInTransaction, DATA_DIR, DB_PATH };
+/**
+ * Creates the first admin account from env vars on boot, when no admin exists yet.
+ * Exists so hosts without shell/SSH access (e.g. Hostinger's git-deploy Node app, whose
+ * SSH login shell rejects interactive sessions) can still get an admin login — just set
+ * ADMIN_EMAIL + ADMIN_BOOTSTRAP_PASSWORD in the panel's environment variables and restart.
+ * Never overwrites an existing admin, so it's safe to leave the env vars set afterward.
+ */
+function ensureBootstrapAdmin() {
+  const database = getDb();
+  const { c: adminCount } = database.prepare('SELECT COUNT(*) AS c FROM admin_users').get();
+  if (adminCount > 0) return;
+
+  const email = process.env.ADMIN_EMAIL;
+  const password = process.env.ADMIN_BOOTSTRAP_PASSWORD;
+  if (!email || !password) return;
+
+  const bcrypt = require('bcryptjs');
+  const hash = bcrypt.hashSync(password, 10);
+  database.prepare('INSERT INTO admin_users (email, password_hash) VALUES (?, ?)').run(email, hash);
+  console.log(`[bootstrap] Đã tạo tài khoản quản trị đầu tiên: ${email}`);
+}
+
+module.exports = { getDb, ensureDatabase, ensureBootstrapAdmin, runInTransaction, DATA_DIR, DB_PATH };

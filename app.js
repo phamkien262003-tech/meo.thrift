@@ -4,13 +4,14 @@ const express = require('express');
 const session = require('express-session');
 const FileStore = require('session-file-store')(session);
 
-const { ensureDatabase } = require('./src/config/db');
+const { ensureDatabase, ensureBootstrapAdmin } = require('./src/config/db');
 const errorHandler = require('./src/middleware/error-handler');
 const { icon } = require('./src/services/icons');
 const { resolveImage } = require('./src/services/images');
 const { placeholderArt } = require('./src/services/placeholder');
 
 ensureDatabase();
+ensureBootstrapAdmin();
 
 const publicRoutes = require('./src/routes/public');
 const shopRoutes = require('./src/routes/shop');

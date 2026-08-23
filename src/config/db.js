@@ -13,7 +13,8 @@ function getPool() {
       database: process.env.DB_NAME,
       namedPlaceholders: true,
       waitForConnections: true,
-      connectionLimit: 10,
+      connectionLimit: 4,
+      queueLimit: 0,
       dateStrings: true,
     });
   }

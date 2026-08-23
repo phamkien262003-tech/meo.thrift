@@ -4,7 +4,7 @@ const express = require('express');
 const session = require('express-session');
 const MySQLStore = require('express-mysql-session')(session);
 
-const { ensureDatabase, ensureBootstrapAdmin } = require('./src/config/db');
+const { ensureDatabase, ensureBootstrapAdmin, getPool } = require('./src/config/db');
 const errorHandler = require('./src/middleware/error-handler');
 const { icon } = require('./src/services/icons');
 const { resolveImage, getImageRow } = require('./src/services/images');
@@ -44,13 +44,9 @@ app.get('/img/:id', async (req, res, next) => {
 
 // Sessions also live in MySQL — a local file store gets wiped on redeploy just like
 // everything else outside Git, which was silently logging admins out after every push.
-const sessionStore = new MySQLStore({
-  host: process.env.DB_HOST,
-  port: process.env.DB_PORT ? Number(process.env.DB_PORT) : 3306,
-  user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-  database: process.env.DB_NAME,
-});
+// Reuses the app's own pool (rather than opening a second one) since shared-hosting
+// MySQL plans often cap total connections quite low.
+const sessionStore = new MySQLStore({}, getPool());
 
 app.use(
   session({

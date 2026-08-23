@@ -326,8 +326,11 @@ router.post('/cai-dat/lien-he', async (req, res, next) => {
 
 router.get('/quan-tri-vien', requireLevel1, async (req, res, next) => {
   try {
-    const admins = await query('SELECT id, email, role, created_at FROM admin_users ORDER BY created_at ASC');
-    res.render('admin/admins', { title: 'Quản trị viên', admins, isAdminSelfId: req.session.adminId });
+    const [admins, requests] = await Promise.all([
+      query('SELECT id, email, role, created_at FROM admin_users ORDER BY created_at ASC'),
+      query('SELECT id, email, created_at FROM admin_requests ORDER BY created_at ASC'),
+    ]);
+    res.render('admin/admins', { title: 'Quản trị viên', admins, requests, isAdminSelfId: req.session.adminId });
   } catch (err) {
     next(err);
   }
@@ -399,6 +402,42 @@ router.post('/quan-tri-vien/:id/xoa', requireLevel1, async (req, res, next) => {
     }
     await run('DELETE FROM admin_users WHERE id = ?', [id]);
     req.session.flash = { type: 'success', message: 'Đã xoá quản trị viên.' };
+    res.redirect('/admin/quan-tri-vien');
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.post('/quan-tri-vien/yeu-cau/:id/duyet', requireLevel1, async (req, res, next) => {
+  try {
+    const id = Number(req.params.id);
+    const request = await queryOne('SELECT * FROM admin_requests WHERE id = ?', [id]);
+    if (!request) {
+      req.session.flash = { type: 'error', message: 'Yêu cầu không tồn tại hoặc đã được xử lý.' };
+      return res.redirect('/admin/quan-tri-vien');
+    }
+    const existing = await queryOne('SELECT id FROM admin_users WHERE email = ?', [request.email]);
+    if (existing) {
+      await run('DELETE FROM admin_requests WHERE id = ?', [id]);
+      req.session.flash = { type: 'error', message: 'Email này đã là quản trị viên — đã xoá yêu cầu trùng.' };
+      return res.redirect('/admin/quan-tri-vien');
+    }
+    await run("INSERT INTO admin_users (email, password_hash, role) VALUES (?, ?, 'level2')", [
+      request.email,
+      request.password_hash,
+    ]);
+    await run('DELETE FROM admin_requests WHERE id = ?', [id]);
+    req.session.flash = { type: 'success', message: `Đã phê duyệt — ${request.email} là quản trị viên cấp 2.` };
+    res.redirect('/admin/quan-tri-vien');
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.post('/quan-tri-vien/yeu-cau/:id/tu-choi', requireLevel1, async (req, res, next) => {
+  try {
+    await run('DELETE FROM admin_requests WHERE id = ?', [Number(req.params.id)]);
+    req.session.flash = { type: 'success', message: 'Đã từ chối yêu cầu.' };
     res.redirect('/admin/quan-tri-vien');
   } catch (err) {
     next(err);

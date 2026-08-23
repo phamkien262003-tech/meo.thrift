@@ -10,6 +10,40 @@
   <h1 class="text-3xl mb-2">Quản trị viên</h1>
   <p class="text-espresso-soft mb-8">Quản trị viên cấp 1 có toàn quyền, kể cả thêm/xoá và đổi cấp các quản trị viên khác. Quản trị viên cấp 2 có đầy đủ quyền quản lý cửa hàng nhưng không vào được trang này.</p>
 
+  <% if (requests.length > 0) { %>
+    <div class="card-surface overflow-x-auto mb-8 border border-terracotta/40">
+      <div class="px-4 pt-4">
+        <h2 class="font-serif text-xl">Yêu cầu chờ duyệt (<%= requests.length %>)</h2>
+        <p class="text-xs text-espresso-soft mt-1">Phê duyệt sẽ tự động cấp quyền quản trị viên cấp 2 (xem và chỉnh sửa).</p>
+      </div>
+      <table class="w-full text-sm min-w-[480px] mt-3">
+        <thead>
+          <tr class="text-left border-b border-border">
+            <th class="py-3 px-4">Email</th>
+            <th class="py-3 px-4">Ngày yêu cầu</th>
+            <th class="py-3 px-4 text-right">Thao tác</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-border">
+          <% requests.forEach(r => { %>
+            <tr>
+              <td class="py-3 px-4 font-medium"><%= r.email %></td>
+              <td class="py-3 px-4 text-espresso-soft"><%= new Date(r.created_at).toLocaleDateString('vi-VN') %></td>
+              <td class="py-3 px-4 text-right whitespace-nowrap space-x-2">
+                <form action="/admin/quan-tri-vien/yeu-cau/<%= r.id %>/duyet" method="POST" class="inline">
+                  <button type="submit" class="badge bg-olive/10 text-olive-dark hover:bg-olive hover:text-white transition-colors duration-250">Phê duyệt</button>
+                </form>
+                <form action="/admin/quan-tri-vien/yeu-cau/<%= r.id %>/tu-choi" method="POST" class="inline" onsubmit="return confirm('Từ chối yêu cầu này?');">
+                  <button type="submit" class="badge bg-espresso/10 text-espresso-soft hover:bg-red-600 hover:text-white transition-colors duration-250">Từ chối</button>
+                </form>
+              </td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+  <% } %>
+
   <div class="card-surface overflow-x-auto mb-8">
     <table class="w-full text-sm min-w-[560px]">
       <thead>

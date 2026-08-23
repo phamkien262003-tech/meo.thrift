@@ -3,7 +3,7 @@
 <head>
 <%- include('../partials/head') %>
 </head>
-<body class="bg-espresso min-h-screen flex items-center justify-center px-4">
+<body class="bg-espresso min-h-screen flex items-center justify-center px-4 py-10">
   <div class="w-full max-w-sm">
     <div class="text-center mb-8">
       <span class="text-rose"><%- icon('leaf', 'w-8 h-8 mx-auto mb-3') %></span>
@@ -24,6 +24,28 @@
       </div>
       <button type="submit" class="btn-primary w-full">Đăng nhập</button>
     </form>
+
+    <details class="mt-4 group">
+      <summary class="text-center text-sm text-cream/50 hover:text-cream/80 transition-colors duration-250 cursor-pointer list-none">
+        Chưa có tài khoản? <span class="text-rose underline">Yêu cầu quyền quản trị</span>
+      </summary>
+      <form action="/admin/yeu-cau-quyen" method="POST" class="bg-cream/5 border border-cream/10 rounded-2xl p-6 space-y-4 mt-3">
+        <p class="text-xs text-cream/50 -mt-1 mb-2">Yêu cầu sẽ chờ quản trị viên cấp 1 phê duyệt trước khi bạn đăng nhập được.</p>
+        <div>
+          <label class="block text-sm text-cream/70 mb-1.5" for="req-email">Email</label>
+          <input type="email" id="req-email" name="email" required class="w-full rounded-xl border border-cream/20 bg-cream/5 text-cream px-4 py-2.5 focus:border-rose focus:ring-2 focus:ring-rose/20 outline-none transition-colors duration-250" />
+        </div>
+        <div>
+          <label class="block text-sm text-cream/70 mb-1.5" for="req-password">Mật khẩu (tối thiểu 6 ký tự)</label>
+          <input type="password" id="req-password" name="password" required minlength="6" class="w-full rounded-xl border border-cream/20 bg-cream/5 text-cream px-4 py-2.5 focus:border-rose focus:ring-2 focus:ring-rose/20 outline-none transition-colors duration-250" />
+        </div>
+        <div>
+          <label class="block text-sm text-cream/70 mb-1.5" for="req-password-confirm">Nhập lại mật khẩu</label>
+          <input type="password" id="req-password-confirm" name="password_confirm" required minlength="6" class="w-full rounded-xl border border-cream/20 bg-cream/5 text-cream px-4 py-2.5 focus:border-rose focus:ring-2 focus:ring-rose/20 outline-none transition-colors duration-250" />
+        </div>
+        <button type="submit" class="btn-primary w-full">Gửi yêu cầu</button>
+      </form>
+    </details>
   </div>
 </body>
 </html>

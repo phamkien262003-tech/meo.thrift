@@ -27,6 +27,7 @@ const PATHS = {
   image: '<rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="8.5" cy="9.5" r="1.5"/><path d="M21 16l-5-5-11 9"/>',
   sparkle: '<path d="M12 3l1.5 5L18 9.5 13.5 11 12 16l-1.5-5L5 9.5 9.5 8 12 3Z"/>',
   doc: '<path d="M7 3h7l4 4v14a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1Z"/><path d="M14 3v4h4"/><path d="M9 13h6"/><path d="M9 17h6"/>',
+  users: '<circle cx="9" cy="8" r="3.2"/><path d="M2.5 20c0-3.6 2.9-6.5 6.5-6.5s6.5 2.9 6.5 6.5"/><path d="M16 4.3a3.2 3.2 0 0 1 0 6.2"/><path d="M18.5 13.8c2.2.7 3.8 2.8 3.8 5.2"/>',
 };
 
 function icon(name, className = 'w-5 h-5') {

@@ -2,7 +2,8 @@ const express = require('express');
 const router = express.Router();
 const slugify = require('slugify');
 const { query, queryOne, run } = require('../config/db');
-const { requireAdmin } = require('../middleware/auth');
+const bcrypt = require('bcryptjs');
+const { requireAdmin, requireLevel1 } = require('../middleware/auth');
 const { upload } = require('../middleware/upload');
 const { saveImage, deleteImage, resolveImage } = require('../services/images');
 const {
@@ -316,6 +317,89 @@ router.post('/cai-dat/lien-he', async (req, res, next) => {
     ]);
     req.session.flash = { type: 'success', message: 'Đã lưu thông tin liên hệ.' };
     res.redirect('/admin/cai-dat');
+  } catch (err) {
+    next(err);
+  }
+});
+
+// ---------- Quản trị viên (chỉ cấp 1) ----------
+
+router.get('/quan-tri-vien', requireLevel1, async (req, res, next) => {
+  try {
+    const admins = await query('SELECT id, email, role, created_at FROM admin_users ORDER BY created_at ASC');
+    res.render('admin/admins', { title: 'Quản trị viên', admins, isAdminSelfId: req.session.adminId });
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.post('/quan-tri-vien', requireLevel1, async (req, res, next) => {
+  try {
+    const { email, password } = req.body;
+    if (!email || !password || password.length < 6) {
+      req.session.flash = { type: 'error', message: 'Cần email hợp lệ và mật khẩu tối thiểu 6 ký tự.' };
+      return res.redirect('/admin/quan-tri-vien');
+    }
+    const existing = await queryOne('SELECT id FROM admin_users WHERE email = ?', [email]);
+    if (existing) {
+      req.session.flash = { type: 'error', message: 'Email này đã là quản trị viên.' };
+      return res.redirect('/admin/quan-tri-vien');
+    }
+    const hash = bcrypt.hashSync(password, 10);
+    await run("INSERT INTO admin_users (email, password_hash, role) VALUES (?, ?, 'level2')", [email, hash]);
+    req.session.flash = { type: 'success', message: `Đã thêm quản trị viên cấp 2: ${email}.` };
+    res.redirect('/admin/quan-tri-vien');
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.post('/quan-tri-vien/:id/vai-tro', requireLevel1, async (req, res, next) => {
+  try {
+    const id = Number(req.params.id);
+    const { role } = req.body;
+    if (!['level1', 'level2'].includes(role)) {
+      req.session.flash = { type: 'error', message: 'Cấp quản trị không hợp lệ.' };
+      return res.redirect('/admin/quan-tri-vien');
+    }
+    if (id === req.session.adminId) {
+      req.session.flash = { type: 'error', message: 'Không thể tự đổi cấp của chính mình.' };
+      return res.redirect('/admin/quan-tri-vien');
+    }
+    if (role === 'level2') {
+      const target = await queryOne('SELECT role FROM admin_users WHERE id = ?', [id]);
+      const { c } = await queryOne("SELECT COUNT(*) c FROM admin_users WHERE role = 'level1'");
+      if (target && target.role === 'level1' && c <= 1) {
+        req.session.flash = { type: 'error', message: 'Không thể hạ cấp — cần giữ ít nhất 1 quản trị viên cấp 1.' };
+        return res.redirect('/admin/quan-tri-vien');
+      }
+    }
+    await run('UPDATE admin_users SET role = ? WHERE id = ?', [role, id]);
+    req.session.flash = { type: 'success', message: 'Đã cập nhật cấp quản trị.' };
+    res.redirect('/admin/quan-tri-vien');
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.post('/quan-tri-vien/:id/xoa', requireLevel1, async (req, res, next) => {
+  try {
+    const id = Number(req.params.id);
+    if (id === req.session.adminId) {
+      req.session.flash = { type: 'error', message: 'Không thể tự xoá tài khoản của chính mình.' };
+      return res.redirect('/admin/quan-tri-vien');
+    }
+    const target = await queryOne('SELECT role FROM admin_users WHERE id = ?', [id]);
+    if (target && target.role === 'level1') {
+      const { c } = await queryOne("SELECT COUNT(*) c FROM admin_users WHERE role = 'level1'");
+      if (c <= 1) {
+        req.session.flash = { type: 'error', message: 'Không thể xoá — cần giữ ít nhất 1 quản trị viên cấp 1.' };
+        return res.redirect('/admin/quan-tri-vien');
+      }
+    }
+    await run('DELETE FROM admin_users WHERE id = ?', [id]);
+    req.session.flash = { type: 'success', message: 'Đã xoá quản trị viên.' };
+    res.redirect('/admin/quan-tri-vien');
   } catch (err) {
     next(err);
   }

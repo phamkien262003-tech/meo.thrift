@@ -14,6 +14,9 @@
       <a href="/admin/noi-dung" class="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-cream/10 transition-colors duration-250 <%= currentPath.startsWith('/admin/noi-dung') ? 'bg-cream/10 text-rose' : '' %>"><%- icon('doc', 'w-4 h-4') %> Nội dung trang</a>
       <a href="/admin/nhat-ky" class="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-cream/10 transition-colors duration-250 <%= currentPath.startsWith('/admin/nhat-ky') ? 'bg-cream/10 text-rose' : '' %>"><%- icon('sparkle', 'w-4 h-4') %> Nhật ký</a>
       <a href="/admin/cai-dat" class="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-cream/10 transition-colors duration-250 <%= currentPath.startsWith('/admin/cai-dat') ? 'bg-cream/10 text-rose' : '' %>"><%- icon('pencil', 'w-4 h-4') %> Cài đặt</a>
+      <% if (isLevel1Admin) { %>
+        <a href="/admin/quan-tri-vien" class="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-cream/10 transition-colors duration-250 <%= currentPath.startsWith('/admin/quan-tri-vien') ? 'bg-cream/10 text-rose' : '' %>"><%- icon('users', 'w-4 h-4') %> Quản trị viên</a>
+      <% } %>
     </nav>
     <div class="px-3 py-4 border-t border-cream/10">
       <a href="/" class="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-cream/10 transition-colors duration-250 text-sm"><%- icon('chevronLeft', 'w-4 h-4') %> Xem website</a>
@@ -40,6 +43,9 @@
       <a href="/admin/noi-dung" class="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-cream/10 transition-colors duration-250 <%= currentPath.startsWith('/admin/noi-dung') ? 'bg-cream/10 text-rose' : '' %>"><%- icon('doc', 'w-4 h-4') %> Nội dung trang</a>
       <a href="/admin/nhat-ky" class="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-cream/10 transition-colors duration-250 <%= currentPath.startsWith('/admin/nhat-ky') ? 'bg-cream/10 text-rose' : '' %>"><%- icon('sparkle', 'w-4 h-4') %> Nhật ký</a>
       <a href="/admin/cai-dat" class="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-cream/10 transition-colors duration-250 <%= currentPath.startsWith('/admin/cai-dat') ? 'bg-cream/10 text-rose' : '' %>"><%- icon('pencil', 'w-4 h-4') %> Cài đặt</a>
+      <% if (isLevel1Admin) { %>
+        <a href="/admin/quan-tri-vien" class="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-cream/10 transition-colors duration-250 <%= currentPath.startsWith('/admin/quan-tri-vien') ? 'bg-cream/10 text-rose' : '' %>"><%- icon('users', 'w-4 h-4') %> Quản trị viên</a>
+      <% } %>
       <a href="/" class="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-cream/10 transition-colors duration-250 border-t border-cream/10 mt-1 pt-3"><%- icon('chevronLeft', 'w-4 h-4') %> Xem website</a>
     </nav>
     <main class="p-4 sm:p-8 max-w-6xl">

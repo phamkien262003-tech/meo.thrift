@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<%- include('../partials/head') %>
+</head>
+<body class="bg-cream">
+<%- include('../partials/admin-nav') %>
+
+  <%- include('../partials/flash') %>
+  <h1 class="text-3xl mb-2">Quản trị viên</h1>
+  <p class="text-espresso-soft mb-8">Quản trị viên cấp 1 có toàn quyền, kể cả thêm/xoá và đổi cấp các quản trị viên khác. Quản trị viên cấp 2 có đầy đủ quyền quản lý cửa hàng nhưng không vào được trang này.</p>
+
+  <div class="card-surface overflow-x-auto mb-8">
+    <table class="w-full text-sm min-w-[560px]">
+      <thead>
+        <tr class="text-left border-b border-border">
+          <th class="py-3 px-4">Email</th>
+          <th class="py-3 px-4">Cấp</th>
+          <th class="py-3 px-4">Ngày tạo</th>
+          <th class="py-3 px-4 text-right">Thao tác</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-border">
+        <% admins.forEach(a => { %>
+          <tr>
+            <td class="py-3 px-4 font-medium"><%= a.email %></td>
+            <td class="py-3 px-4">
+              <span class="badge <%= a.role === 'level1' ? 'bg-terracotta text-white' : 'bg-sand text-espresso' %>">
+                <%= a.role === 'level1' ? 'Cấp 1' : 'Cấp 2' %>
+              </span>
+            </td>
+            <td class="py-3 px-4 text-espresso-soft"><%= new Date(a.created_at).toLocaleDateString('vi-VN') %></td>
+            <td class="py-3 px-4 text-right whitespace-nowrap">
+              <% if (a.id === isAdminSelfId) { %>
+                <span class="text-xs text-espresso-soft">Tài khoản của bạn</span>
+              <% } else { %>
+                <form action="/admin/quan-tri-vien/<%= a.id %>/vai-tro" method="POST" class="inline-flex items-center gap-2">
+                  <select name="role" class="field-select text-xs py-1.5" onchange="this.form.requestSubmit()">
+                    <option value="level2" <%= a.role === 'level2' ? 'selected' : '' %>>Cấp 2</option>
+                    <option value="level1" <%= a.role === 'level1' ? 'selected' : '' %>>Cấp 1</option>
+                  </select>
+                </form>
+                <form action="/admin/quan-tri-vien/<%= a.id %>/xoa" method="POST" class="inline" onsubmit="return confirm('Xoá quản trị viên này? Họ sẽ không thể đăng nhập nữa.');">
+                  <button type="submit" class="ml-2 text-espresso-soft hover:text-red-600 inline-flex align-middle"><%- icon('trash', 'w-4 h-4') %></button>
+                </form>
+              <% } %>
+            </td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+
+  <form action="/admin/quan-tri-vien" method="POST" class="card-surface p-6 space-y-4 max-w-md">
+    <h2 class="font-serif text-xl mb-2">Thêm quản trị viên cấp 2</h2>
+    <div>
+      <label class="field-label" for="email">Email</label>
+      <input type="email" id="email" name="email" required class="field-input" />
+    </div>
+    <div>
+      <label class="field-label" for="password">Mật khẩu (tối thiểu 6 ký tự)</label>
+      <input type="password" id="password" name="password" required minlength="6" class="field-input" />
+    </div>
+    <button type="submit" class="btn-primary">Thêm quản trị viên</button>
+  </form>
+
+<%- include('../partials/admin-nav-end') %>
+</body>
+</html>

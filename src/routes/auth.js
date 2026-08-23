@@ -20,6 +20,7 @@ router.post('/admin/dang-nhap', async (req, res, next) => {
 
     req.session.adminId = admin.id;
     req.session.adminEmail = admin.email;
+    req.session.adminRole = admin.role;
     res.redirect('/admin');
   } catch (err) {
     next(err);

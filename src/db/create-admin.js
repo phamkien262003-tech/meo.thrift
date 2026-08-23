@@ -9,8 +9,10 @@ async function createAdmin(email, password) {
     process.exit(1);
   }
   const hash = bcrypt.hashSync(password, 10);
+  // Chạy được từ terminal server nên coi là đáng tin cậy như chủ sở hữu — tạo mới thì là cấp 1;
+  // nếu tài khoản đã tồn tại chỉ cập nhật mật khẩu, không đụng đến cấp bậc hiện có.
   await run(
-    `INSERT INTO admin_users (email, password_hash) VALUES (?, ?)
+    `INSERT INTO admin_users (email, password_hash, role) VALUES (?, ?, 'level1')
      ON DUPLICATE KEY UPDATE password_hash = VALUES(password_hash)`,
     [email, hash]
   );

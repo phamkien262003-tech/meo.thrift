@@ -63,6 +63,17 @@ async function runInTransaction(fn) {
   }
 }
 
+/** MySQL has no "ADD COLUMN IF NOT EXISTS" (pre-8.0.29/MariaDB) — add newly-introduced
+ * columns by hand so existing databases pick them up without a migration tool. */
+async function migrateSchema() {
+  const cols = await query(
+    `SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'admin_users' AND COLUMN_NAME = 'role'`
+  );
+  if (cols.length === 0) {
+    await run("ALTER TABLE admin_users ADD COLUMN role VARCHAR(20) NOT NULL DEFAULT 'level2'");
+  }
+}
+
 async function ensureDatabase() {
   for (const sql of STATEMENTS) {
     try {
@@ -71,6 +82,7 @@ async function ensureDatabase() {
       if (!IGNORABLE_ERROR_CODES.has(err.code)) throw err;
     }
   }
+  await migrateSchema();
 }
 
 /**
@@ -90,8 +102,8 @@ async function ensureBootstrapAdmin() {
 
   const bcrypt = require('bcryptjs');
   const hash = bcrypt.hashSync(password, 10);
-  await run('INSERT INTO admin_users (email, password_hash) VALUES (?, ?)', [email, hash]);
-  console.log(`[bootstrap] Đã tạo tài khoản quản trị đầu tiên: ${email}`);
+  await run("INSERT INTO admin_users (email, password_hash, role) VALUES (?, ?, 'level1')", [email, hash]);
+  console.log(`[bootstrap] Đã tạo tài khoản quản trị cấp 1 đầu tiên: ${email}`);
 }
 
 module.exports = { getPool, query, queryOne, run, runInTransaction, ensureDatabase, ensureBootstrapAdmin };

@@ -67,6 +67,7 @@ app.use((req, res, next) => {
   res.locals.siteName = process.env.SITE_NAME || 'teo.mhrift';
   res.locals.currentPath = req.path;
   res.locals.isAdmin = Boolean(req.session.adminId);
+  res.locals.isLevel1Admin = req.session.adminRole === 'level1';
   res.locals.flash = req.session.flash;
   res.locals.icon = icon;
   res.locals.resolveImage = resolveImage;

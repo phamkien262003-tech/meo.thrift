@@ -8,8 +8,8 @@
 
 <main class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-16 grid lg:grid-cols-2 gap-12">
   <div>
-    <h1 class="text-4xl sm:text-5xl mb-4"><%= content.contact.title %></h1>
-    <p class="text-espresso-soft leading-relaxed mb-8"><%= content.contact.intro %></p>
+    <h1 class="text-4xl sm:text-5xl mb-4"><%- edit('contact', 'title', content.contact.title) %></h1>
+    <p class="text-espresso-soft leading-relaxed mb-8"><%- edit('contact', 'intro', content.contact.intro, { multiline: true }) %></p>
 
     <ul class="space-y-4 mb-8">
       <li class="flex items-center gap-3"><span class="p-2.5 rounded-full bg-terracotta/10 text-terracotta"><%- icon('mail', 'w-4 h-4') %></span> <%= contact.email %></li>

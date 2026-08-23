@@ -53,6 +53,13 @@ const PAGE_CONTENT = {
           { key: 'newsletterDesc', label: 'Mô tả', type: 'textarea', default: 'Đăng ký để nhận thông báo khi có sản phẩm mới — mỗi item chỉ có một chiếc duy nhất.' },
         ],
       },
+      {
+        title: 'Ảnh minh họa',
+        fields: [
+          { key: 'heroImage', label: 'Ảnh lớn', type: 'image', default: null },
+          { key: 'heroImage2', label: 'Ảnh nhỏ nổi', type: 'image', default: null },
+        ],
+      },
     ],
   },
 
@@ -66,6 +73,10 @@ const PAGE_CONTENT = {
           { key: 'heroTitle', label: 'Tiêu đề', type: 'text', default: 'Về teo.mhrift' },
           { key: 'heroDesc', label: 'Mô tả', type: 'textarea', default: 'teo.mhrift ra đời từ tình yêu với những chiếc váy đã có một đời sống riêng — và niềm tin rằng thời trang đẹp không cần phải mới hoàn toàn.' },
         ],
+      },
+      {
+        title: 'Ảnh minh họa',
+        fields: [{ key: 'heroImage', label: 'Ảnh banner', type: 'image', default: null }],
       },
       {
         title: 'Mục 1',
@@ -306,11 +317,50 @@ function getAllPageContent() {
 function savePageContent(page, body) {
   const schema = PAGE_CONTENT[page];
   if (!schema) return;
+  const saved = JSON.parse(getSetting(`content:${page}`, '{}') || '{}');
   const data = {};
   fieldsOf(page).forEach((f) => {
-    data[f.key] = (body[f.key] || '').trim();
+    // Image fields aren't part of the text form — leave whatever was uploaded via the inline editor untouched.
+    data[f.key] = f.type === 'image' ? (saved[f.key] !== undefined ? saved[f.key] : null) : (body[f.key] || '').trim();
   });
   setSetting(`content:${page}`, JSON.stringify(data));
 }
 
-module.exports = { PAGE_CONTENT, getPageContent, getAllPageContent, savePageContent };
+/** Updates a single field (used by the inline click-to-edit UI on the live pages). Returns false if page/key is unknown. */
+function updatePageContentField(page, key, value) {
+  const schema = PAGE_CONTENT[page];
+  if (!schema) return false;
+  if (!fieldsOf(page).some((f) => f.key === key)) return false;
+  const saved = JSON.parse(getSetting(`content:${page}`, '{}') || '{}');
+  saved[key] = value;
+  setSetting(`content:${page}`, JSON.stringify(saved));
+  return true;
+}
+
+function escapeHtml(str) {
+  return String(str == null ? '' : str).replace(/[&<>"']/g, (c) => (
+    { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]
+  ));
+}
+
+/**
+ * Renders a text field so it's plain text for visitors, but click-to-edit for a logged-in
+ * admin (used on the live public pages instead of a separate admin form). `multiline`
+ * allows Enter to insert line breaks (paragraphs); otherwise Enter saves and blurs.
+ */
+function editableText(isAdmin, page, key, value, { multiline = false } = {}) {
+  // Always a <span> (never a block tag) so this can be dropped inside an existing <p>/<h1>/etc.
+  // without breaking HTML nesting; multi-line values use <br> instead of block boxes.
+  const safe = escapeHtml(value).replace(/\n/g, '<br>');
+  if (!isAdmin) return `<span>${safe}</span>`;
+  return `<span class="js-edit-text" data-page="${page}" data-key="${key}" data-multiline="${multiline ? '1' : '0'}">${safe}</span>`;
+}
+
+module.exports = {
+  PAGE_CONTENT,
+  getPageContent,
+  getAllPageContent,
+  savePageContent,
+  updatePageContentField,
+  editableText,
+};

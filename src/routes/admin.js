@@ -4,7 +4,7 @@ const slugify = require('slugify');
 const { getDb } = require('../config/db');
 const { requireAdmin } = require('../middleware/auth');
 const { upload } = require('../middleware/upload');
-const { saveProductImage, deleteProductImageFiles } = require('../services/images');
+const { saveProductImage, deleteProductImageFiles, resolveImage } = require('../services/images');
 const {
   CATEGORIES,
   ERA_TAGS,
@@ -18,7 +18,7 @@ const {
   listJournalPosts,
   getJournalPostById,
 } = require('../db/models');
-const { PAGE_CONTENT, getPageContent, savePageContent } = require('../services/page-content');
+const { PAGE_CONTENT, getPageContent, savePageContent, updatePageContentField } = require('../services/page-content');
 
 router.use(requireAdmin);
 
@@ -281,8 +281,18 @@ router.post('/cai-dat/lien-he', (req, res) => {
 
 // ---------- Nội dung trang (page content) ----------
 
+const PAGE_LIVE_URL = {
+  home: '/',
+  about: '/ve-chung-toi',
+  faq: '/cau-hoi-thuong-gap',
+  policy: '/chinh-sach',
+  sizeGuide: '/huong-dan-chon-size',
+  contact: '/lien-he',
+  footer: '/#site-footer',
+};
+
 router.get('/noi-dung', (req, res) => {
-  res.render('admin/content-list', { title: 'Nội dung trang', pages: PAGE_CONTENT });
+  res.render('admin/content-list', { title: 'Nội dung trang', pages: PAGE_CONTENT, liveUrls: PAGE_LIVE_URL });
 });
 
 router.get('/noi-dung/:page', (req, res) => {
@@ -302,6 +312,38 @@ router.post('/noi-dung/:page', (req, res) => {
   savePageContent(req.params.page, req.body);
   req.session.flash = { type: 'success', message: `Đã lưu nội dung trang "${schema.label}".` };
   res.redirect(`/admin/noi-dung/${req.params.page}`);
+});
+
+// Inline click-to-edit on the live pages (see public/js/inline-edit.js).
+router.post('/noi-dung/api/text', (req, res) => {
+  const { page, key, value } = req.body;
+  if (typeof page !== 'string' || typeof key !== 'string' || typeof value !== 'string') {
+    return res.status(400).json({ ok: false, error: 'invalid_request' });
+  }
+  const ok = updatePageContentField(page, key, value);
+  if (!ok) return res.status(400).json({ ok: false, error: 'unknown_field' });
+  res.json({ ok: true });
+});
+
+router.post('/noi-dung/api/image', upload.single('image'), async (req, res, next) => {
+  try {
+    const { page, key } = req.body;
+    const schema = PAGE_CONTENT[page];
+    const field = schema && schema.groups.flatMap((g) => g.fields).find((f) => f.key === key && f.type === 'image');
+    if (!field) return res.status(400).json({ ok: false, error: 'unknown_field' });
+    if (!req.file) return res.status(400).json({ ok: false, error: 'no_file' });
+
+    const previous = getPageContent(page)[key];
+    const baseName = `content-${page}-${key}-${Date.now().toString(36)}`;
+    await saveProductImage(req.file.buffer, baseName);
+    const filename = `${baseName}-detail.webp`;
+    updatePageContentField(page, key, filename);
+    if (previous) deleteProductImageFiles(previous);
+
+    res.json({ ok: true, src: resolveImage(filename, 'detail').src });
+  } catch (err) {
+    next(err);
+  }
 });
 
 // ---------- Nhật ký (Journal) ----------

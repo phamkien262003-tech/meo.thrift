@@ -8,16 +8,24 @@
 
   <%- include('../partials/flash') %>
   <h1 class="text-3xl mb-2">Nội dung trang</h1>
-  <p class="text-espresso-soft mb-8">Chỉnh sửa tiêu đề, mô tả và nội dung hiển thị trên trang chủ và các trang tĩnh.</p>
+  <p class="text-espresso-soft mb-8">Bấm vào một trang để mở trang thật — di chuột vào chữ để sửa, bấm vào chữ để gõ trực tiếp; ảnh minh họa có nút "Đổi ảnh" hiện khi rê chuột vào.</p>
 
   <div class="grid sm:grid-cols-2 gap-4">
     <% Object.entries(pages).forEach(([key, schema]) => { %>
-      <a href="/admin/noi-dung/<%= key %>" class="card-surface p-5 flex items-center justify-between hover:border-terracotta transition-colors duration-250">
-        <span class="font-medium"><%= schema.label %></span>
-        <%- icon('chevronRight', 'w-4 h-4 text-espresso-soft') %>
+      <a href="<%= liveUrls[key] %>" class="card-surface p-5 flex items-center justify-between hover:border-terracotta transition-colors duration-250">
+        <span>
+          <span class="font-medium block"><%= schema.label %></span>
+          <span class="text-xs text-espresso-soft">Mở trang thật để chỉnh sửa</span>
+        </span>
+        <%- icon('chevronRight', 'w-4 h-4 text-espresso-soft shrink-0') %>
       </a>
     <% }) %>
   </div>
+
+  <p class="text-xs text-espresso-soft mt-8">
+    Muốn xem tất cả các trường cùng lúc dưới dạng danh sách? Vào từng trang qua đường dẫn
+    <code class="text-espresso">/admin/noi-dung/&lt;tên-trang&gt;</code> (ví dụ <a href="/admin/noi-dung/home" class="underline hover:text-terracotta">/admin/noi-dung/home</a>).
+  </p>
 
 <%- include('../partials/admin-nav-end') %>
 </body>

@@ -1,0 +1,16 @@
+<%
+/* locals: page, key, value (stored filename or null), tone, seed, className (position/size/rounding classes) */
+const _resolved = resolveImage(value, 'detail');
+%>
+<div class="overflow-hidden <%= className || '' %> <%= isAdmin ? 'js-edit-image-wrap' : '' %>"<% if (isAdmin) { %> data-page="<%= page %>" data-key="<%= key %>"<% } %>>
+  <% if (_resolved.isPlaceholder) { %>
+    <%- placeholderArt(tone || 'terracotta', seed || 0) %>
+  <% } else { %>
+    <img src="<%= _resolved.src %>" alt="" class="w-full h-full object-cover" />
+  <% } %>
+  <% if (isAdmin) { %>
+    <button type="button" class="js-edit-image-btn absolute bottom-2 right-2 z-10 inline-flex items-center gap-1.5 rounded-full bg-espresso/80 text-cream text-xs px-3 py-1.5 backdrop-blur-sm hover:bg-espresso transition-colors duration-250">
+      <%- icon('image', 'w-3.5 h-3.5') %> Đổi ảnh
+    </button>
+  <% } %>
+</div>

@@ -7,24 +7,24 @@
 <%- include('../partials/header') %>
 
 <main class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-  <h1 class="text-4xl sm:text-5xl mb-10"><%= content.faq.title %></h1>
+  <h1 class="text-4xl sm:text-5xl mb-10"><%- edit('faq', 'title', content.faq.title) %></h1>
 
   <div class="space-y-3">
-    <% const faqs = [1, 2, 3, 4, 5, 6].map(n => ({ q: content.faq['q' + n], a: content.faq['a' + n] })); %>
-    <% faqs.forEach(f => { %>
+    <% const faqs = [1, 2, 3, 4, 5, 6]; %>
+    <% faqs.forEach(n => { %>
       <details class="card-surface p-5 group">
         <summary class="flex items-center justify-between cursor-pointer font-medium list-none">
-          <span><%= f.q %></span>
+          <span><%- edit('faq', 'q' + n, content.faq['q' + n]) %></span>
           <span class="text-terracotta transition-transform duration-250 group-open:rotate-180"><%- icon('chevronDown', 'w-5 h-5') %></span>
         </summary>
-        <p class="text-espresso-soft mt-3 leading-relaxed"><%= f.a %></p>
+        <p class="text-espresso-soft mt-3 leading-relaxed"><%- edit('faq', 'a' + n, content.faq['a' + n], { multiline: true }) %></p>
       </details>
     <% }) %>
   </div>
 
   <div class="text-center mt-12">
-    <p class="text-espresso-soft mb-4"><%= content.faq.ctaText %></p>
-    <a href="/lien-he" class="btn-primary"><%= content.faq.ctaButton %></a>
+    <p class="text-espresso-soft mb-4"><%- edit('faq', 'ctaText', content.faq.ctaText) %></p>
+    <a href="/lien-he" class="btn-primary"><%- edit('faq', 'ctaButton', content.faq.ctaButton) %></a>
   </div>
 </main>
 

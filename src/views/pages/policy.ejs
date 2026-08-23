@@ -7,16 +7,13 @@
 <%- include('../partials/header') %>
 
 <main class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-  <h1 class="text-4xl sm:text-5xl mb-10"><%= content.policy.title %></h1>
+  <h1 class="text-4xl sm:text-5xl mb-10"><%- edit('policy', 'title', content.policy.title) %></h1>
 
   <div class="space-y-8 text-espresso-soft leading-relaxed">
-    <% const sections = [1, 2, 3, 4].map(n => ({ title: content.policy['section' + n + 'Title'], body: content.policy['section' + n + 'Body'] })); %>
-    <% sections.forEach(s => { %>
+    <% [1, 2, 3, 4].forEach(n => { %>
       <div>
-        <h2 class="font-serif text-2xl text-espresso mb-3"><%= s.title %></h2>
-        <% s.body.split('\n\n').forEach((para, i) => { %>
-          <p class="<%= i > 0 ? 'mt-2' : '' %>"><%= para %></p>
-        <% }) %>
+        <h2 class="font-serif text-2xl text-espresso mb-3"><%- edit('policy', 'section' + n + 'Title', content.policy['section' + n + 'Title']) %></h2>
+        <p><%- edit('policy', 'section' + n + 'Body', content.policy['section' + n + 'Body'], { multiline: true }) %></p>
       </div>
     <% }) %>
   </div>

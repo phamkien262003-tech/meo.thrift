@@ -7,8 +7,8 @@
 <%- include('../partials/header') %>
 
 <main class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-  <h1 class="text-4xl sm:text-5xl mb-4"><%= content.sizeGuide.title %></h1>
-  <p class="text-espresso-soft text-lg mb-10"><%= content.sizeGuide.intro %></p>
+  <h1 class="text-4xl sm:text-5xl mb-4"><%- edit('sizeGuide', 'title', content.sizeGuide.title) %></h1>
+  <p class="text-espresso-soft text-lg mb-10"><%- edit('sizeGuide', 'intro', content.sizeGuide.intro, { multiline: true }) %></p>
 
   <div class="card-surface p-6 overflow-x-auto mb-10">
     <table class="w-full text-sm min-w-[480px]">
@@ -21,29 +21,29 @@
         </tr>
       </thead>
       <tbody class="divide-y divide-border">
-        <tr><td class="py-3 pr-4 font-medium">XS</td><td class="py-3 pr-4"><%= content.sizeGuide.xsChest %></td><td class="py-3 pr-4"><%= content.sizeGuide.xsWaist %></td><td class="py-3"><%= content.sizeGuide.xsHip %></td></tr>
-        <tr><td class="py-3 pr-4 font-medium">S</td><td class="py-3 pr-4"><%= content.sizeGuide.sChest %></td><td class="py-3 pr-4"><%= content.sizeGuide.sWaist %></td><td class="py-3"><%= content.sizeGuide.sHip %></td></tr>
-        <tr><td class="py-3 pr-4 font-medium">M</td><td class="py-3 pr-4"><%= content.sizeGuide.mChest %></td><td class="py-3 pr-4"><%= content.sizeGuide.mWaist %></td><td class="py-3"><%= content.sizeGuide.mHip %></td></tr>
-        <tr><td class="py-3 pr-4 font-medium">L</td><td class="py-3 pr-4"><%= content.sizeGuide.lChest %></td><td class="py-3 pr-4"><%= content.sizeGuide.lWaist %></td><td class="py-3"><%= content.sizeGuide.lHip %></td></tr>
-        <tr><td class="py-3 pr-4 font-medium">XL</td><td class="py-3 pr-4"><%= content.sizeGuide.xlChest %></td><td class="py-3 pr-4"><%= content.sizeGuide.xlWaist %></td><td class="py-3"><%= content.sizeGuide.xlHip %></td></tr>
+        <tr><td class="py-3 pr-4 font-medium">XS</td><td class="py-3 pr-4"><%- edit('sizeGuide', 'xsChest', content.sizeGuide.xsChest) %></td><td class="py-3 pr-4"><%- edit('sizeGuide', 'xsWaist', content.sizeGuide.xsWaist) %></td><td class="py-3"><%- edit('sizeGuide', 'xsHip', content.sizeGuide.xsHip) %></td></tr>
+        <tr><td class="py-3 pr-4 font-medium">S</td><td class="py-3 pr-4"><%- edit('sizeGuide', 'sChest', content.sizeGuide.sChest) %></td><td class="py-3 pr-4"><%- edit('sizeGuide', 'sWaist', content.sizeGuide.sWaist) %></td><td class="py-3"><%- edit('sizeGuide', 'sHip', content.sizeGuide.sHip) %></td></tr>
+        <tr><td class="py-3 pr-4 font-medium">M</td><td class="py-3 pr-4"><%- edit('sizeGuide', 'mChest', content.sizeGuide.mChest) %></td><td class="py-3 pr-4"><%- edit('sizeGuide', 'mWaist', content.sizeGuide.mWaist) %></td><td class="py-3"><%- edit('sizeGuide', 'mHip', content.sizeGuide.mHip) %></td></tr>
+        <tr><td class="py-3 pr-4 font-medium">L</td><td class="py-3 pr-4"><%- edit('sizeGuide', 'lChest', content.sizeGuide.lChest) %></td><td class="py-3 pr-4"><%- edit('sizeGuide', 'lWaist', content.sizeGuide.lWaist) %></td><td class="py-3"><%- edit('sizeGuide', 'lHip', content.sizeGuide.lHip) %></td></tr>
+        <tr><td class="py-3 pr-4 font-medium">XL</td><td class="py-3 pr-4"><%- edit('sizeGuide', 'xlChest', content.sizeGuide.xlChest) %></td><td class="py-3 pr-4"><%- edit('sizeGuide', 'xlWaist', content.sizeGuide.xlWaist) %></td><td class="py-3"><%- edit('sizeGuide', 'xlHip', content.sizeGuide.xlHip) %></td></tr>
       </tbody>
     </table>
   </div>
 
   <div class="grid sm:grid-cols-2 gap-6">
     <div class="card-surface p-6">
-      <h2 class="font-serif text-xl mb-2"><%= content.sizeGuide.measureTitle %></h2>
+      <h2 class="font-serif text-xl mb-2"><%- edit('sizeGuide', 'measureTitle', content.sizeGuide.measureTitle) %></h2>
       <ul class="text-sm text-espresso-soft space-y-2 list-disc list-inside">
-        <li><%= content.sizeGuide.measure1 %></li>
-        <li><%= content.sizeGuide.measure2 %></li>
-        <li><%= content.sizeGuide.measure3 %></li>
-        <li><%= content.sizeGuide.measure4 %></li>
+        <li><%- edit('sizeGuide', 'measure1', content.sizeGuide.measure1) %></li>
+        <li><%- edit('sizeGuide', 'measure2', content.sizeGuide.measure2) %></li>
+        <li><%- edit('sizeGuide', 'measure3', content.sizeGuide.measure3) %></li>
+        <li><%- edit('sizeGuide', 'measure4', content.sizeGuide.measure4) %></li>
       </ul>
     </div>
     <div class="card-surface p-6">
-      <h2 class="font-serif text-xl mb-2"><%= content.sizeGuide.adviceTitle %></h2>
-      <p class="text-sm text-espresso-soft mb-4"><%= content.sizeGuide.adviceBody %></p>
-      <a href="/lien-he" class="btn-secondary"><%= content.sizeGuide.adviceButton %></a>
+      <h2 class="font-serif text-xl mb-2"><%- edit('sizeGuide', 'adviceTitle', content.sizeGuide.adviceTitle) %></h2>
+      <p class="text-sm text-espresso-soft mb-4"><%- edit('sizeGuide', 'adviceBody', content.sizeGuide.adviceBody, { multiline: true }) %></p>
+      <a href="/lien-he" class="btn-secondary"><%- edit('sizeGuide', 'adviceButton', content.sizeGuide.adviceButton) %></a>
     </div>
   </div>
 </main>

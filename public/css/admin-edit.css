@@ -1,0 +1,73 @@
+/* Inline content-editing affordances, loaded only for logged-in admins. */
+
+.js-edit-text {
+  cursor: pointer;
+  border-radius: 4px;
+  outline: 1px dashed transparent;
+  outline-offset: 3px;
+  transition: background-color 0.15s ease, outline-color 0.15s ease;
+}
+
+.js-edit-text:hover {
+  outline-color: rgba(198, 123, 92, 0.55);
+  background-color: rgba(198, 123, 92, 0.08);
+}
+
+.js-edit-text[contenteditable="true"] {
+  cursor: text;
+  outline: 2px solid #c67b5c;
+  outline-offset: 3px;
+  background-color: rgba(255, 255, 255, 0.92);
+}
+
+@keyframes js-edit-saved-flash {
+  0% { background-color: rgba(107, 123, 60, 0.4); }
+  100% { background-color: transparent; }
+}
+
+.js-edit-flash-saved {
+  animation: js-edit-saved-flash 900ms ease;
+}
+
+.js-edit-image-btn {
+  opacity: 0;
+  transition: opacity 0.15s ease;
+}
+
+.js-edit-image-wrap:hover .js-edit-image-btn,
+.js-edit-image-btn:focus {
+  opacity: 1;
+}
+
+@media (hover: none) {
+  .js-edit-image-btn {
+    opacity: 1;
+  }
+}
+
+.js-edit-image-btn[disabled] {
+  opacity: 1;
+  cursor: wait;
+}
+
+#admin-edit-toast {
+  position: fixed;
+  left: 50%;
+  bottom: 24px;
+  transform: translate(-50%, 12px);
+  background: #3a2e27;
+  color: #fbf8f2;
+  font-size: 13px;
+  padding: 8px 16px;
+  border-radius: 999px;
+  box-shadow: 0 8px 30px -8px rgba(58, 46, 39, 0.4);
+  z-index: 200;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+#admin-edit-toast.is-visible {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}

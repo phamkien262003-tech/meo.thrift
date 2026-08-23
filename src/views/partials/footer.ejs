@@ -1,11 +1,11 @@
-<footer class="bg-espresso text-cream/90 mt-24">
+<footer id="site-footer" class="bg-espresso text-cream/90 mt-24">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
     <div>
       <div class="flex items-center gap-2 mb-4">
         <span class="text-rose"><%- icon('leaf', 'w-5 h-5') %></span>
         <span class="font-serif text-xl text-cream">teo<span class="text-rose">.</span>mhrift</span>
       </div>
-      <p class="text-sm text-cream/60 leading-relaxed"><%= content.footer.tagline %></p>
+      <p class="text-sm text-cream/60 leading-relaxed"><%- edit('footer', 'tagline', content.footer.tagline, { multiline: true }) %></p>
       <div class="flex items-center gap-3 mt-5">
         <a href="<%= contact.instagramUrl || '#' %>" aria-label="Instagram" class="p-2 rounded-full bg-cream/10 hover:bg-rose hover:text-espresso transition-colors duration-250"><%- icon('instagram', 'w-4 h-4') %></a>
         <a href="<%= contact.facebookUrl || '#' %>" aria-label="Facebook" class="p-2 rounded-full bg-cream/10 hover:bg-rose hover:text-espresso transition-colors duration-250"><%- icon('facebook', 'w-4 h-4') %></a>
@@ -42,6 +42,10 @@
     </div>
   </div>
   <div class="border-t border-cream/10 py-5 text-center text-xs text-cream/40">
-    © <%= new Date().getFullYear() %> teo.mhrift. <%= content.footer.copyright %>
+    © <%= new Date().getFullYear() %> teo.mhrift. <%- edit('footer', 'copyright', content.footer.copyright) %>
   </div>
 </footer>
+<% if (isAdmin) { %>
+  <link rel="stylesheet" href="/css/admin-edit.css" />
+  <script src="/js/inline-edit.js" defer></script>
+<% } %>

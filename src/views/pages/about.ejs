@@ -8,40 +8,40 @@
 
 <main>
   <section class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16 text-center">
-    <span class="badge bg-olive/10 text-olive-dark mb-5"><%- icon('leaf', 'w-3.5 h-3.5') %> <%= content.about.heroBadge %></span>
-    <h1 class="text-4xl sm:text-5xl mb-6"><%= content.about.heroTitle %></h1>
+    <span class="badge bg-olive/10 text-olive-dark mb-5"><%- icon('leaf', 'w-3.5 h-3.5') %> <%- edit('about', 'heroBadge', content.about.heroBadge) %></span>
+    <h1 class="text-4xl sm:text-5xl mb-6"><%- edit('about', 'heroTitle', content.about.heroTitle) %></h1>
     <p class="text-espresso-soft text-lg leading-relaxed">
-      <%= content.about.heroDesc %>
+      <%- edit('about', 'heroDesc', content.about.heroDesc, { multiline: true }) %>
     </p>
   </section>
 
   <section class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 pb-16 space-y-10 text-espresso-soft leading-relaxed">
-    <div class="aspect-[21/9] rounded-2xl overflow-hidden shadow-soft"><%- placeholderArt('sand', 3) %></div>
+    <%- include('../partials/editable-image', { page: 'about', key: 'heroImage', value: content.about.heroImage, tone: 'sand', seed: 3, className: 'relative aspect-[21/9] rounded-2xl shadow-soft' }) %>
 
     <div>
-      <h2 class="font-serif text-2xl text-espresso mb-3"><%= content.about.block1Title %></h2>
-      <p><%= content.about.block1Body %></p>
+      <h2 class="font-serif text-2xl text-espresso mb-3"><%- edit('about', 'block1Title', content.about.block1Title) %></h2>
+      <p><%- edit('about', 'block1Body', content.about.block1Body, { multiline: true }) %></p>
     </div>
 
     <div>
-      <h2 class="font-serif text-2xl text-espresso mb-3"><%= content.about.block2Title %></h2>
-      <p><%= content.about.block2Body %></p>
+      <h2 class="font-serif text-2xl text-espresso mb-3"><%- edit('about', 'block2Title', content.about.block2Title) %></h2>
+      <p><%- edit('about', 'block2Body', content.about.block2Body, { multiline: true }) %></p>
     </div>
 
     <div>
-      <h2 class="font-serif text-2xl text-espresso mb-3"><%= content.about.block3Title %></h2>
-      <p><%= content.about.block3Body %></p>
+      <h2 class="font-serif text-2xl text-espresso mb-3"><%- edit('about', 'block3Title', content.about.block3Title) %></h2>
+      <p><%- edit('about', 'block3Body', content.about.block3Body, { multiline: true }) %></p>
     </div>
 
     <div>
-      <h2 class="font-serif text-2xl text-espresso mb-3"><%= content.about.block4Title %></h2>
-      <p><%= content.about.block4Body %></p>
+      <h2 class="font-serif text-2xl text-espresso mb-3"><%- edit('about', 'block4Title', content.about.block4Title) %></h2>
+      <p><%- edit('about', 'block4Body', content.about.block4Body, { multiline: true }) %></p>
     </div>
   </section>
 
   <section class="bg-terracotta/5 py-16 text-center">
-    <h2 class="text-2xl sm:text-3xl mb-5"><%= content.about.ctaTitle %></h2>
-    <a href="/cua-hang" class="btn-primary"><%= content.about.ctaButton %></a>
+    <h2 class="text-2xl sm:text-3xl mb-5"><%- edit('about', 'ctaTitle', content.about.ctaTitle) %></h2>
+    <a href="/cua-hang" class="btn-primary"><%- edit('about', 'ctaButton', content.about.ctaButton) %></a>
   </section>
 </main>
 

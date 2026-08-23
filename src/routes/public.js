@@ -2,9 +2,13 @@ const express = require('express');
 const router = express.Router();
 const { getFeaturedProducts, listJournalPosts, getJournalPostBySlug } = require('../db/models');
 
-router.get('/', (req, res) => {
-  const featured = getFeaturedProducts(8);
-  res.render('pages/home', { title: 'Trang chủ', featured });
+router.get('/', async (req, res, next) => {
+  try {
+    const featured = await getFeaturedProducts(8);
+    res.render('pages/home', { title: 'Trang chủ', featured });
+  } catch (err) {
+    next(err);
+  }
 });
 
 router.get('/ve-chung-toi', (req, res) => {
@@ -35,17 +39,25 @@ router.post('/lien-he', (req, res) => {
   res.redirect('/lien-he');
 });
 
-router.get('/nhat-ky', (req, res) => {
-  const posts = listJournalPosts();
-  res.render('pages/journal', { title: 'Nhật ký phong cách', posts });
+router.get('/nhat-ky', async (req, res, next) => {
+  try {
+    const posts = await listJournalPosts();
+    res.render('pages/journal', { title: 'Nhật ký phong cách', posts });
+  } catch (err) {
+    next(err);
+  }
 });
 
-router.get('/nhat-ky/:slug', (req, res) => {
-  const post = getJournalPostBySlug(req.params.slug);
-  if (!post) {
-    return res.status(404).render('pages/404', { title: 'Không tìm thấy bài viết' });
+router.get('/nhat-ky/:slug', async (req, res, next) => {
+  try {
+    const post = await getJournalPostBySlug(req.params.slug);
+    if (!post) {
+      return res.status(404).render('pages/404', { title: 'Không tìm thấy bài viết' });
+    }
+    res.render('pages/journal-post', { title: post.title, post });
+  } catch (err) {
+    next(err);
   }
-  res.render('pages/journal-post', { title: post.title, post });
 });
 
 module.exports = router;

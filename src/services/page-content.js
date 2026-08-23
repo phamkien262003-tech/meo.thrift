@@ -295,10 +295,10 @@ function fieldsOf(page) {
   return PAGE_CONTENT[page].groups.flatMap((g) => g.fields);
 }
 
-function getPageContent(page) {
+async function getPageContent(page) {
   const schema = PAGE_CONTENT[page];
   if (!schema) return {};
-  const saved = JSON.parse(getSetting(`content:${page}`, '{}') || '{}');
+  const saved = JSON.parse((await getSetting(`content:${page}`, '{}')) || '{}');
   const result = {};
   fieldsOf(page).forEach((f) => {
     result[f.key] = saved[f.key] !== undefined && saved[f.key] !== '' ? saved[f.key] : f.default;
@@ -306,34 +306,34 @@ function getPageContent(page) {
   return result;
 }
 
-function getAllPageContent() {
+async function getAllPageContent() {
   const result = {};
-  Object.keys(PAGE_CONTENT).forEach((page) => {
-    result[page] = getPageContent(page);
-  });
+  for (const page of Object.keys(PAGE_CONTENT)) {
+    result[page] = await getPageContent(page);
+  }
   return result;
 }
 
-function savePageContent(page, body) {
+async function savePageContent(page, body) {
   const schema = PAGE_CONTENT[page];
   if (!schema) return;
-  const saved = JSON.parse(getSetting(`content:${page}`, '{}') || '{}');
+  const saved = JSON.parse((await getSetting(`content:${page}`, '{}')) || '{}');
   const data = {};
   fieldsOf(page).forEach((f) => {
     // Image fields aren't part of the text form — leave whatever was uploaded via the inline editor untouched.
     data[f.key] = f.type === 'image' ? (saved[f.key] !== undefined ? saved[f.key] : null) : (body[f.key] || '').trim();
   });
-  setSetting(`content:${page}`, JSON.stringify(data));
+  await setSetting(`content:${page}`, JSON.stringify(data));
 }
 
 /** Updates a single field (used by the inline click-to-edit UI on the live pages). Returns false if page/key is unknown. */
-function updatePageContentField(page, key, value) {
+async function updatePageContentField(page, key, value) {
   const schema = PAGE_CONTENT[page];
   if (!schema) return false;
   if (!fieldsOf(page).some((f) => f.key === key)) return false;
-  const saved = JSON.parse(getSetting(`content:${page}`, '{}') || '{}');
+  const saved = JSON.parse((await getSetting(`content:${page}`, '{}')) || '{}');
   saved[key] = value;
-  setSetting(`content:${page}`, JSON.stringify(saved));
+  await setSetting(`content:${page}`, JSON.stringify(saved));
   return true;
 }
 

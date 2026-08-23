@@ -1,6 +1,6 @@
 <%
-/* locals: page, key, value (stored filename or null), tone, seed, className (position/size/rounding classes) */
-const _resolved = resolveImage(value, 'detail');
+/* locals: page, key, value (stored image id or null), tone, seed, className (position/size/rounding classes) */
+const _resolved = resolveImage(value);
 %>
 <div class="overflow-hidden <%= className || '' %> <%= isAdmin ? 'js-edit-image-wrap' : '' %>"<% if (isAdmin) { %> data-page="<%= page %>" data-key="<%= key %>"<% } %>>
   <% if (_resolved.isPlaceholder) { %>

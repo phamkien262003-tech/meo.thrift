@@ -1,12 +1,12 @@
 <%
-/* locals: product, variant ('thumb'|'detail'), className, imageIndex (optional) */
+/* locals: product, variant ('thumb'|'detail') — kept for call-site compatibility, no longer changes anything since images are stored at one size; className, imageIndex (optional) */
 const _idx = typeof imageIndex === 'number' ? imageIndex : 0;
 const _img = product.images && product.images[_idx] ? product.images[_idx] : null;
-const _resolved = resolveImage(_img ? _img.filename : null, variant || 'thumb');
+const _resolved = resolveImage(_img ? _img.image_id : null);
 %>
 <% if (_resolved.isPlaceholder) { %>
   <div class="relative overflow-hidden <%= className || '' %>">
-    <%- placeholderArt(_resolved.tone, product.id + _idx) %>
+    <%- placeholderArt((_img && _img.placeholder_tone) || 'terracotta', product.id + _idx) %>
     <span class="absolute bottom-2 right-2 badge bg-espresso/70 text-cream backdrop-blur-sm">
       Ảnh minh họa
     </span>

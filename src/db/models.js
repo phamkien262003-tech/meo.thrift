@@ -1,4 +1,4 @@
-const { getDb } = require('../config/db');
+const { query, queryOne, run } = require('../config/db');
 
 const CATEGORIES = [
   'Đầm dạ hội',
@@ -23,45 +23,48 @@ const ORDER_STATUS = {
   cancelled: 'Đã hủy',
 };
 
-function attachImages(products) {
-  const db = getDb();
-  const imgStmt = db.prepare(
-    'SELECT id, filename, sort_order FROM product_images WHERE product_id = ? ORDER BY sort_order ASC, id ASC'
-  );
-  return products.map((p) => ({ ...p, images: imgStmt.all(p.id) }));
+async function attachImages(products) {
+  const results = [];
+  for (const p of products) {
+    const images = await query(
+      'SELECT id, image_id, placeholder_tone, sort_order FROM product_images WHERE product_id = :id ORDER BY sort_order ASC, id ASC',
+      { id: p.id }
+    );
+    results.push({ ...p, images });
+  }
+  return results;
 }
 
-function listProducts({ category, size, era, minPrice, maxPrice, q, status = 'available', sort = 'newest', limit, offset } = {}) {
-  const db = getDb();
+async function listProducts({ category, size, era, minPrice, maxPrice, q, status = 'available', sort = 'newest', limit, offset } = {}) {
   const clauses = [];
   const params = {};
 
   if (status) {
-    clauses.push('status = @status');
+    clauses.push('status = :status');
     params.status = status;
   }
   if (category) {
-    clauses.push('category = @category');
+    clauses.push('category = :category');
     params.category = category;
   }
   if (size) {
-    clauses.push('size_label = @size');
+    clauses.push('size_label = :size');
     params.size = size;
   }
   if (era) {
-    clauses.push('era_tag = @era');
+    clauses.push('era_tag = :era');
     params.era = era;
   }
   if (minPrice) {
-    clauses.push('price >= @minPrice');
+    clauses.push('price >= :minPrice');
     params.minPrice = minPrice;
   }
   if (maxPrice) {
-    clauses.push('price <= @maxPrice');
+    clauses.push('price <= :maxPrice');
     params.maxPrice = maxPrice;
   }
   if (q) {
-    clauses.push('(name LIKE @q OR description LIKE @q OR brand LIKE @q)');
+    clauses.push('(name LIKE :q OR description LIKE :q OR brand LIKE :q)');
     params.q = `%${q}%`;
   }
 
@@ -75,135 +78,121 @@ function listProducts({ category, size, era, minPrice, maxPrice, q, status = 'av
 
   let sql = `SELECT * FROM products ${where} ${orderBy}`;
   if (limit) {
-    sql += ' LIMIT @limit';
-    params.limit = limit;
+    sql += ' LIMIT :limit';
+    params.limit = Number(limit);
     if (offset) {
-      sql += ' OFFSET @offset';
-      params.offset = offset;
+      sql += ' OFFSET :offset';
+      params.offset = Number(offset);
     }
   }
 
-  const rows = db.prepare(sql).all(params);
+  const rows = await query(sql, params);
   return attachImages(rows);
 }
 
-function countProducts(filters = {}) {
-  const db = getDb();
+async function countProducts(filters = {}) {
   const clauses = [];
   const params = {};
   const { category, size, era, minPrice, maxPrice, q, status = 'available' } = filters;
 
   if (status) {
-    clauses.push('status = @status');
+    clauses.push('status = :status');
     params.status = status;
   }
   if (category) {
-    clauses.push('category = @category');
+    clauses.push('category = :category');
     params.category = category;
   }
   if (size) {
-    clauses.push('size_label = @size');
+    clauses.push('size_label = :size');
     params.size = size;
   }
   if (era) {
-    clauses.push('era_tag = @era');
+    clauses.push('era_tag = :era');
     params.era = era;
   }
   if (minPrice) {
-    clauses.push('price >= @minPrice');
+    clauses.push('price >= :minPrice');
     params.minPrice = minPrice;
   }
   if (maxPrice) {
-    clauses.push('price <= @maxPrice');
+    clauses.push('price <= :maxPrice');
     params.maxPrice = maxPrice;
   }
   if (q) {
-    clauses.push('(name LIKE @q OR description LIKE @q OR brand LIKE @q)');
+    clauses.push('(name LIKE :q OR description LIKE :q OR brand LIKE :q)');
     params.q = `%${q}%`;
   }
   const where = clauses.length ? `WHERE ${clauses.join(' AND ')}` : '';
-  const row = db.prepare(`SELECT COUNT(*) as total FROM products ${where}`).get(params);
+  const row = await queryOne(`SELECT COUNT(*) as total FROM products ${where}`, params);
   return row.total;
 }
 
-function listAllProductsAdmin() {
-  const db = getDb();
-  const rows = db.prepare('SELECT * FROM products ORDER BY created_at DESC').all();
+async function listAllProductsAdmin() {
+  const rows = await query('SELECT * FROM products ORDER BY created_at DESC');
   return attachImages(rows);
 }
 
-function getProductBySlug(slug) {
-  const db = getDb();
-  const product = db.prepare('SELECT * FROM products WHERE slug = ?').get(slug);
+async function getProductBySlug(slug) {
+  const product = await queryOne('SELECT * FROM products WHERE slug = ?', [slug]);
   if (!product) return null;
-  return attachImages([product])[0];
+  return (await attachImages([product]))[0];
 }
 
-function getProductById(id) {
-  const db = getDb();
-  const product = db.prepare('SELECT * FROM products WHERE id = ?').get(id);
+async function getProductById(id) {
+  const product = await queryOne('SELECT * FROM products WHERE id = ?', [id]);
   if (!product) return null;
-  return attachImages([product])[0];
+  return (await attachImages([product]))[0];
 }
 
-function getRelatedProducts(product, limitCount = 4) {
-  const db = getDb();
-  const rows = db
-    .prepare(
-      `SELECT * FROM products WHERE category = ? AND id != ? AND status = 'available' ORDER BY RANDOM() LIMIT ?`
-    )
-    .all(product.category, product.id, limitCount);
+async function getRelatedProducts(product, limitCount = 4) {
+  const rows = await query(
+    `SELECT * FROM products WHERE category = :category AND id != :id AND status = 'available' ORDER BY RAND() LIMIT :limit`,
+    { category: product.category, id: product.id, limit: limitCount }
+  );
   return attachImages(rows);
 }
 
-function getFeaturedProducts(limitCount = 8) {
-  const db = getDb();
-  const rows = db
-    .prepare(
-      `SELECT * FROM products WHERE status = 'available' ORDER BY featured DESC, created_at DESC LIMIT ?`
-    )
-    .all(limitCount);
+async function getFeaturedProducts(limitCount = 8) {
+  const rows = await query(
+    `SELECT * FROM products WHERE status = 'available' ORDER BY featured DESC, created_at DESC LIMIT :limit`,
+    { limit: limitCount }
+  );
   return attachImages(rows);
 }
 
-function getSetting(key, fallback = null) {
-  const db = getDb();
-  const row = db.prepare('SELECT value FROM settings WHERE key = ?').get(key);
+async function getSetting(key, fallback = null) {
+  const row = await queryOne('SELECT value FROM settings WHERE `key` = ?', [key]);
   return row ? row.value : fallback;
 }
 
-function setSetting(key, value) {
-  const db = getDb();
-  db.prepare(
-    'INSERT INTO settings (key, value) VALUES (?, ?) ON CONFLICT(key) DO UPDATE SET value = excluded.value'
-  ).run(key, value);
+async function setSetting(key, value) {
+  await run('INSERT INTO settings (`key`, value) VALUES (?, ?) ON DUPLICATE KEY UPDATE value = VALUES(value)', [key, value]);
 }
 
-function listJournalPosts() {
-  const db = getDb();
-  return db.prepare('SELECT * FROM journal_posts ORDER BY published_at DESC').all();
+async function listJournalPosts() {
+  return query('SELECT * FROM journal_posts ORDER BY published_at DESC');
 }
 
-function getJournalPostBySlug(slug) {
-  const db = getDb();
-  return db.prepare('SELECT * FROM journal_posts WHERE slug = ?').get(slug);
+async function getJournalPostBySlug(slug) {
+  return queryOne('SELECT * FROM journal_posts WHERE slug = ?', [slug]);
 }
 
-function getJournalPostById(id) {
-  const db = getDb();
-  return db.prepare('SELECT * FROM journal_posts WHERE id = ?').get(id);
+async function getJournalPostById(id) {
+  return queryOne('SELECT * FROM journal_posts WHERE id = ?', [id]);
 }
 
 /** Contact/social links shown in the header/footer/contact page — editable via /admin/cai-dat, falling back to .env defaults. */
-function getContactInfo() {
-  return {
-    email: getSetting('contact_email', process.env.CONTACT_EMAIL || 'hello@teomhrift.vn'),
-    phone: getSetting('contact_phone', process.env.CONTACT_PHONE || '0900 000 000'),
-    zaloUrl: getSetting('contact_zalo_url', process.env.CONTACT_ZALO_URL || ''),
-    instagramUrl: getSetting('contact_instagram_url', process.env.CONTACT_INSTAGRAM_URL || ''),
-    facebookUrl: getSetting('contact_facebook_url', process.env.CONTACT_FACEBOOK_URL || ''),
-    instagramHandle: getSetting('contact_instagram_handle', process.env.CONTACT_INSTAGRAM_HANDLE || '@teo.mhrift'),
-  };
+async function getContactInfo() {
+  const [email, phone, zaloUrl, instagramUrl, facebookUrl, instagramHandle] = await Promise.all([
+    getSetting('contact_email', process.env.CONTACT_EMAIL || 'hello@teomhrift.vn'),
+    getSetting('contact_phone', process.env.CONTACT_PHONE || '0900 000 000'),
+    getSetting('contact_zalo_url', process.env.CONTACT_ZALO_URL || ''),
+    getSetting('contact_instagram_url', process.env.CONTACT_INSTAGRAM_URL || ''),
+    getSetting('contact_facebook_url', process.env.CONTACT_FACEBOOK_URL || ''),
+    getSetting('contact_instagram_handle', process.env.CONTACT_INSTAGRAM_HANDLE || '@teo.mhrift'),
+  ]);
+  return { email, phone, zaloUrl, instagramUrl, facebookUrl, instagramHandle };
 }
 
 module.exports = {

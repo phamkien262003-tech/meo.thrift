@@ -1,31 +1,34 @@
 # teo.mhrift — hướng dẫn cho Claude
 
-## ⚠️ CẢNH BÁO: push code có thể xoá dữ liệu live trên Hostinger
+## Kiến trúc dữ liệu: MySQL, không phải file cục bộ
 
-Phát hiện ngày 2026-08-24: `data/*.db` (database) và `public/uploads/*` (ảnh tải lên)
-bị `.gitignore` loại khỏi Git — nghĩa là sản phẩm/ảnh/nội dung mà admin đăng **trực
-tiếp trên web live (Hostinger)** không hề tồn tại trong Git. Nếu cơ chế auto-deploy
-của Hostinger thay nguyên thư mục ứng dụng bằng đúng nội dung repo (nhiều gói
-Git-deploy trên hosting làm vậy) thì **mỗi lần `git push` — kể cả chỉ sửa 1 dòng
-chữ không liên quan — có thể xoá sạch database và ảnh đang sống trên server**.
+Phát hiện + khắc phục ngày 2026-08-24: Hostinger dựng lại toàn bộ thư mục ứng dụng từ
+Git mỗi lần deploy (xác nhận qua thử nghiệm thực tế: một push chỉ sửa 1 dòng HTML comment
+đã xoá sạch sản phẩm đang có trên web live). Vì vậy:
 
-Chủ dự án xác nhận (2026-08-24): hiện đang có sản phẩm/ảnh thật đăng trực tiếp trên
-bản live, nên rủi ro này là thật, không phải giả thuyết suông.
+- **Toàn bộ dữ liệu (sản phẩm, đơn hàng, cài đặt, nội dung trang) sống trong MySQL**
+  (`src/config/db.js`), không còn dùng SQLite file cục bộ nữa.
+- **Ảnh tải lên (sản phẩm, bìa nhật ký, ảnh nội dung trang) lưu dưới dạng BLOB trong
+  bảng `images`** (`src/services/images.js`), phục vụ qua route `GET /img/:id`
+  (`app.js`) — không còn lưu file trong `public/uploads/`.
+- **Session đăng nhập admin cũng lưu trong MySQL** (`express-mysql-session`), không
+  còn dùng `session-file-store` cục bộ.
 
-**Cho đến khi xác minh rõ cơ chế deploy của Hostinger và có cách bảo vệ
-`data/`/`public/uploads/` khỏi bị ghi đè, TẠM DỪNG quy tắc auto-push bên dưới đối
-với các thay đổi sẽ kích hoạt deploy lại** (tức là mọi push lên `main`). Vẫn có thể
-`git commit` cục bộ bình thường, nhưng phải hỏi xác nhận trước khi `push` cho đến khi
-vấn đề này được giải quyết dứt điểm.
+Kết quả: `git push`/deploy lại giờ an toàn — không còn gì sống trong thư mục ứng dụng
+mà deploy có thể xoá mất.
+
+**Bắt buộc phải có 5 biến môi trường MySQL** (`DB_HOST`, `DB_PORT`, `DB_USER`,
+`DB_PASSWORD`, `DB_NAME`) cả ở `.env` cục bộ lẫn trong Environment Variables của
+Hostinger — thiếu là app crash ngay khi khởi động. Xem `.env.example`.
+
+Nếu sau này cần thêm cột/bảng mới: sửa `src/db/schema.js` (mảng câu lệnh
+`CREATE TABLE IF NOT EXISTS` — chạy lại an toàn, không xoá dữ liệu cũ).
 
 ## Quy trình git
 
 Theo yêu cầu của chủ dự án (2026-08-24): sau mỗi lần chỉnh sửa code trong repo này,
 **tự động `git add` + `git commit` + `git push origin main`** — không cần hỏi lại
 mỗi lần. Viết commit message ngắn gọn, đúng nội dung thay đổi.
-
-**Ngoại lệ hiện tại: xem cảnh báo phía trên — TẠM DỪNG phần `push` cho đến khi rủi ro
-mất dữ liệu live được giải quyết.**
 
 Vẫn áp dụng các quy tắc an toàn git thông thường: không `--force`, không `--no-verify`,
 không amend commit đã có, kiểm tra `git status`/diff trước khi add để tránh dính file

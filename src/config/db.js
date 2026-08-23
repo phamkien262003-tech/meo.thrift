@@ -1,53 +1,75 @@
-const fs = require('fs');
-const path = require('path');
-const { DatabaseSync } = require('node:sqlite');
+const mysql = require('mysql2/promise');
+const { STATEMENTS, IGNORABLE_ERROR_CODES } = require('../db/schema');
 
-const DATA_DIR = path.join(__dirname, '../../data');
-const DB_PATH = path.join(DATA_DIR, 'teomhrift.db');
+let pool;
 
-let db;
-
-function getDb() {
-  if (!db) {
-    db = new DatabaseSync(DB_PATH);
-    db.exec('PRAGMA journal_mode = WAL');
-    db.exec('PRAGMA foreign_keys = ON');
+function getPool() {
+  if (!pool) {
+    pool = mysql.createPool({
+      host: process.env.DB_HOST,
+      port: process.env.DB_PORT ? Number(process.env.DB_PORT) : 3306,
+      user: process.env.DB_USER,
+      password: process.env.DB_PASSWORD,
+      database: process.env.DB_NAME,
+      namedPlaceholders: true,
+      waitForConnections: true,
+      connectionLimit: 10,
+      dateStrings: true,
+    });
   }
-  return db;
+  return pool;
 }
 
-/** node:sqlite's DatabaseSync has no built-in `.transaction()` helper (unlike better-sqlite3) — wrap manually. */
-function runInTransaction(fn) {
-  const database = getDb();
-  database.exec('BEGIN');
+/** Runs a SELECT and returns all rows. */
+async function query(sql, params) {
+  const [rows] = await getPool().query(sql, params);
+  return rows;
+}
+
+/** Runs a SELECT and returns the first row, or undefined. */
+async function queryOne(sql, params) {
+  const rows = await query(sql, params);
+  return rows[0];
+}
+
+/** Runs an INSERT/UPDATE/DELETE; result has .insertId / .affectedRows. */
+async function run(sql, params) {
+  const [result] = await getPool().query(sql, params);
+  return result;
+}
+
+/**
+ * Runs `fn` inside a transaction on a single dedicated connection, so its queries are
+ * atomic. `fn` receives { query, run } bound to that connection (same shape as the
+ * module-level helpers above, but scoped to the transaction).
+ */
+async function runInTransaction(fn) {
+  const conn = await getPool().getConnection();
   try {
-    const result = fn();
-    database.exec('COMMIT');
+    await conn.beginTransaction();
+    const tx = {
+      query: async (sql, params) => (await conn.query(sql, params))[0],
+      run: async (sql, params) => (await conn.query(sql, params))[0],
+    };
+    const result = await fn(tx);
+    await conn.commit();
     return result;
   } catch (err) {
-    database.exec('ROLLBACK');
+    await conn.rollback();
     throw err;
+  } finally {
+    conn.release();
   }
 }
 
-/** SQLite has no "ALTER TABLE ADD COLUMN IF NOT EXISTS" — add newly-introduced columns by hand so upgrades don't need a full migration tool. */
-function migrateSchema(database) {
-  const journalCols = database.prepare('PRAGMA table_info(journal_posts)').all();
-  if (!journalCols.some((c) => c.name === 'cover_image')) {
-    database.exec('ALTER TABLE journal_posts ADD COLUMN cover_image TEXT');
+async function ensureDatabase() {
+  for (const sql of STATEMENTS) {
+    try {
+      await run(sql);
+    } catch (err) {
+      if (!IGNORABLE_ERROR_CODES.has(err.code)) throw err;
+    }
   }
-}
-
-function ensureDatabase() {
-  if (!fs.existsSync(DATA_DIR)) {
-    fs.mkdirSync(DATA_DIR, { recursive: true });
-  }
-  const database = getDb();
-  const schemaPath = path.join(__dirname, '../db/schema.sql');
-  const schema = fs.readFileSync(schemaPath, 'utf8');
-  database.exec(schema);
-  migrateSchema(database);
-  return database;
 }
 
 /**
@@ -57,9 +79,8 @@ function ensureDatabase() {
  * ADMIN_EMAIL + ADMIN_BOOTSTRAP_PASSWORD in the panel's environment variables and restart.
  * Never overwrites an existing admin, so it's safe to leave the env vars set afterward.
  */
-function ensureBootstrapAdmin() {
-  const database = getDb();
-  const { c: adminCount } = database.prepare('SELECT COUNT(*) AS c FROM admin_users').get();
+async function ensureBootstrapAdmin() {
+  const { c: adminCount } = await queryOne('SELECT COUNT(*) AS c FROM admin_users');
   if (adminCount > 0) return;
 
   const email = process.env.ADMIN_EMAIL;
@@ -68,8 +89,8 @@ function ensureBootstrapAdmin() {
 
   const bcrypt = require('bcryptjs');
   const hash = bcrypt.hashSync(password, 10);
-  database.prepare('INSERT INTO admin_users (email, password_hash) VALUES (?, ?)').run(email, hash);
+  await run('INSERT INTO admin_users (email, password_hash) VALUES (?, ?)', [email, hash]);
   console.log(`[bootstrap] Đã tạo tài khoản quản trị đầu tiên: ${email}`);
 }
 
-module.exports = { getDb, ensureDatabase, ensureBootstrapAdmin, runInTransaction, DATA_DIR, DB_PATH };
+module.exports = { getPool, query, queryOne, run, runInTransaction, ensureDatabase, ensureBootstrapAdmin };

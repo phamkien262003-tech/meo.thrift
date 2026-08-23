@@ -2,18 +2,15 @@ require('dotenv').config();
 const path = require('path');
 const express = require('express');
 const session = require('express-session');
-const FileStore = require('session-file-store')(session);
+const MySQLStore = require('express-mysql-session')(session);
 
 const { ensureDatabase, ensureBootstrapAdmin } = require('./src/config/db');
 const errorHandler = require('./src/middleware/error-handler');
 const { icon } = require('./src/services/icons');
-const { resolveImage } = require('./src/services/images');
+const { resolveImage, getImageRow } = require('./src/services/images');
 const { placeholderArt } = require('./src/services/placeholder');
 const { getContactInfo } = require('./src/db/models');
 const { getAllPageContent, editableText } = require('./src/services/page-content');
-
-ensureDatabase();
-ensureBootstrapAdmin();
 
 const publicRoutes = require('./src/routes/public');
 const shopRoutes = require('./src/routes/shop');
@@ -31,9 +28,33 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
+// Images are served from the database (see src/services/images.js) so they survive a
+// redeploy — Hostinger's git auto-deploy wipes anything only living on local disk.
+app.get('/img/:id', async (req, res, next) => {
+  try {
+    const row = await getImageRow(Number(req.params.id));
+    if (!row) return res.status(404).end();
+    res.set('Content-Type', row.mime_type);
+    res.set('Cache-Control', 'public, max-age=31536000, immutable');
+    res.send(row.data);
+  } catch (err) {
+    next(err);
+  }
+});
+
+// Sessions also live in MySQL — a local file store gets wiped on redeploy just like
+// everything else outside Git, which was silently logging admins out after every push.
+const sessionStore = new MySQLStore({
+  host: process.env.DB_HOST,
+  port: process.env.DB_PORT ? Number(process.env.DB_PORT) : 3306,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME,
+});
+
 app.use(
   session({
-    store: new FileStore({ path: path.join(__dirname, 'data', 'sessions'), logFn: () => {} }),
+    store: sessionStore,
     secret: process.env.SESSION_SECRET || 'thay-doi-chuoi-bi-mat-nay',
     resave: false,
     saveUninitialized: false,
@@ -55,11 +76,16 @@ app.use((req, res, next) => {
   res.locals.resolveImage = resolveImage;
   res.locals.placeholderArt = placeholderArt;
   res.locals.formatPrice = (n) => `${Number(n).toLocaleString('vi-VN')}đ`;
-  res.locals.contact = getContactInfo();
-  res.locals.content = getAllPageContent();
   res.locals.edit = (page, key, value, opts) => editableText(res.locals.isAdmin, page, key, value, opts);
   delete req.session.flash;
-  next();
+
+  Promise.all([getContactInfo(), getAllPageContent()])
+    .then(([contact, content]) => {
+      res.locals.contact = contact;
+      res.locals.content = content;
+      next();
+    })
+    .catch(next);
 });
 
 app.use('/', publicRoutes);
@@ -74,9 +100,19 @@ app.use((req, res) => {
 
 app.use(errorHandler);
 
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`teo.mhrift đang chạy tại http://localhost:${PORT}`);
+async function start() {
+  await ensureDatabase();
+  await ensureBootstrapAdmin();
+
+  const PORT = process.env.PORT || 3000;
+  app.listen(PORT, () => {
+    console.log(`teo.mhrift đang chạy tại http://localhost:${PORT}`);
+  });
+}
+
+start().catch((err) => {
+  console.error('Không khởi động được ứng dụng:', err);
+  process.exit(1);
 });
 
 module.exports = app;

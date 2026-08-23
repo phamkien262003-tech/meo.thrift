@@ -27,12 +27,12 @@
           <tr><td colspan="4" class="py-8 px-4 text-center text-espresso-soft">Chưa có bài viết nào. <a href="/admin/nhat-ky/them" class="text-terracotta underline">Viết bài đầu tiên</a>.</td></tr>
         <% } %>
         <% posts.forEach(p => { %>
-          <% const resolved = resolveImage(p.cover_image, 'thumb'); %>
+          <% const resolved = resolveImage(p.cover_image_id); %>
           <tr>
             <td class="py-2 px-4">
               <div class="w-12 h-14 rounded-lg overflow-hidden">
                 <% if (resolved.isPlaceholder) { %>
-                  <%- placeholderArt(p.cover_color || resolved.tone, p.id) %>
+                  <%- placeholderArt(p.cover_color, p.id) %>
                 <% } else { %>
                   <img src="<%= resolved.src %>" alt="" class="w-full h-full object-cover" />
                 <% } %>

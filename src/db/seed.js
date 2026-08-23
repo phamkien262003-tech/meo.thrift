@@ -1,8 +1,6 @@
 require('dotenv').config();
 const slugify = require('slugify');
-const { ensureDatabase, runInTransaction } = require('../config/db');
-
-const db = ensureDatabase();
+const { ensureDatabase, queryOne, run } = require('../config/db');
 
 const sampleProducts = [
   {
@@ -98,61 +96,71 @@ const sampleProducts = [
   },
 ];
 
-const insertProduct = db.prepare(`
-  INSERT INTO products (slug, name, category, brand, size_label, measurements, condition_grade, condition_notes, fabric, era_tag, price, original_price, description, status, featured)
-  VALUES (@slug, @name, @category, @brand, @size_label, @measurements, @condition_grade, @condition_notes, @fabric, @era_tag, @price, @original_price, @description, 'available', @featured)
-`);
+async function main() {
+  await ensureDatabase();
 
-const insertImage = db.prepare(
-  'INSERT INTO product_images (product_id, filename, sort_order) VALUES (?, ?, ?)'
-);
+  const countRow = await queryOne('SELECT COUNT(*) AS total FROM products');
 
-const countRow = db.prepare('SELECT COUNT(*) AS total FROM products').get();
-
-if (countRow.total === 0) {
-  const palette = ['terracotta', 'olive', 'rose', 'sand', 'clay'];
-  runInTransaction(() => {
-    sampleProducts.forEach((item, index) => {
+  if (countRow.total === 0) {
+    const palette = ['terracotta', 'olive', 'rose', 'sand', 'clay'];
+    for (let index = 0; index < sampleProducts.length; index += 1) {
+      const item = sampleProducts[index];
       const slug = slugify(item.name, { lower: true, locale: 'vi', strict: true });
-      const info = insertProduct.run({ ...item, slug });
-      insertImage.run(Number(info.lastInsertRowid), `placeholder:${palette[index % palette.length]}`, 0);
-    });
-  });
-  console.log(`Đã thêm ${sampleProducts.length} sản phẩm mẫu.`);
-} else {
-  console.log('Đã có sản phẩm trong cơ sở dữ liệu, bỏ qua bước seed.');
+      const info = await run(
+        `INSERT INTO products (slug, name, category, brand, size_label, measurements, condition_grade, condition_notes, fabric, era_tag, price, original_price, description, status, featured)
+         VALUES (:slug, :name, :category, :brand, :size_label, :measurements, :condition_grade, :condition_notes, :fabric, :era_tag, :price, :original_price, :description, 'available', :featured)`,
+        { ...item, slug }
+      );
+      await run('INSERT INTO product_images (product_id, placeholder_tone, sort_order) VALUES (?, ?, 0)', [
+        info.insertId,
+        palette[index % palette.length],
+      ]);
+    }
+    console.log(`Đã thêm ${sampleProducts.length} sản phẩm mẫu.`);
+  } else {
+    console.log('Đã có sản phẩm trong cơ sở dữ liệu, bỏ qua bước seed.');
+  }
+
+  const journalCount = await queryOne('SELECT COUNT(*) AS total FROM journal_posts');
+  if (journalCount.total === 0) {
+    const posts = [
+      {
+        slug: 'phong-cach-mori-la-gi',
+        title: 'Phong cách Mori là gì và vì sao mình yêu nó',
+        excerpt: 'Mori kei — "cô gái rừng" — là tinh thần sống chậm, mặc đẹp và trân trọng từng món đồ cũ.',
+        content:
+          'Mori kei bắt nguồn từ Nhật Bản, mang cảm hứng từ thiên nhiên: vải tự nhiên, tông màu đất, form dáng thoải mái. Với teo.mhrift, mỗi chiếc váy secondhand đều kể một câu chuyện riêng...',
+        cover_color: 'olive',
+      },
+      {
+        slug: 'huong-dan-bao-quan-vay-vintage',
+        title: 'Hướng dẫn bảo quản váy vintage đúng cách',
+        excerpt: 'Một vài mẹo nhỏ để những chiếc váy độc bản luôn bền đẹp theo năm tháng.',
+        content: 'Giặt tay với nước lạnh, phơi trong bóng râm, tránh treo quá lâu để giữ form vải...',
+        cover_color: 'terracotta',
+      },
+      {
+        slug: 'tai-sao-nen-chon-do-secondhand',
+        title: 'Vì sao thời trang secondhand là lựa chọn bền vững',
+        excerpt: 'Mua lại không chỉ tiết kiệm mà còn là cách yêu thương hành tinh này hơn.',
+        content: 'Mỗi món đồ được tái sử dụng là một bước giảm thiểu rác thải thời trang...',
+        cover_color: 'rose',
+      },
+    ];
+    for (const p of posts) {
+      await run(
+        `INSERT INTO journal_posts (slug, title, excerpt, content, cover_color, published_at)
+         VALUES (:slug, :title, :excerpt, :content, :cover_color, NOW())`,
+        p
+      );
+    }
+    console.log(`Đã thêm ${posts.length} bài viết nhật ký.`);
+  }
+
+  process.exit(0);
 }
 
-const journalCount = db.prepare('SELECT COUNT(*) AS total FROM journal_posts').get();
-if (journalCount.total === 0) {
-  const insertPost = db.prepare(`
-    INSERT INTO journal_posts (slug, title, excerpt, content, cover_color, published_at)
-    VALUES (@slug, @title, @excerpt, @content, @cover_color, datetime('now'))
-  `);
-  const posts = [
-    {
-      slug: 'phong-cach-mori-la-gi',
-      title: 'Phong cách Mori là gì và vì sao mình yêu nó',
-      excerpt: 'Mori kei — "cô gái rừng" — là tinh thần sống chậm, mặc đẹp và trân trọng từng món đồ cũ.',
-      content:
-        'Mori kei bắt nguồn từ Nhật Bản, mang cảm hứng từ thiên nhiên: vải tự nhiên, tông màu đất, form dáng thoải mái. Với teo.mhrift, mỗi chiếc váy secondhand đều kể một câu chuyện riêng...',
-      cover_color: 'olive',
-    },
-    {
-      slug: 'huong-dan-bao-quan-vay-vintage',
-      title: 'Hướng dẫn bảo quản váy vintage đúng cách',
-      excerpt: 'Một vài mẹo nhỏ để những chiếc váy độc bản luôn bền đẹp theo năm tháng.',
-      content: 'Giặt tay với nước lạnh, phơi trong bóng râm, tránh treo quá lâu để giữ form vải...',
-      cover_color: 'terracotta',
-    },
-    {
-      slug: 'tai-sao-nen-chon-do-secondhand',
-      title: 'Vì sao thời trang secondhand là lựa chọn bền vững',
-      excerpt: 'Mua lại không chỉ tiết kiệm mà còn là cách yêu thương hành tinh này hơn.',
-      content: 'Mỗi món đồ được tái sử dụng là một bước giảm thiểu rác thải thời trang...',
-      cover_color: 'rose',
-    },
-  ];
-  posts.forEach((p) => insertPost.run(p));
-  console.log(`Đã thêm ${posts.length} bài viết nhật ký.`);
-}
+main().catch((err) => {
+  console.error(err);
+  process.exit(1);
+});

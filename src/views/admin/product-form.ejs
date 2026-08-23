@@ -19,7 +19,7 @@
         <% product.images.forEach((img, i) => { %>
           <div class="relative w-16 h-20 rounded-lg overflow-hidden group">
             <%- include('../partials/product-media', { product, variant: 'thumb', className: 'w-full h-full', imageIndex: i }) %>
-            <% if (!img.filename.startsWith('placeholder:')) { %>
+            <% if (img.image_id) { %>
               <form action="/admin/san-pham/<%= product.id %>/anh/<%= img.id %>/xoa" method="POST" onsubmit="return confirm('Xóa ảnh này?');" class="absolute top-0.5 right-0.5">
                 <button type="submit" class="w-5 h-5 flex items-center justify-center rounded-full bg-espresso/70 text-cream hover:bg-red-600 transition-colors duration-250" aria-label="Xóa ảnh"><%- icon('close', 'w-3 h-3') %></button>
               </form>

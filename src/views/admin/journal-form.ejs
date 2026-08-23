@@ -27,7 +27,7 @@
     <div>
       <label class="field-label" for="cover_image">Ảnh bìa (JPG/PNG/WEBP)</label>
       <input type="file" id="cover_image" name="cover_image" accept="image/jpeg,image/png,image/webp" class="field-input" />
-      <% if (post && post.cover_image) { %>
+      <% if (post && post.cover_image_id) { %>
         <p class="text-xs text-espresso-soft mt-2">Tải ảnh mới sẽ thay thế ảnh bìa hiện tại.</p>
       <% } %>
     </div>

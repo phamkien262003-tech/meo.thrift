@@ -87,15 +87,11 @@
   }
 
   function mediaMarkup(item) {
-    if (item.image && item.image.indexOf('placeholder:') === 0) {
-      var tone = item.image.split(':')[1] || 'terracotta';
-      return '<div class="w-full h-full" style="background:' + (TONE_GRADIENTS[tone] || TONE_GRADIENTS.terracotta) + '"></div>';
+    if (item.image_id) {
+      return '<img src="/img/' + item.image_id + '" alt="" class="w-full h-full object-cover" />';
     }
-    if (item.image) {
-      var base = item.image.replace(/-(thumb|detail)\.webp$/, '');
-      return '<img src="/uploads/' + base + '-thumb.webp" alt="" class="w-full h-full object-cover" />';
-    }
-    return '<div class="w-full h-full" style="background:' + TONE_GRADIENTS.terracotta + '"></div>';
+    var tone = item.placeholder_tone || 'terracotta';
+    return '<div class="w-full h-full" style="background:' + (TONE_GRADIENTS[tone] || TONE_GRADIENTS.terracotta) + '"></div>';
   }
 
   function renderCartPage() {

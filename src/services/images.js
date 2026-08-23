@@ -1,46 +1,30 @@
-const fs = require('fs');
-const path = require('path');
 const sharp = require('sharp');
-const { UPLOAD_DIR } = require('../middleware/upload');
+const { run, queryOne } = require('../config/db');
 
-const VARIANTS = {
-  thumb: 480,
-  detail: 1200,
-};
+const MAX_WIDTH = 1200;
+const QUALITY = 82;
 
-async function saveProductImage(buffer, baseName) {
-  const results = {};
-  for (const [variant, width] of Object.entries(VARIANTS)) {
-    const filename = `${baseName}-${variant}.webp`;
-    const outPath = path.join(UPLOAD_DIR, filename);
-    await sharp(buffer)
-      .resize({ width, withoutEnlargement: true })
-      .webp({ quality: 82 })
-      .toFile(outPath);
-    results[variant] = filename;
-  }
-  return results;
+/** Resizes/compresses the buffer and stores it as a row in `images`. Returns the new image id. */
+async function saveImage(buffer) {
+  const webp = await sharp(buffer).resize({ width: MAX_WIDTH, withoutEnlargement: true }).webp({ quality: QUALITY }).toBuffer();
+  const result = await run('INSERT INTO images (mime_type, data) VALUES (?, ?)', ['image/webp', webp]);
+  return result.insertId;
 }
 
-function deleteProductImageFiles(filename) {
-  if (!filename || filename.startsWith('placeholder:')) return;
-  const base = filename.replace(/-(thumb|detail)\.webp$/, '');
-  ['thumb', 'detail'].forEach((variant) => {
-    const p = path.join(UPLOAD_DIR, `${base}-${variant}.webp`);
-    if (fs.existsSync(p)) fs.unlinkSync(p);
-  });
+/** Deletes an image row (safe to call with null/undefined — a no-op). */
+async function deleteImage(imageId) {
+  if (!imageId) return;
+  await run('DELETE FROM images WHERE id = ?', [imageId]);
 }
 
-/** Resolves a stored filename value into a template-friendly image descriptor. */
-function resolveImage(filename, variant = 'detail') {
-  if (!filename) {
-    return { isPlaceholder: true, tone: 'terracotta', src: null };
-  }
-  if (filename.startsWith('placeholder:')) {
-    return { isPlaceholder: true, tone: filename.split(':')[1] || 'terracotta', src: null };
-  }
-  const base = filename.replace(/-(thumb|detail)\.webp$/, '');
-  return { isPlaceholder: false, tone: null, src: `/uploads/${base}-${variant}.webp` };
+async function getImageRow(imageId) {
+  return queryOne('SELECT mime_type, data FROM images WHERE id = ?', [imageId]);
 }
 
-module.exports = { saveProductImage, deleteProductImageFiles, resolveImage };
+/** Resolves a stored image id into a template-friendly descriptor. */
+function resolveImage(imageId) {
+  if (!imageId) return { isPlaceholder: true, src: null };
+  return { isPlaceholder: false, src: `/img/${imageId}` };
+}
+
+module.exports = { saveImage, deleteImage, getImageRow, resolveImage };

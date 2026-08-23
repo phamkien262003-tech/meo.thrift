@@ -11,6 +11,25 @@
 
   <%- include('../partials/flash') %>
 
+  <% if (product && product.images.length) { %>
+    <div class="card-surface p-6 mt-4 max-w-3xl">
+      <p class="field-label mb-2">Ảnh hiện tại (<%= product.images.length %>)</p>
+      <p class="text-xs text-espresso-soft mb-3">Xóa từng ảnh bằng nút ✕ — việc xóa áp dụng ngay, không cần bấm "Lưu thay đổi".</p>
+      <div class="flex gap-2 flex-wrap">
+        <% product.images.forEach((img, i) => { %>
+          <div class="relative w-16 h-20 rounded-lg overflow-hidden group">
+            <%- include('../partials/product-media', { product, variant: 'thumb', className: 'w-full h-full', imageIndex: i }) %>
+            <% if (!img.filename.startsWith('placeholder:')) { %>
+              <form action="/admin/san-pham/<%= product.id %>/anh/<%= img.id %>/xoa" method="POST" onsubmit="return confirm('Xóa ảnh này?');" class="absolute top-0.5 right-0.5">
+                <button type="submit" class="w-5 h-5 flex items-center justify-center rounded-full bg-espresso/70 text-cream hover:bg-red-600 transition-colors duration-250" aria-label="Xóa ảnh"><%- icon('close', 'w-3 h-3') %></button>
+              </form>
+            <% } %>
+          </div>
+        <% }) %>
+      </div>
+    </div>
+  <% } %>
+
   <form action="<%= product ? `/admin/san-pham/${product.id}` : '/admin/san-pham' %>" method="POST" enctype="multipart/form-data" class="card-surface p-6 space-y-6 mt-4 max-w-3xl">
     <div class="grid sm:grid-cols-2 gap-4">
       <div class="sm:col-span-2">
@@ -95,16 +114,9 @@
     </div>
 
     <div>
-      <label class="field-label" for="images">Ảnh sản phẩm (tối đa 6 ảnh, JPG/PNG/WEBP)</label>
+      <label class="field-label" for="images">Thêm ảnh mới (tối đa 6 ảnh mỗi lần, JPG/PNG/WEBP)</label>
       <input type="file" id="images" name="images" accept="image/jpeg,image/png,image/webp" multiple class="field-input" />
-      <% if (product && product.images.length) { %>
-        <p class="text-xs text-espresso-soft mt-2">Đã có <%= product.images.length %> ảnh. Tải ảnh mới sẽ thay thế toàn bộ ảnh cũ.</p>
-        <div class="flex gap-2 mt-2">
-          <% product.images.forEach((img, i) => { %>
-            <div class="w-14 h-16 rounded-lg overflow-hidden"><%- include('../partials/product-media', { product, variant: 'thumb', className: 'w-full h-full', imageIndex: i }) %></div>
-          <% }) %>
-        </div>
-      <% } %>
+      <p class="text-xs text-espresso-soft mt-2">Ảnh mới sẽ được <strong>thêm vào</strong> ảnh hiện có, không xóa ảnh cũ.</p>
     </div>
 
     <div class="flex gap-3 pt-4 border-t border-border">

@@ -12,14 +12,14 @@
     <p class="text-espresso-soft leading-relaxed mb-8">Có câu hỏi về sản phẩm, số đo hay đơn hàng? Nhắn cho teo.mhrift, mình phản hồi trong vòng 24 giờ.</p>
 
     <ul class="space-y-4 mb-8">
-      <li class="flex items-center gap-3"><span class="p-2.5 rounded-full bg-terracotta/10 text-terracotta"><%- icon('mail', 'w-4 h-4') %></span> hello@teomhrift.vn</li>
-      <li class="flex items-center gap-3"><span class="p-2.5 rounded-full bg-terracotta/10 text-terracotta"><%- icon('phone', 'w-4 h-4') %></span> 0900 000 000 (Zalo)</li>
-      <li class="flex items-center gap-3"><span class="p-2.5 rounded-full bg-terracotta/10 text-terracotta"><%- icon('instagram', 'w-4 h-4') %></span> @teo.mhrift</li>
+      <li class="flex items-center gap-3"><span class="p-2.5 rounded-full bg-terracotta/10 text-terracotta"><%- icon('mail', 'w-4 h-4') %></span> <%= contact.email %></li>
+      <li class="flex items-center gap-3"><span class="p-2.5 rounded-full bg-terracotta/10 text-terracotta"><%- icon('phone', 'w-4 h-4') %></span> <%= contact.phone %> (Zalo)</li>
+      <li class="flex items-center gap-3"><span class="p-2.5 rounded-full bg-terracotta/10 text-terracotta"><%- icon('instagram', 'w-4 h-4') %></span> <%= contact.instagramHandle %></li>
     </ul>
 
     <div class="flex gap-3">
-      <a href="#" class="btn-secondary"><%- icon('zalo', 'w-4 h-4') %> Nhắn Zalo</a>
-      <a href="#" class="btn-secondary"><%- icon('instagram', 'w-4 h-4') %> Instagram</a>
+      <a href="<%= contact.zaloUrl || '#' %>" class="btn-secondary"><%- icon('zalo', 'w-4 h-4') %> Nhắn Zalo</a>
+      <a href="<%= contact.instagramUrl || '#' %>" class="btn-secondary"><%- icon('instagram', 'w-4 h-4') %> Instagram</a>
     </div>
   </div>
 

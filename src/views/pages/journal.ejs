@@ -18,9 +18,14 @@
   <% } else { %>
     <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
       <% posts.forEach((post, i) => { %>
+        <% const resolved = resolveImage(post.cover_image, 'thumb'); %>
         <a href="/nhat-ky/<%= post.slug %>" class="group reveal" data-reveal>
           <div class="aspect-[4/3] rounded-2xl overflow-hidden card-surface mb-4">
-            <%- placeholderArt(post.cover_color, i) %>
+            <% if (resolved.isPlaceholder) { %>
+              <%- placeholderArt(post.cover_color || resolved.tone, post.id || i) %>
+            <% } else { %>
+              <img src="<%= resolved.src %>" alt="" loading="lazy" class="w-full h-full object-cover" />
+            <% } %>
           </div>
           <p class="text-xs text-espresso-soft mb-1"><%= new Date(post.published_at).toLocaleDateString('vi-VN') %></p>
           <h2 class="font-serif text-xl group-hover:text-terracotta transition-colors duration-250"><%= post.title %></h2>

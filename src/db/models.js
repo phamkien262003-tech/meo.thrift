@@ -189,6 +189,23 @@ function getJournalPostBySlug(slug) {
   return db.prepare('SELECT * FROM journal_posts WHERE slug = ?').get(slug);
 }
 
+function getJournalPostById(id) {
+  const db = getDb();
+  return db.prepare('SELECT * FROM journal_posts WHERE id = ?').get(id);
+}
+
+/** Contact/social links shown in the header/footer/contact page — editable via /admin/cai-dat, falling back to .env defaults. */
+function getContactInfo() {
+  return {
+    email: getSetting('contact_email', process.env.CONTACT_EMAIL || 'hello@teomhrift.vn'),
+    phone: getSetting('contact_phone', process.env.CONTACT_PHONE || '0900 000 000'),
+    zaloUrl: getSetting('contact_zalo_url', process.env.CONTACT_ZALO_URL || ''),
+    instagramUrl: getSetting('contact_instagram_url', process.env.CONTACT_INSTAGRAM_URL || ''),
+    facebookUrl: getSetting('contact_facebook_url', process.env.CONTACT_FACEBOOK_URL || ''),
+    instagramHandle: getSetting('contact_instagram_handle', process.env.CONTACT_INSTAGRAM_HANDLE || '@teo.mhrift'),
+  };
+}
+
 module.exports = {
   CATEGORIES,
   ERA_TAGS,
@@ -206,4 +223,6 @@ module.exports = {
   setSetting,
   listJournalPosts,
   getJournalPostBySlug,
+  getJournalPostById,
+  getContactInfo,
 };

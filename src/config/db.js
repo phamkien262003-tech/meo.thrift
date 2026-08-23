@@ -30,6 +30,14 @@ function runInTransaction(fn) {
   }
 }
 
+/** SQLite has no "ALTER TABLE ADD COLUMN IF NOT EXISTS" — add newly-introduced columns by hand so upgrades don't need a full migration tool. */
+function migrateSchema(database) {
+  const journalCols = database.prepare('PRAGMA table_info(journal_posts)').all();
+  if (!journalCols.some((c) => c.name === 'cover_image')) {
+    database.exec('ALTER TABLE journal_posts ADD COLUMN cover_image TEXT');
+  }
+}
+
 function ensureDatabase() {
   if (!fs.existsSync(DATA_DIR)) {
     fs.mkdirSync(DATA_DIR, { recursive: true });
@@ -38,6 +46,7 @@ function ensureDatabase() {
   const schemaPath = path.join(__dirname, '../db/schema.sql');
   const schema = fs.readFileSync(schemaPath, 'utf8');
   database.exec(schema);
+  migrateSchema(database);
   return database;
 }
 

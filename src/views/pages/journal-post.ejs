@@ -10,8 +10,13 @@
   <a href="/nhat-ky" class="btn-ghost mb-6"><%- icon('chevronLeft', 'w-4 h-4') %> Tất cả bài viết</a>
   <p class="text-xs text-espresso-soft mb-2"><%= new Date(post.published_at).toLocaleDateString('vi-VN') %></p>
   <h1 class="text-3xl sm:text-4xl mb-6"><%= post.title %></h1>
+  <% const resolvedCover = resolveImage(post.cover_image, 'detail'); %>
   <div class="aspect-[16/9] rounded-2xl overflow-hidden card-surface mb-8">
-    <%- placeholderArt(post.cover_color, post.id) %>
+    <% if (resolvedCover.isPlaceholder) { %>
+      <%- placeholderArt(post.cover_color || resolvedCover.tone, post.id) %>
+    <% } else { %>
+      <img src="<%= resolvedCover.src %>" alt="" class="w-full h-full object-cover" />
+    <% } %>
   </div>
   <div class="prose-vi text-espresso-soft leading-relaxed space-y-4">
     <p><%= post.content %></p>

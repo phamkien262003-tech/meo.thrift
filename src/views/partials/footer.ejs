@@ -7,9 +7,9 @@
       </div>
       <p class="text-sm text-cream/60 leading-relaxed">Váy secondhand cao cấp, tuyển chọn kỹ lưỡng — mỗi chiếc váy là một câu chuyện riêng. Chỉ bán online.</p>
       <div class="flex items-center gap-3 mt-5">
-        <a href="#" aria-label="Instagram" class="p-2 rounded-full bg-cream/10 hover:bg-rose hover:text-espresso transition-colors duration-250"><%- icon('instagram', 'w-4 h-4') %></a>
-        <a href="#" aria-label="Facebook" class="p-2 rounded-full bg-cream/10 hover:bg-rose hover:text-espresso transition-colors duration-250"><%- icon('facebook', 'w-4 h-4') %></a>
-        <a href="#" aria-label="Zalo" class="p-2 rounded-full bg-cream/10 hover:bg-rose hover:text-espresso transition-colors duration-250"><%- icon('zalo', 'w-4 h-4') %></a>
+        <a href="<%= contact.instagramUrl || '#' %>" aria-label="Instagram" class="p-2 rounded-full bg-cream/10 hover:bg-rose hover:text-espresso transition-colors duration-250"><%- icon('instagram', 'w-4 h-4') %></a>
+        <a href="<%= contact.facebookUrl || '#' %>" aria-label="Facebook" class="p-2 rounded-full bg-cream/10 hover:bg-rose hover:text-espresso transition-colors duration-250"><%- icon('facebook', 'w-4 h-4') %></a>
+        <a href="<%= contact.zaloUrl || '#' %>" aria-label="Zalo" class="p-2 rounded-full bg-cream/10 hover:bg-rose hover:text-espresso transition-colors duration-250"><%- icon('zalo', 'w-4 h-4') %></a>
       </div>
     </div>
 
@@ -35,8 +35,8 @@
     <div>
       <h4 class="font-serif text-lg mb-4 text-cream">Liên hệ</h4>
       <ul class="space-y-2.5 text-sm text-cream/60">
-        <li class="flex items-start gap-2"><%- icon('mail', 'w-4 h-4 mt-0.5 shrink-0') %><span>hello@teomhrift.vn</span></li>
-        <li class="flex items-start gap-2"><%- icon('phone', 'w-4 h-4 mt-0.5 shrink-0') %><span>0900 000 000 (Zalo)</span></li>
+        <li class="flex items-start gap-2"><%- icon('mail', 'w-4 h-4 mt-0.5 shrink-0') %><span><%= contact.email %></span></li>
+        <li class="flex items-start gap-2"><%- icon('phone', 'w-4 h-4 mt-0.5 shrink-0') %><span><%= contact.phone %> (Zalo)</span></li>
         <li class="flex items-start gap-2"><%- icon('location', 'w-4 h-4 mt-0.5 shrink-0') %><span>Giao hàng toàn quốc — chỉ bán online</span></li>
       </ul>
     </div>

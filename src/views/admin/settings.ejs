@@ -27,6 +27,36 @@
     <button type="submit" class="btn-primary">Lưu cài đặt</button>
   </form>
 
+  <form action="/admin/cai-dat/lien-he" method="POST" class="card-surface p-6 space-y-4 max-w-lg mt-6">
+    <h2 class="font-serif text-xl mb-2">Thông tin liên hệ & mạng xã hội</h2>
+    <p class="text-sm text-espresso-soft mb-4">Hiển thị ở chân trang, trang Liên hệ và trang Đặt hàng.</p>
+    <div>
+      <label class="field-label" for="contact_email">Email</label>
+      <input type="email" id="contact_email" name="contact_email" value="<%= contact.email %>" class="field-input" />
+    </div>
+    <div>
+      <label class="field-label" for="contact_phone">Số điện thoại / Zalo</label>
+      <input type="text" id="contact_phone" name="contact_phone" value="<%= contact.phone %>" class="field-input" />
+    </div>
+    <div>
+      <label class="field-label" for="contact_zalo_url">Link Zalo</label>
+      <input type="url" id="contact_zalo_url" name="contact_zalo_url" value="<%= contact.zaloUrl %>" placeholder="https://zalo.me/..." class="field-input" />
+    </div>
+    <div>
+      <label class="field-label" for="contact_instagram_handle">Tên hiển thị Instagram</label>
+      <input type="text" id="contact_instagram_handle" name="contact_instagram_handle" value="<%= contact.instagramHandle %>" class="field-input" />
+    </div>
+    <div>
+      <label class="field-label" for="contact_instagram_url">Link Instagram</label>
+      <input type="url" id="contact_instagram_url" name="contact_instagram_url" value="<%= contact.instagramUrl %>" placeholder="https://instagram.com/..." class="field-input" />
+    </div>
+    <div>
+      <label class="field-label" for="contact_facebook_url">Link Facebook</label>
+      <input type="url" id="contact_facebook_url" name="contact_facebook_url" value="<%= contact.facebookUrl %>" placeholder="https://facebook.com/..." class="field-input" />
+    </div>
+    <button type="submit" class="btn-primary">Lưu thông tin liên hệ</button>
+  </form>
+
 <%- include('../partials/admin-nav-end') %>
 </body>
 </html>

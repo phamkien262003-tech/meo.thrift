@@ -9,6 +9,7 @@ const errorHandler = require('./src/middleware/error-handler');
 const { icon } = require('./src/services/icons');
 const { resolveImage } = require('./src/services/images');
 const { placeholderArt } = require('./src/services/placeholder');
+const { getContactInfo } = require('./src/db/models');
 
 ensureDatabase();
 ensureBootstrapAdmin();
@@ -53,6 +54,7 @@ app.use((req, res, next) => {
   res.locals.resolveImage = resolveImage;
   res.locals.placeholderArt = placeholderArt;
   res.locals.formatPrice = (n) => `${Number(n).toLocaleString('vi-VN')}đ`;
+  res.locals.contact = getContactInfo();
   delete req.session.flash;
   next();
 });

@@ -15,6 +15,8 @@ const {
   listAllProductsAdmin,
   getSetting,
   setSetting,
+  listJournalPosts,
+  getJournalPostById,
 } = require('../db/models');
 
 router.use(requireAdmin);
@@ -146,15 +148,21 @@ router.post('/san-pham/:id', upload.array('images', 6), async (req, res, next) =
     const files = req.files || [];
     if (files.length > 0) {
       const product = getProductById(id);
-      product.images.forEach((img) => deleteProductImageFiles(img.filename));
-      db.prepare('DELETE FROM product_images WHERE product_id = ?').run(id);
+      // Ảnh mới được THÊM vào, không xóa ảnh cũ — trừ ảnh minh họa placeholder (không còn cần khi đã có ảnh thật).
+      const realImages = product.images.filter((img) => !img.filename.startsWith('placeholder:'));
+      const placeholders = product.images.filter((img) => img.filename.startsWith('placeholder:'));
+      if (realImages.length > 0 || files.length > 0) {
+        placeholders.forEach((img) => db.prepare('DELETE FROM product_images WHERE id = ?').run(img.id));
+      }
       const insertImage = db.prepare(
         'INSERT INTO product_images (product_id, filename, sort_order) VALUES (?, ?, ?)'
       );
+      let nextSort = realImages.length;
       for (let i = 0; i < files.length; i += 1) {
-        const baseName = `${product.slug}-${i}-${Date.now().toString(36)}`;
+        const baseName = `${product.slug}-${nextSort}-${Date.now().toString(36)}-${i}`;
         await saveProductImage(files[i].buffer, baseName);
-        insertImage.run(id, `${baseName}-thumb.webp`, i);
+        insertImage.run(id, `${baseName}-thumb.webp`, nextSort);
+        nextSort += 1;
       }
     }
 
@@ -163,6 +171,22 @@ router.post('/san-pham/:id', upload.array('images', 6), async (req, res, next) =
   } catch (err) {
     next(err);
   }
+});
+
+router.post('/san-pham/:id/anh/:imageId/xoa', (req, res) => {
+  const db = getDb();
+  const { id, imageId } = req.params;
+  const image = db.prepare('SELECT * FROM product_images WHERE id = ? AND product_id = ?').get(Number(imageId), Number(id));
+  if (image) {
+    deleteProductImageFiles(image.filename);
+    db.prepare('DELETE FROM product_images WHERE id = ?').run(image.id);
+    const remaining = db.prepare('SELECT COUNT(*) AS c FROM product_images WHERE product_id = ?').get(Number(id));
+    if (remaining.c === 0) {
+      db.prepare('INSERT INTO product_images (product_id, filename, sort_order) VALUES (?, ?, 0)').run(Number(id), 'placeholder:terracotta');
+    }
+  }
+  req.session.flash = { type: 'success', message: 'Đã xóa ảnh.' };
+  res.redirect(`/admin/san-pham/${id}/sua`);
 });
 
 router.post('/san-pham/:id/xoa', (req, res) => {
@@ -241,6 +265,102 @@ router.post('/cai-dat', (req, res) => {
   setSetting('bank_account_number', req.body.bank_account_number || '');
   req.session.flash = { type: 'success', message: 'Đã lưu cài đặt.' };
   res.redirect('/admin/cai-dat');
+});
+
+router.post('/cai-dat/lien-he', (req, res) => {
+  setSetting('contact_email', req.body.contact_email || '');
+  setSetting('contact_phone', req.body.contact_phone || '');
+  setSetting('contact_zalo_url', req.body.contact_zalo_url || '');
+  setSetting('contact_instagram_handle', req.body.contact_instagram_handle || '');
+  setSetting('contact_instagram_url', req.body.contact_instagram_url || '');
+  setSetting('contact_facebook_url', req.body.contact_facebook_url || '');
+  req.session.flash = { type: 'success', message: 'Đã lưu thông tin liên hệ.' };
+  res.redirect('/admin/cai-dat');
+});
+
+// ---------- Nhật ký (Journal) ----------
+
+router.get('/nhat-ky', (req, res) => {
+  const posts = listJournalPosts();
+  res.render('admin/journal-list', { title: 'Quản lý nhật ký', posts });
+});
+
+router.get('/nhat-ky/them', (req, res) => {
+  res.render('admin/journal-form', { title: 'Viết bài mới', post: null });
+});
+
+router.get('/nhat-ky/:id/sua', (req, res) => {
+  const post = getJournalPostById(Number(req.params.id));
+  if (!post) return res.redirect('/admin/nhat-ky');
+  res.render('admin/journal-form', { title: 'Sửa bài viết', post });
+});
+
+router.post('/nhat-ky', upload.single('cover_image'), async (req, res, next) => {
+  try {
+    const db = getDb();
+    const { title, excerpt, content } = req.body;
+    const slug = `${slugify(title, { lower: true, locale: 'vi', strict: true })}-${Date.now().toString(36)}`;
+
+    let coverImage = 'placeholder:terracotta';
+    if (req.file) {
+      const baseName = `journal-${slug}-${Date.now().toString(36)}`;
+      await saveProductImage(req.file.buffer, baseName);
+      coverImage = `${baseName}-thumb.webp`;
+    }
+
+    db.prepare(
+      `INSERT INTO journal_posts (slug, title, excerpt, content, cover_image, published_at)
+       VALUES (?, ?, ?, ?, ?, datetime('now'))`
+    ).run(slug, title, excerpt || null, content || null, coverImage);
+
+    req.session.flash = { type: 'success', message: 'Đã đăng bài viết mới.' };
+    res.redirect('/admin/nhat-ky');
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.post('/nhat-ky/:id', upload.single('cover_image'), async (req, res, next) => {
+  try {
+    const db = getDb();
+    const id = Number(req.params.id);
+    const { title, excerpt, content } = req.body;
+    const existing = getJournalPostById(id);
+    if (!existing) return res.redirect('/admin/nhat-ky');
+
+    let coverImage = existing.cover_image;
+    if (req.file) {
+      deleteProductImageFiles(existing.cover_image);
+      const baseName = `journal-${existing.slug}-${Date.now().toString(36)}`;
+      await saveProductImage(req.file.buffer, baseName);
+      coverImage = `${baseName}-thumb.webp`;
+    }
+
+    db.prepare('UPDATE journal_posts SET title = ?, excerpt = ?, content = ?, cover_image = ? WHERE id = ?').run(
+      title,
+      excerpt || null,
+      content || null,
+      coverImage,
+      id
+    );
+
+    req.session.flash = { type: 'success', message: 'Đã cập nhật bài viết.' };
+    res.redirect('/admin/nhat-ky');
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.post('/nhat-ky/:id/xoa', (req, res) => {
+  const db = getDb();
+  const id = Number(req.params.id);
+  const existing = getJournalPostById(id);
+  if (existing) {
+    deleteProductImageFiles(existing.cover_image);
+    db.prepare('DELETE FROM journal_posts WHERE id = ?').run(id);
+  }
+  req.session.flash = { type: 'success', message: 'Đã xóa bài viết.' };
+  res.redirect('/admin/nhat-ky');
 });
 
 module.exports = router;

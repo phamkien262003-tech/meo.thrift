@@ -10,6 +10,7 @@ const { icon } = require('./src/services/icons');
 const { resolveImage } = require('./src/services/images');
 const { placeholderArt } = require('./src/services/placeholder');
 const { getContactInfo } = require('./src/db/models');
+const { getAllPageContent } = require('./src/services/page-content');
 
 ensureDatabase();
 ensureBootstrapAdmin();
@@ -55,6 +56,7 @@ app.use((req, res, next) => {
   res.locals.placeholderArt = placeholderArt;
   res.locals.formatPrice = (n) => `${Number(n).toLocaleString('vi-VN')}đ`;
   res.locals.contact = getContactInfo();
+  res.locals.content = getAllPageContent();
   delete req.session.flash;
   next();
 });

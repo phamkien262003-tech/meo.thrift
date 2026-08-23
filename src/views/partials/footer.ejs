@@ -5,7 +5,7 @@
         <span class="text-rose"><%- icon('leaf', 'w-5 h-5') %></span>
         <span class="font-serif text-xl text-cream">teo<span class="text-rose">.</span>mhrift</span>
       </div>
-      <p class="text-sm text-cream/60 leading-relaxed">Váy secondhand cao cấp, tuyển chọn kỹ lưỡng — mỗi chiếc váy là một câu chuyện riêng. Chỉ bán online.</p>
+      <p class="text-sm text-cream/60 leading-relaxed"><%= content.footer.tagline %></p>
       <div class="flex items-center gap-3 mt-5">
         <a href="<%= contact.instagramUrl || '#' %>" aria-label="Instagram" class="p-2 rounded-full bg-cream/10 hover:bg-rose hover:text-espresso transition-colors duration-250"><%- icon('instagram', 'w-4 h-4') %></a>
         <a href="<%= contact.facebookUrl || '#' %>" aria-label="Facebook" class="p-2 rounded-full bg-cream/10 hover:bg-rose hover:text-espresso transition-colors duration-250"><%- icon('facebook', 'w-4 h-4') %></a>
@@ -42,6 +42,6 @@
     </div>
   </div>
   <div class="border-t border-cream/10 py-5 text-center text-xs text-cream/40">
-    © <%= new Date().getFullYear() %> teo.mhrift. Yêu thương từng chiếc váy cũ, trân trọng từng câu chuyện.
+    © <%= new Date().getFullYear() %> teo.mhrift. <%= content.footer.copyright %>
   </div>
 </footer>

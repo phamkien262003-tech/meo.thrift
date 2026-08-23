@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<%- include('../partials/head') %>
+</head>
+<body class="bg-cream">
+<%- include('../partials/admin-nav') %>
+
+  <%- include('../partials/flash') %>
+  <h1 class="text-3xl mb-2">Nội dung trang</h1>
+  <p class="text-espresso-soft mb-8">Chỉnh sửa tiêu đề, mô tả và nội dung hiển thị trên trang chủ và các trang tĩnh.</p>
+
+  <div class="grid sm:grid-cols-2 gap-4">
+    <% Object.entries(pages).forEach(([key, schema]) => { %>
+      <a href="/admin/noi-dung/<%= key %>" class="card-surface p-5 flex items-center justify-between hover:border-terracotta transition-colors duration-250">
+        <span class="font-medium"><%= schema.label %></span>
+        <%- icon('chevronRight', 'w-4 h-4 text-espresso-soft') %>
+      </a>
+    <% }) %>
+  </div>
+
+<%- include('../partials/admin-nav-end') %>
+</body>
+</html>

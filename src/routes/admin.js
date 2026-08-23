@@ -18,6 +18,7 @@ const {
   listJournalPosts,
   getJournalPostById,
 } = require('../db/models');
+const { PAGE_CONTENT, getPageContent, savePageContent } = require('../services/page-content');
 
 router.use(requireAdmin);
 
@@ -276,6 +277,31 @@ router.post('/cai-dat/lien-he', (req, res) => {
   setSetting('contact_facebook_url', req.body.contact_facebook_url || '');
   req.session.flash = { type: 'success', message: 'Đã lưu thông tin liên hệ.' };
   res.redirect('/admin/cai-dat');
+});
+
+// ---------- Nội dung trang (page content) ----------
+
+router.get('/noi-dung', (req, res) => {
+  res.render('admin/content-list', { title: 'Nội dung trang', pages: PAGE_CONTENT });
+});
+
+router.get('/noi-dung/:page', (req, res) => {
+  const schema = PAGE_CONTENT[req.params.page];
+  if (!schema) return res.redirect('/admin/noi-dung');
+  res.render('admin/content-edit', {
+    title: `Nội dung — ${schema.label}`,
+    page: req.params.page,
+    schema,
+    values: getPageContent(req.params.page),
+  });
+});
+
+router.post('/noi-dung/:page', (req, res) => {
+  const schema = PAGE_CONTENT[req.params.page];
+  if (!schema) return res.redirect('/admin/noi-dung');
+  savePageContent(req.params.page, req.body);
+  req.session.flash = { type: 'success', message: `Đã lưu nội dung trang "${schema.label}".` };
+  res.redirect(`/admin/noi-dung/${req.params.page}`);
 });
 
 // ---------- Nhật ký (Journal) ----------

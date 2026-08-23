@@ -7,8 +7,8 @@
 <%- include('../partials/header') %>
 
 <main class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-  <h1 class="text-4xl sm:text-5xl mb-4">Hướng dẫn chọn size</h1>
-  <p class="text-espresso-soft text-lg mb-10">Vì mỗi món đồ là hàng secondhand độc bản, form dáng có thể khác đôi chút so với size mới tinh. Hãy luôn dựa vào <strong>số đo thật</strong> ghi trên từng sản phẩm thay vì chỉ nhìn nhãn size.</p>
+  <h1 class="text-4xl sm:text-5xl mb-4"><%= content.sizeGuide.title %></h1>
+  <p class="text-espresso-soft text-lg mb-10"><%= content.sizeGuide.intro %></p>
 
   <div class="card-surface p-6 overflow-x-auto mb-10">
     <table class="w-full text-sm min-w-[480px]">
@@ -21,29 +21,29 @@
         </tr>
       </thead>
       <tbody class="divide-y divide-border">
-        <tr><td class="py-3 pr-4 font-medium">XS</td><td class="py-3 pr-4">78–80</td><td class="py-3 pr-4">60–62</td><td class="py-3">86–88</td></tr>
-        <tr><td class="py-3 pr-4 font-medium">S</td><td class="py-3 pr-4">81–84</td><td class="py-3 pr-4">63–66</td><td class="py-3">89–92</td></tr>
-        <tr><td class="py-3 pr-4 font-medium">M</td><td class="py-3 pr-4">85–88</td><td class="py-3 pr-4">67–70</td><td class="py-3">93–96</td></tr>
-        <tr><td class="py-3 pr-4 font-medium">L</td><td class="py-3 pr-4">89–93</td><td class="py-3 pr-4">71–75</td><td class="py-3">97–101</td></tr>
-        <tr><td class="py-3 pr-4 font-medium">XL</td><td class="py-3 pr-4">94–98</td><td class="py-3 pr-4">76–80</td><td class="py-3">102–106</td></tr>
+        <tr><td class="py-3 pr-4 font-medium">XS</td><td class="py-3 pr-4"><%= content.sizeGuide.xsChest %></td><td class="py-3 pr-4"><%= content.sizeGuide.xsWaist %></td><td class="py-3"><%= content.sizeGuide.xsHip %></td></tr>
+        <tr><td class="py-3 pr-4 font-medium">S</td><td class="py-3 pr-4"><%= content.sizeGuide.sChest %></td><td class="py-3 pr-4"><%= content.sizeGuide.sWaist %></td><td class="py-3"><%= content.sizeGuide.sHip %></td></tr>
+        <tr><td class="py-3 pr-4 font-medium">M</td><td class="py-3 pr-4"><%= content.sizeGuide.mChest %></td><td class="py-3 pr-4"><%= content.sizeGuide.mWaist %></td><td class="py-3"><%= content.sizeGuide.mHip %></td></tr>
+        <tr><td class="py-3 pr-4 font-medium">L</td><td class="py-3 pr-4"><%= content.sizeGuide.lChest %></td><td class="py-3 pr-4"><%= content.sizeGuide.lWaist %></td><td class="py-3"><%= content.sizeGuide.lHip %></td></tr>
+        <tr><td class="py-3 pr-4 font-medium">XL</td><td class="py-3 pr-4"><%= content.sizeGuide.xlChest %></td><td class="py-3 pr-4"><%= content.sizeGuide.xlWaist %></td><td class="py-3"><%= content.sizeGuide.xlHip %></td></tr>
       </tbody>
     </table>
   </div>
 
   <div class="grid sm:grid-cols-2 gap-6">
     <div class="card-surface p-6">
-      <h2 class="font-serif text-xl mb-2">Cách đo tại nhà</h2>
+      <h2 class="font-serif text-xl mb-2"><%= content.sizeGuide.measureTitle %></h2>
       <ul class="text-sm text-espresso-soft space-y-2 list-disc list-inside">
-        <li>Vòng ngực: đo quanh phần đầy nhất của ngực.</li>
-        <li>Vòng eo: đo quanh phần nhỏ nhất của eo.</li>
-        <li>Vòng hông: đo quanh phần đầy nhất của hông.</li>
-        <li>Nên đo khi mặc đồ lót mỏng, thước dây ôm sát nhưng không siết chặt.</li>
+        <li><%= content.sizeGuide.measure1 %></li>
+        <li><%= content.sizeGuide.measure2 %></li>
+        <li><%= content.sizeGuide.measure3 %></li>
+        <li><%= content.sizeGuide.measure4 %></li>
       </ul>
     </div>
     <div class="card-surface p-6">
-      <h2 class="font-serif text-xl mb-2">Còn phân vân?</h2>
-      <p class="text-sm text-espresso-soft mb-4">Nhắn cho shop số đo của bạn, teo.mhrift sẽ tư vấn chiếc váy phù hợp nhất trong bộ sưu tập hiện có.</p>
-      <a href="/lien-he" class="btn-secondary">Liên hệ tư vấn</a>
+      <h2 class="font-serif text-xl mb-2"><%= content.sizeGuide.adviceTitle %></h2>
+      <p class="text-sm text-espresso-soft mb-4"><%= content.sizeGuide.adviceBody %></p>
+      <a href="/lien-he" class="btn-secondary"><%= content.sizeGuide.adviceButton %></a>
     </div>
   </div>
 </main>

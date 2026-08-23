@@ -8,10 +8,10 @@
 
 <main>
   <section class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16 text-center">
-    <span class="badge bg-olive/10 text-olive-dark mb-5"><%- icon('leaf', 'w-3.5 h-3.5') %> Câu chuyện của chúng tôi</span>
-    <h1 class="text-4xl sm:text-5xl mb-6">Về teo.mhrift</h1>
+    <span class="badge bg-olive/10 text-olive-dark mb-5"><%- icon('leaf', 'w-3.5 h-3.5') %> <%= content.about.heroBadge %></span>
+    <h1 class="text-4xl sm:text-5xl mb-6"><%= content.about.heroTitle %></h1>
     <p class="text-espresso-soft text-lg leading-relaxed">
-      teo.mhrift ra đời từ tình yêu với những chiếc váy đã có một đời sống riêng — và niềm tin rằng thời trang đẹp không cần phải mới hoàn toàn.
+      <%= content.about.heroDesc %>
     </p>
   </section>
 
@@ -19,29 +19,29 @@
     <div class="aspect-[21/9] rounded-2xl overflow-hidden shadow-soft"><%- placeholderArt('sand', 3) %></div>
 
     <div>
-      <h2 class="font-serif text-2xl text-espresso mb-3">Vì sao lại là "mori"?</h2>
-      <p>Mori kei — nghĩa là "cô gái rừng" — là một tinh thần thời trang Nhật Bản: mộc mạc, tự nhiên, gần gũi với thiên nhiên. Đó cũng chính là điều teo.mhrift muốn mang đến — không phải sự hoàn hảo bóng bẩy, mà là vẻ đẹp có chiều sâu, có câu chuyện, có thời gian.</p>
+      <h2 class="font-serif text-2xl text-espresso mb-3"><%= content.about.block1Title %></h2>
+      <p><%= content.about.block1Body %></p>
     </div>
 
     <div>
-      <h2 class="font-serif text-2xl text-espresso mb-3">Mỗi chiếc váy, một câu chuyện</h2>
-      <p>Chúng mình tìm kiếm những chiếc váy chất lượng cao đã qua sử dụng — từ các thương hiệu được yêu thích — kiểm tra kỹ từng đường kim mũi chỉ, đo đạc số thật, và ghi chú trung thực mọi dấu vết thời gian. Vì mỗi chiếc chỉ có một, khi bạn chọn một chiếc váy ở đây, bạn đang chọn một điều thực sự riêng biệt.</p>
+      <h2 class="font-serif text-2xl text-espresso mb-3"><%= content.about.block2Title %></h2>
+      <p><%= content.about.block2Body %></p>
     </div>
 
     <div>
-      <h2 class="font-serif text-2xl text-espresso mb-3">Dành cho ai?</h2>
-      <p>teo.mhrift dành cho những cô gái trẻ, có cá tính riêng, không ngại khác biệt — những người tin rằng phong cách thật sự đến từ sự lựa chọn có ý thức, không phải từ số lượng.</p>
+      <h2 class="font-serif text-2xl text-espresso mb-3"><%= content.about.block3Title %></h2>
+      <p><%= content.about.block3Body %></p>
     </div>
 
     <div>
-      <h2 class="font-serif text-2xl text-espresso mb-3">Chỉ bán online</h2>
-      <p>teo.mhrift không có cửa hàng offline — toàn bộ trải nghiệm mua sắm diễn ra tại đây, được chăm chút tỉ mỉ từ hình ảnh, mô tả đến từng bước đặt hàng, để bạn luôn an tâm khi chọn đồ secondhand online.</p>
+      <h2 class="font-serif text-2xl text-espresso mb-3"><%= content.about.block4Title %></h2>
+      <p><%= content.about.block4Body %></p>
     </div>
   </section>
 
   <section class="bg-terracotta/5 py-16 text-center">
-    <h2 class="text-2xl sm:text-3xl mb-5">Sẵn sàng tìm chiếc váy của riêng bạn?</h2>
-    <a href="/cua-hang" class="btn-primary">Khám phá cửa hàng</a>
+    <h2 class="text-2xl sm:text-3xl mb-5"><%= content.about.ctaTitle %></h2>
+    <a href="/cua-hang" class="btn-primary"><%= content.about.ctaButton %></a>
   </section>
 </main>
 

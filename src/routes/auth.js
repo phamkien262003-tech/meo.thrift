@@ -61,7 +61,7 @@ router.post('/admin/yeu-cau-quyen', redirectIfAuthed, async (req, res, next) => 
     await run('INSERT INTO admin_requests (email, password_hash) VALUES (?, ?)', [email, hash]);
     req.session.flash = {
       type: 'success',
-      message: 'Đã gửi yêu cầu. Quản trị viên cấp 1 sẽ xem xét và phê duyệt.',
+      message: 'Đã gửi yêu cầu. Vui lòng chờ được phê duyệt.',
     };
     res.redirect('/admin/dang-nhap');
   } catch (err) {

@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<%- include('../partials/head') %>
+</head>
+<body>
+<%- include('../partials/header') %>
+
+<main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+  <div class="mb-8">
+    <p class="text-xs tracking-widest uppercase text-terracotta mb-2">Cửa hàng</p>
+    <h1 class="text-3xl sm:text-4xl mb-2">Toàn bộ bộ sưu tập</h1>
+    <p class="text-espresso-soft"><%= total %> sản phẩm độc bản đang chờ chủ nhân mới</p>
+  </div>
+
+  <div class="grid lg:grid-cols-[260px_1fr] gap-8">
+    <!-- Filters -->
+    <aside class="lg:sticky lg:top-24 self-start">
+      <button type="button" id="filter-toggle" class="lg:hidden btn-secondary w-full mb-4">
+        <%- icon('filter', 'w-4 h-4') %> Bộ lọc
+      </button>
+      <form id="filter-form" action="/cua-hang" method="GET" class="hidden lg:block space-y-6 card-surface p-5">
+        <div>
+          <label class="field-label">Loại váy</label>
+          <select name="loai" class="field-select" onchange="this.form.submit()">
+            <option value="">Tất cả</option>
+            <% categories.forEach(c => { %>
+              <option value="<%= c %>" <%= filters.loai === c ? 'selected' : '' %>><%= c %></option>
+            <% }) %>
+          </select>
+        </div>
+        <div>
+          <label class="field-label">Size</label>
+          <select name="size" class="field-select" onchange="this.form.submit()">
+            <option value="">Tất cả</option>
+            <% sizeLabels.forEach(s => { %>
+              <option value="<%= s %>" <%= filters.size === s ? 'selected' : '' %>><%= s %></option>
+            <% }) %>
+          </select>
+        </div>
+        <div>
+          <label class="field-label">Phong cách</label>
+          <select name="phong_cach" class="field-select" onchange="this.form.submit()">
+            <option value="">Tất cả</option>
+            <% eraTags.forEach(e => { %>
+              <option value="<%= e %>" <%= filters.phong_cach === e ? 'selected' : '' %>><%= e %></option>
+            <% }) %>
+          </select>
+        </div>
+        <div>
+          <label class="field-label">Khoảng giá</label>
+          <div class="flex items-center gap-2">
+            <input type="number" name="gia_tu" value="<%= filters.gia_tu || '' %>" placeholder="Từ" class="field-input" />
+            <span class="text-espresso-soft">—</span>
+            <input type="number" name="gia_den" value="<%= filters.gia_den || '' %>" placeholder="Đến" class="field-input" />
+          </div>
+        </div>
+        <% if (filters.q) { %><input type="hidden" name="q" value="<%= filters.q %>" /><% } %>
+        <div class="flex gap-2">
+          <button type="submit" class="btn-primary flex-1">Lọc</button>
+          <a href="/cua-hang" class="btn-secondary flex-1 text-center">Xóa lọc</a>
+        </div>
+      </form>
+    </aside>
+
+    <!-- Results -->
+    <div>
+      <div class="flex items-center justify-between mb-6">
+        <p class="text-sm text-espresso-soft hidden sm:block">Hiển thị <%= products.length %> / <%= total %> sản phẩm</p>
+        <form action="/cua-hang" method="GET" class="ml-auto">
+          <% Object.entries(filters).forEach(([k,v]) => { if (k !== 'sap_xep' && v) { %><input type="hidden" name="<%= k %>" value="<%= v %>" /><% } }) %>
+          <select name="sap_xep" class="field-select !w-auto" onchange="this.form.submit()">
+            <option value="newest" <%= filters.sap_xep === 'newest' || !filters.sap_xep ? 'selected' : '' %>>Mới nhất</option>
+            <option value="price_asc" <%= filters.sap_xep === 'price_asc' ? 'selected' : '' %>>Giá tăng dần</option>
+            <option value="price_desc" <%= filters.sap_xep === 'price_desc' ? 'selected' : '' %>>Giá giảm dần</option>
+          </select>
+        </form>
+      </div>
+
+      <% if (products.length === 0) { %>
+        <div class="text-center py-20 card-surface">
+          <span class="text-espresso-soft"><%- icon('search', 'w-10 h-10 mx-auto mb-4') %></span>
+          <p class="text-lg mb-2">Không tìm thấy sản phẩm phù hợp</p>
+          <p class="text-espresso-soft text-sm mb-6">Hãy thử điều chỉnh bộ lọc hoặc quay lại sau — hàng mới về liên tục!</p>
+          <a href="/cua-hang" class="btn-primary">Xem tất cả sản phẩm</a>
+        </div>
+      <% } else { %>
+        <div class="grid grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+          <% products.forEach(product => { %>
+            <%- include('../partials/product-card', { product }) %>
+          <% }) %>
+        </div>
+
+        <% if (totalPages > 1) { %>
+          <nav class="flex items-center justify-center gap-2 mt-12" aria-label="Phân trang">
+            <% for (let p = 1; p <= totalPages; p++) { %>
+              <a href="?<%= new URLSearchParams({...filters, trang: p}).toString() %>"
+                class="w-10 h-10 flex items-center justify-center rounded-full text-sm transition-colors duration-250 <%= p === page ? 'bg-terracotta text-white' : 'hover:bg-sand' %>">
+                <%= p %>
+              </a>
+            <% } %>
+          </nav>
+        <% } %>
+      <% } %>
+    </div>
+  </div>
+</main>
+
+<%- include('../partials/footer') %>
+<script src="/js/main.js" defer></script>
+<script src="/js/cart.js" defer></script>
+<script src="/js/filters.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<%- include('../partials/head') %>
+</head>
+<body class="bg-cream">
+<%- include('../partials/admin-nav') %>
+
+  <%- include('../partials/flash') %>
+  <h1 class="text-3xl mb-8">Bảng điều khiển</h1>
+
+  <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-10">
+    <div class="card-surface p-5">
+      <p class="text-xs uppercase tracking-wide text-espresso-soft mb-1">Đang bán</p>
+      <p class="text-3xl font-serif text-terracotta"><%= stats.totalProducts %></p>
+    </div>
+    <div class="card-surface p-5">
+      <p class="text-xs uppercase tracking-wide text-espresso-soft mb-1">Đang giữ chỗ</p>
+      <p class="text-3xl font-serif text-olive"><%= stats.reserved %></p>
+    </div>
+    <div class="card-surface p-5">
+      <p class="text-xs uppercase tracking-wide text-espresso-soft mb-1">Đã bán</p>
+      <p class="text-3xl font-serif text-espresso-soft"><%= stats.sold %></p>
+    </div>
+    <div class="card-surface p-5">
+      <p class="text-xs uppercase tracking-wide text-espresso-soft mb-1">Đơn chờ xác nhận</p>
+      <p class="text-3xl font-serif text-terracotta"><%= stats.pendingOrders %></p>
+    </div>
+  </div>
+
+  <div class="flex items-center justify-between mb-4">
+    <h2 class="font-serif text-2xl">Đơn hàng gần đây</h2>
+    <a href="/admin/don-hang" class="btn-ghost">Xem tất cả <%- icon('chevronRight', 'w-4 h-4') %></a>
+  </div>
+
+  <div class="card-surface overflow-x-auto">
+    <table class="w-full text-sm min-w-[560px]">
+      <thead>
+        <tr class="text-left border-b border-border">
+          <th class="py-3 px-4">Mã đơn</th>
+          <th class="py-3 px-4">Khách hàng</th>
+          <th class="py-3 px-4">Tổng tiền</th>
+          <th class="py-3 px-4">Trạng thái</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-border">
+        <% if (recentOrders.length === 0) { %>
+          <tr><td colspan="4" class="py-6 px-4 text-center text-espresso-soft">Chưa có đơn hàng nào.</td></tr>
+        <% } %>
+        <% recentOrders.forEach(o => { %>
+          <tr class="hover:bg-sand/40 cursor-pointer" onclick="location.href='/admin/don-hang/<%= o.id %>'">
+            <td class="py-3 px-4 font-medium"><%= o.order_code %></td>
+            <td class="py-3 px-4"><%= o.customer_name %></td>
+            <td class="py-3 px-4"><%= formatPrice(o.subtotal) %></td>
+            <td class="py-3 px-4"><span class="badge bg-sand text-espresso"><%= ORDER_STATUS[o.status] %></span></td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+
+<%- include('../partials/admin-nav-end') %>
+</body>
+</html>

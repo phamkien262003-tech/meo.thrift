@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<%- include('../partials/head') %>
+</head>
+<body>
+<%- include('../partials/header') %>
+
+<main>
+  <!-- Hero -->
+  <section class="relative overflow-hidden">
+    <div class="absolute inset-0 bg-gradient-to-br from-sand via-cream to-rose/20"></div>
+    <div class="absolute -top-24 -right-24 w-96 h-96 rounded-full bg-olive/10 blur-3xl"></div>
+    <div class="absolute -bottom-24 -left-24 w-96 h-96 rounded-full bg-terracotta/10 blur-3xl"></div>
+    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-28 grid lg:grid-cols-2 gap-12 items-center">
+      <div class="reveal" data-reveal>
+        <span class="badge bg-olive/10 text-olive-dark mb-5"><%- icon('sparkle', 'w-3.5 h-3.5') %> Phong cách mori · độc bản</span>
+        <h1 class="text-4xl sm:text-5xl lg:text-6xl leading-[1.1] text-espresso mb-6">
+          Những chiếc váy cũ,<br />
+          <span class="text-terracotta italic">tâm hồn mới.</span>
+        </h1>
+        <p class="text-espresso-soft text-lg leading-relaxed mb-8 max-w-md">
+          teo.mhrift tuyển chọn váy secondhand cao cấp cho cô gái trẻ, tự nhiên và có cá tính riêng. Mỗi chiếc chỉ có một — khi hết là hết.
+        </p>
+        <div class="flex flex-wrap gap-4">
+          <a href="/cua-hang" class="btn-primary">Khám phá bộ sưu tập <%- icon('chevronRight', 'w-4 h-4') %></a>
+          <a href="/ve-chung-toi" class="btn-secondary">Câu chuyện của chúng tôi</a>
+        </div>
+      </div>
+      <div class="relative reveal" data-reveal>
+        <div class="aspect-[4/5] rounded-organic overflow-hidden shadow-soft">
+          <%- placeholderArt('olive', 1) %>
+        </div>
+        <div class="absolute -bottom-6 -left-6 w-32 h-40 rounded-2xl overflow-hidden shadow-soft border-4 border-cream hidden sm:block">
+          <%- placeholderArt('rose', 2) %>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- USP -->
+  <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 grid sm:grid-cols-3 gap-8">
+    <div class="text-center reveal" data-reveal>
+      <div class="w-14 h-14 mx-auto rounded-full bg-terracotta/10 flex items-center justify-center text-terracotta mb-4"><%- icon('leaf', 'w-6 h-6') %></div>
+      <h3 class="font-serif text-xl mb-2">Tuyển chọn kỹ lưỡng</h3>
+      <p class="text-sm text-espresso-soft leading-relaxed">Từng chiếc váy được kiểm tra chất liệu, đường may và tình trạng trước khi lên kệ.</p>
+    </div>
+    <div class="text-center reveal" data-reveal>
+      <div class="w-14 h-14 mx-auto rounded-full bg-olive/10 flex items-center justify-center text-olive mb-4"><%- icon('sparkle', 'w-6 h-6') %></div>
+      <h3 class="font-serif text-xl mb-2">Độc bản, không đụng hàng</h3>
+      <p class="text-sm text-espresso-soft leading-relaxed">Mỗi sản phẩm chỉ có đúng một chiếc — khi bạn thích, hãy đặt trước ngay.</p>
+    </div>
+    <div class="text-center reveal" data-reveal>
+      <div class="w-14 h-14 mx-auto rounded-full bg-rose/20 flex items-center justify-center text-terracotta-dark mb-4"><%- icon('heart', 'w-6 h-6') %></div>
+      <h3 class="font-serif text-xl mb-2">Thời trang bền vững</h3>
+      <p class="text-sm text-espresso-soft leading-relaxed">Chọn đồ cũ là chọn một lối sống chậm lại và yêu thương môi trường hơn.</p>
+    </div>
+  </section>
+
+  <!-- Featured products -->
+  <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+    <div class="flex items-end justify-between mb-10 reveal" data-reveal>
+      <div>
+        <p class="text-xs tracking-widest uppercase text-terracotta mb-2">Vừa lên kệ</p>
+        <h2 class="text-3xl sm:text-4xl">Bộ sưu tập nổi bật</h2>
+      </div>
+      <a href="/cua-hang" class="btn-ghost hidden sm:inline-flex">Xem tất cả <%- icon('chevronRight', 'w-4 h-4') %></a>
+    </div>
+    <% if (featured.length === 0) { %>
+      <p class="text-espresso-soft">Chưa có sản phẩm nào. Hãy quay lại sau nhé!</p>
+    <% } else { %>
+      <div class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
+        <% featured.forEach(product => { %>
+          <%- include('../partials/product-card', { product }) %>
+        <% }) %>
+      </div>
+    <% } %>
+    <a href="/cua-hang" class="btn-secondary mt-10 sm:hidden w-full">Xem tất cả sản phẩm</a>
+  </section>
+
+  <!-- Story teaser -->
+  <section class="bg-olive/5 py-20">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center reveal" data-reveal>
+      <span class="text-olive"><%- icon('leaf', 'w-8 h-8 mx-auto mb-4') %></span>
+      <h2 class="text-3xl sm:text-4xl mb-5">Sống chậm lại, mặc đẹp hơn</h2>
+      <p class="text-espresso-soft leading-relaxed text-lg mb-8">
+        "Mori" trong tiếng Nhật nghĩa là khu rừng — teo.mhrift lấy cảm hứng từ vẻ đẹp tự nhiên, mộc mạc và tinh thần sống chậm ấy. Chúng mình tin rằng một chiếc váy cũ, khi được yêu thương đúng người, sẽ đẹp hơn bất kỳ món đồ mới nào.
+      </p>
+      <a href="/ve-chung-toi" class="btn-primary">Đọc câu chuyện của chúng tôi</a>
+    </div>
+  </section>
+
+  <!-- Newsletter -->
+  <section class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-20 text-center reveal" data-reveal>
+    <h2 class="text-2xl sm:text-3xl mb-3">Đừng bỏ lỡ những chiếc váy mới</h2>
+    <p class="text-espresso-soft mb-6">Đăng ký để nhận thông báo khi có sản phẩm mới — mỗi item chỉ có một chiếc duy nhất.</p>
+    <form class="flex flex-col sm:flex-row gap-3 max-w-md mx-auto" onsubmit="event.preventDefault(); this.querySelector('button').textContent='Đã đăng ký';">
+      <input type="email" required placeholder="Email của bạn" class="field-input flex-1" />
+      <button type="submit" class="btn-primary whitespace-nowrap">Đăng ký</button>
+    </form>
+  </section>
+</main>
+
+<%- include('../partials/footer') %>
+<script src="/js/main.js" defer></script>
+<script src="/js/cart.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<%- include('../partials/head') %>
+</head>
+<body class="bg-cream">
+<%- include('../partials/admin-nav') %>
+
+  <%- include('../partials/flash') %>
+  <h1 class="text-3xl mb-8">Cài đặt</h1>
+
+  <form action="/admin/cai-dat" method="POST" class="card-surface p-6 space-y-4 max-w-lg">
+    <h2 class="font-serif text-xl mb-2">Thông tin chuyển khoản</h2>
+    <p class="text-sm text-espresso-soft mb-4">Thông tin này sẽ hiển thị cho khách hàng ở bước đặt hàng (thanh toán thủ công, Phase 1).</p>
+    <div>
+      <label class="field-label" for="bank_name">Ngân hàng</label>
+      <input type="text" id="bank_name" name="bank_name" value="<%= bankName %>" class="field-input" />
+    </div>
+    <div>
+      <label class="field-label" for="bank_account_name">Chủ tài khoản</label>
+      <input type="text" id="bank_account_name" name="bank_account_name" value="<%= bankAccountName %>" class="field-input" />
+    </div>
+    <div>
+      <label class="field-label" for="bank_account_number">Số tài khoản</label>
+      <input type="text" id="bank_account_number" name="bank_account_number" value="<%= bankAccountNumber %>" class="field-input" />
+    </div>
+    <button type="submit" class="btn-primary">Lưu cài đặt</button>
+  </form>
+
+<%- include('../partials/admin-nav-end') %>
+</body>
+</html>

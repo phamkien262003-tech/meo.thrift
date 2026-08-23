@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<%- include('../partials/head') %>
+</head>
+<body>
+<%- include('../partials/header') %>
+
+<main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+  <div class="text-center mb-12">
+    <span class="badge bg-olive/10 text-olive-dark mb-5"><%- icon('sparkle', 'w-3.5 h-3.5') %> Nhật ký phong cách</span>
+    <h1 class="text-4xl sm:text-5xl mb-4">Câu chuyện & cảm hứng</h1>
+    <p class="text-espresso-soft max-w-xl mx-auto">Những bài viết nhỏ về phong cách mori, cách bảo quản đồ vintage và tinh thần sống bền vững.</p>
+  </div>
+
+  <% if (posts.length === 0) { %>
+    <p class="text-center text-espresso-soft">Chưa có bài viết nào.</p>
+  <% } else { %>
+    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
+      <% posts.forEach((post, i) => { %>
+        <a href="/nhat-ky/<%= post.slug %>" class="group reveal" data-reveal>
+          <div class="aspect-[4/3] rounded-2xl overflow-hidden card-surface mb-4">
+            <%- placeholderArt(post.cover_color, i) %>
+          </div>
+          <p class="text-xs text-espresso-soft mb-1"><%= new Date(post.published_at).toLocaleDateString('vi-VN') %></p>
+          <h2 class="font-serif text-xl group-hover:text-terracotta transition-colors duration-250"><%= post.title %></h2>
+          <p class="text-sm text-espresso-soft mt-2 leading-relaxed"><%= post.excerpt %></p>
+        </a>
+      <% }) %>
+    </div>
+  <% } %>
+</main>
+
+<%- include('../partials/footer') %>
+<script src="/js/main.js" defer></script>
+<script src="/js/cart.js" defer></script>
+</body>
+</html>

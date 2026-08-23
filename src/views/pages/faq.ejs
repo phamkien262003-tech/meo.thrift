@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<%- include('../partials/head') %>
+</head>
+<body>
+<%- include('../partials/header') %>
+
+<main class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+  <h1 class="text-4xl sm:text-5xl mb-10">Câu hỏi thường gặp</h1>
+
+  <div class="space-y-3">
+    <% const faqs = [
+      { q: 'teo.mhrift có cửa hàng offline không?', a: 'Không, teo.mhrift chỉ bán online. Toàn bộ trải nghiệm từ xem hàng, tư vấn đến đặt hàng đều diễn ra trên website và qua Zalo/Instagram.' },
+      { q: 'Làm sao để đặt một chiếc váy?', a: 'Thêm sản phẩm vào giỏ hàng, sau đó vào mục "Đặt hàng" để điền thông tin. Vì hàng độc bản, đơn của bạn sẽ ở trạng thái "chờ xác nhận" cho đến khi shop liên hệ xác nhận thanh toán.' },
+      { q: 'Tôi có thể thanh toán bằng cách nào?', a: 'Hiện tại teo.mhrift nhận chuyển khoản ngân hàng hoặc thanh toán khi nhận hàng (COD) tại các khu vực nội thành. Cổng thanh toán online (VNPay/Momo) sẽ sớm ra mắt.' },
+      { q: 'Sản phẩm có thực sự chỉ có một chiếc?', a: 'Đúng vậy — đây là điểm đặc biệt của thời trang secondhand. Khi một sản phẩm được đặt, nó sẽ chuyển sang trạng thái "đang giữ chỗ" và không còn hiển thị để người khác đặt mua.' },
+      { q: 'Làm sao biết tình trạng thật của váy?', a: 'Mỗi sản phẩm đều có ghi chú trung thực về tình trạng (thang điểm Như mới / Rất tốt / Tốt) kèm mô tả chi tiết nếu có vết mờ, lỗi nhỏ.' },
+      { q: 'Tôi có thể đổi trả nếu không hợp size không?', a: 'teo.mhrift khuyến khích bạn đối chiếu kỹ số đo thật trước khi đặt. Đổi trả chỉ áp dụng khi sản phẩm thực tế khác đáng kể so với mô tả — xem chi tiết tại trang Chính sách đổi trả.' },
+    ]; %>
+    <% faqs.forEach(f => { %>
+      <details class="card-surface p-5 group">
+        <summary class="flex items-center justify-between cursor-pointer font-medium list-none">
+          <span><%= f.q %></span>
+          <span class="text-terracotta transition-transform duration-250 group-open:rotate-180"><%- icon('chevronDown', 'w-5 h-5') %></span>
+        </summary>
+        <p class="text-espresso-soft mt-3 leading-relaxed"><%= f.a %></p>
+      </details>
+    <% }) %>
+  </div>
+
+  <div class="text-center mt-12">
+    <p class="text-espresso-soft mb-4">Vẫn còn thắc mắc?</p>
+    <a href="/lien-he" class="btn-primary">Liên hệ với chúng tôi</a>
+  </div>
+</main>
+
+<%- include('../partials/footer') %>
+<script src="/js/main.js" defer></script>
+<script src="/js/cart.js" defer></script>
+</body>
+</html>

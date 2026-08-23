@@ -1,0 +1,9 @@
+<% if (typeof flash !== 'undefined' && flash) { %>
+  <div class="max-w-3xl mx-auto px-4 sm:px-6 mt-4" role="status" aria-live="polite">
+    <div class="rounded-xl px-4 py-3 text-sm flex items-center gap-2 border
+      <%= flash.type === 'error' ? 'bg-red-50 border-red-200 text-red-700' : 'bg-olive/10 border-olive/30 text-olive-dark' %>">
+      <%- icon(flash.type === 'error' ? 'close' : 'check', 'w-4 h-4 shrink-0') %>
+      <span><%= flash.message %></span>
+    </div>
+  </div>
+<% } %>

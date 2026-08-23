@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<%- include('../partials/head') %>
+</head>
+<body class="bg-espresso min-h-screen flex items-center justify-center px-4">
+  <div class="w-full max-w-sm">
+    <div class="text-center mb-8">
+      <span class="text-rose"><%- icon('leaf', 'w-8 h-8 mx-auto mb-3') %></span>
+      <h1 class="font-serif text-2xl text-cream">teo<span class="text-rose">.</span>mhrift</h1>
+      <p class="text-cream/50 text-sm mt-1">Đăng nhập quản trị</p>
+    </div>
+
+    <%- include('../partials/flash') %>
+
+    <form action="/admin/dang-nhap" method="POST" class="bg-cream/5 border border-cream/10 rounded-2xl p-6 space-y-4 mt-4">
+      <div>
+        <label class="block text-sm text-cream/70 mb-1.5" for="email">Email</label>
+        <input type="email" id="email" name="email" required class="w-full rounded-xl border border-cream/20 bg-cream/5 text-cream px-4 py-2.5 focus:border-rose focus:ring-2 focus:ring-rose/20 outline-none transition-colors duration-250" />
+      </div>
+      <div>
+        <label class="block text-sm text-cream/70 mb-1.5" for="password">Mật khẩu</label>
+        <input type="password" id="password" name="password" required class="w-full rounded-xl border border-cream/20 bg-cream/5 text-cream px-4 py-2.5 focus:border-rose focus:ring-2 focus:ring-rose/20 outline-none transition-colors duration-250" />
+      </div>
+      <button type="submit" class="btn-primary w-full">Đăng nhập</button>
+    </form>
+  </div>
+</body>
+</html>

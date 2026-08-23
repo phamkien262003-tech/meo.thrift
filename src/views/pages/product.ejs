@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<%- include('../partials/head') %>
+</head>
+<body>
+<%- include('../partials/header') %>
+
+<main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+  <nav class="text-sm text-espresso-soft mb-6 flex items-center gap-2" aria-label="Breadcrumb">
+    <a href="/" class="hover:text-terracotta">Trang chủ</a> <span>/</span>
+    <a href="/cua-hang" class="hover:text-terracotta">Cửa hàng</a> <span>/</span>
+    <span class="text-espresso"><%= product.name %></span>
+  </nav>
+
+  <div class="grid lg:grid-cols-2 gap-10 lg:gap-14">
+    <!-- Gallery -->
+    <div>
+      <div id="gallery-track" class="aspect-[4/5] rounded-2xl overflow-hidden card-surface flex snap-x snap-mandatory overflow-x-auto scroll-smooth [&::-webkit-scrollbar]:hidden">
+        <% (product.images.length ? product.images : [null]).forEach((img, i) => { %>
+          <div class="w-full h-full shrink-0 snap-center">
+            <%- include('../partials/product-media', { product, variant: 'detail', className: 'w-full h-full', imageIndex: i }) %>
+          </div>
+        <% }) %>
+      </div>
+      <% if (product.images.length > 1) { %>
+        <div class="flex gap-3 mt-3 overflow-x-auto">
+          <% product.images.forEach((img, i) => { %>
+            <button type="button" class="gallery-thumb w-16 h-20 rounded-lg overflow-hidden border-2 border-transparent hover:border-terracotta transition-colors duration-250 shrink-0" data-index="<%= i %>">
+              <%- include('../partials/product-media', { product, variant: 'thumb', className: 'w-full h-full', imageIndex: i }) %>
+            </button>
+          <% }) %>
+        </div>
+      <% } %>
+    </div>
+
+    <!-- Info -->
+    <div>
+      <p class="text-xs tracking-widest uppercase text-terracotta mb-2"><%= product.era_tag || product.category %> <% if (product.brand) { %>· <%= product.brand %><% } %></p>
+      <h1 class="text-3xl sm:text-4xl mb-4"><%= product.name %></h1>
+
+      <div class="flex items-center gap-3 mb-6">
+        <span class="text-2xl font-medium text-terracotta"><%= formatPrice(product.price) %></span>
+        <% if (product.original_price && product.original_price > product.price) { %>
+          <span class="text-lg text-espresso-soft/70 line-through"><%= formatPrice(product.original_price) %></span>
+          <span class="badge bg-terracotta/10 text-terracotta-dark">-<%= Math.round(100 - (product.price / product.original_price) * 100) %>%</span>
+        <% } %>
+      </div>
+
+      <% if (product.status !== 'available') { %>
+        <div class="mb-6 rounded-xl bg-espresso/5 border border-espresso/10 px-4 py-3 text-sm">
+          <%= product.status === 'sold' ? 'Sản phẩm này đã tìm được chủ nhân mới.' : 'Sản phẩm đang được giữ chỗ cho một khách hàng khác.' %>
+        </div>
+      <% } %>
+
+      <p class="text-espresso-soft leading-relaxed mb-8"><%= product.description %></p>
+
+      <div class="grid sm:grid-cols-2 gap-4 mb-8">
+        <div class="card-surface p-4">
+          <p class="text-xs uppercase tracking-wide text-espresso-soft mb-1">Size</p>
+          <p class="font-medium"><%= product.size_label %></p>
+        </div>
+        <div class="card-surface p-4">
+          <p class="text-xs uppercase tracking-wide text-espresso-soft mb-1">Tình trạng</p>
+          <p class="font-medium"><%= product.condition_grade %></p>
+        </div>
+        <% if (product.measurements) { %>
+        <div class="card-surface p-4 sm:col-span-2">
+          <p class="text-xs uppercase tracking-wide text-espresso-soft mb-1">Số đo thật</p>
+          <p class="font-medium"><%= product.measurements %></p>
+        </div>
+        <% } %>
+        <% if (product.fabric) { %>
+        <div class="card-surface p-4">
+          <p class="text-xs uppercase tracking-wide text-espresso-soft mb-1">Chất liệu</p>
+          <p class="font-medium"><%= product.fabric %></p>
+        </div>
+        <% } %>
+      </div>
+
+      <% if (product.condition_notes) { %>
+        <div class="mb-8 rounded-xl bg-olive/5 border border-olive/20 px-4 py-3 text-sm flex gap-2">
+          <span class="text-olive shrink-0"><%- icon('leaf', 'w-4 h-4 mt-0.5') %></span>
+          <p><span class="font-medium">Ghi chú trung thực từ shop:</span> <%= product.condition_notes %></p>
+        </div>
+      <% } %>
+
+      <div class="flex flex-col sm:flex-row gap-3">
+        <button type="button" id="add-to-cart" data-product-id="<%= product.id %>"
+          class="btn-primary flex-1" <%= product.status !== 'available' ? 'disabled' : '' %>
+          style="<%= product.status !== 'available' ? 'opacity:.5;pointer-events:none;' : '' %>">
+          <%- icon('bag', 'w-4 h-4') %> Thêm vào giỏ — Đặt trước
+        </button>
+        <button type="button" id="toggle-wishlist" data-product-id="<%= product.id %>" class="btn-secondary" aria-pressed="false">
+          <%- icon('heart', 'w-4 h-4') %> Yêu thích
+        </button>
+      </div>
+      <p class="text-xs text-espresso-soft mt-3">Vì mỗi món chỉ có một chiếc, "đặt trước" sẽ giữ hàng cho bạn trong quá trình xác nhận thanh toán.</p>
+    </div>
+  </div>
+
+  <!-- Related -->
+  <% if (related.length) { %>
+    <section class="mt-20">
+      <h2 class="text-2xl sm:text-3xl mb-8">Có thể bạn cũng thích</h2>
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
+        <% related.forEach(p => { %>
+          <%- include('../partials/product-card', { product: p }) %>
+        <% }) %>
+      </div>
+    </section>
+  <% } %>
+</main>
+
+<%- include('../partials/footer') %>
+<script src="/js/main.js" defer></script>
+<script src="/js/cart.js" defer></script>
+<script src="/js/gallery.js" defer></script>
+</body>
+</html>

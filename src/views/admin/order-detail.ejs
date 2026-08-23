@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<%- include('../partials/head') %>
+</head>
+<body class="bg-cream">
+<%- include('../partials/admin-nav') %>
+
+  <a href="/admin/don-hang" class="btn-ghost mb-4"><%- icon('chevronLeft', 'w-4 h-4') %> Quay lại danh sách</a>
+  <%- include('../partials/flash') %>
+
+  <div class="flex items-center justify-between mb-6">
+    <h1 class="text-3xl">Đơn hàng <%= order.order_code %></h1>
+    <span class="badge bg-sand text-espresso"><%= ORDER_STATUS[order.status] %></span>
+  </div>
+
+  <div class="grid lg:grid-cols-[1fr_320px] gap-6">
+    <div class="card-surface p-6">
+      <h2 class="font-serif text-xl mb-4">Sản phẩm đã đặt</h2>
+      <ul class="space-y-3 mb-4">
+        <% items.forEach(it => { %>
+          <li class="flex justify-between text-sm border-b border-border pb-3">
+            <span><%= it.product_name %></span>
+            <span class="text-terracotta"><%= formatPrice(it.price) %></span>
+          </li>
+        <% }) %>
+      </ul>
+      <div class="flex justify-between font-medium">
+        <span>Tổng cộng</span>
+        <span class="text-terracotta"><%= formatPrice(order.subtotal) %></span>
+      </div>
+    </div>
+
+    <div class="space-y-6">
+      <div class="card-surface p-6">
+        <h2 class="font-serif text-xl mb-4">Thông tin khách hàng</h2>
+        <dl class="space-y-2 text-sm">
+          <div><dt class="text-espresso-soft">Họ tên</dt><dd class="font-medium"><%= order.customer_name %></dd></div>
+          <div><dt class="text-espresso-soft">Điện thoại</dt><dd class="font-medium"><%= order.phone %></dd></div>
+          <% if (order.email) { %><div><dt class="text-espresso-soft">Email</dt><dd class="font-medium"><%= order.email %></dd></div><% } %>
+          <div><dt class="text-espresso-soft">Địa chỉ</dt><dd class="font-medium"><%= order.address %></dd></div>
+          <% if (order.note) { %><div><dt class="text-espresso-soft">Ghi chú</dt><dd class="font-medium"><%= order.note %></dd></div><% } %>
+        </dl>
+      </div>
+
+      <div class="card-surface p-6">
+        <h2 class="font-serif text-xl mb-4">Cập nhật trạng thái</h2>
+        <form action="/admin/don-hang/<%= order.id %>/trang-thai" method="POST" class="space-y-3">
+          <select name="status" class="field-select">
+            <% Object.entries(ORDER_STATUS).forEach(([key, label]) => { %>
+              <option value="<%= key %>" <%= order.status === key ? 'selected' : '' %>><%= label %></option>
+            <% }) %>
+          </select>
+          <button type="submit" class="btn-primary w-full">Cập nhật</button>
+        </form>
+        <p class="text-xs text-espresso-soft mt-3">Chuyển sang "Hoàn tất" sẽ tự động đánh dấu sản phẩm là "Đã bán". Chuyển sang "Đã hủy" sẽ mở lại sản phẩm để bán tiếp.</p>
+      </div>
+    </div>
+  </div>
+
+<%- include('../partials/admin-nav-end') %>
+</body>
+</html>

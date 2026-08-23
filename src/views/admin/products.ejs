@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<%- include('../partials/head') %>
+</head>
+<body class="bg-cream">
+<%- include('../partials/admin-nav') %>
+
+  <%- include('../partials/flash') %>
+  <div class="flex items-center justify-between mb-8">
+    <h1 class="text-3xl">Quản lý sản phẩm</h1>
+    <a href="/admin/san-pham/them" class="btn-primary"><%- icon('plus', 'w-4 h-4') %> Thêm sản phẩm</a>
+  </div>
+
+  <div class="card-surface overflow-x-auto">
+    <table class="w-full text-sm min-w-[720px]">
+      <thead>
+        <tr class="text-left border-b border-border">
+          <th class="py-3 px-4">Ảnh</th>
+          <th class="py-3 px-4">Tên</th>
+          <th class="py-3 px-4">Size</th>
+          <th class="py-3 px-4">Giá</th>
+          <th class="py-3 px-4">Trạng thái</th>
+          <th class="py-3 px-4 text-right">Thao tác</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-border">
+        <% if (products.length === 0) { %>
+          <tr><td colspan="6" class="py-8 px-4 text-center text-espresso-soft">Chưa có sản phẩm nào. <a href="/admin/san-pham/them" class="text-terracotta underline">Thêm sản phẩm đầu tiên</a>.</td></tr>
+        <% } %>
+        <% products.forEach(p => { %>
+          <tr>
+            <td class="py-2 px-4"><div class="w-12 h-14 rounded-lg overflow-hidden"><%- include('../partials/product-media', { product: p, variant: 'thumb', className: 'w-full h-full' }) %></div></td>
+            <td class="py-2 px-4 font-medium"><%= p.name %></td>
+            <td class="py-2 px-4"><%= p.size_label %></td>
+            <td class="py-2 px-4"><%= formatPrice(p.price) %></td>
+            <td class="py-2 px-4">
+              <span class="badge <%= p.status === 'available' ? 'bg-olive/10 text-olive-dark' : p.status === 'reserved' ? 'bg-terracotta/10 text-terracotta-dark' : 'bg-espresso/10 text-espresso-soft' %>">
+                <%= p.status === 'available' ? 'Đang bán' : p.status === 'reserved' ? 'Đang giữ chỗ' : 'Đã bán' %>
+              </span>
+            </td>
+            <td class="py-2 px-4 text-right space-x-3 whitespace-nowrap">
+              <a href="/admin/san-pham/<%= p.id %>/sua" class="text-espresso-soft hover:text-terracotta inline-flex"><%- icon('pencil', 'w-4 h-4') %></a>
+              <form action="/admin/san-pham/<%= p.id %>/xoa" method="POST" class="inline" onsubmit="return confirm('Xóa sản phẩm này? Hành động không thể hoàn tác.');">
+                <button type="submit" class="text-espresso-soft hover:text-red-600 inline-flex"><%- icon('trash', 'w-4 h-4') %></button>
+              </form>
+            </td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+
+<%- include('../partials/admin-nav-end') %>
+</body>
+</html>

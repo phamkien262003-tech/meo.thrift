@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<%- include('../partials/head') %>
+</head>
+<body>
+<%- include('../partials/header') %>
+
+<main class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10 min-h-[50vh]">
+  <h1 class="text-3xl sm:text-4xl mb-2">Đặt hàng</h1>
+  <p class="text-espresso-soft mb-8">Điền thông tin bên dưới — teo.mhrift sẽ liên hệ xác nhận trong 24 giờ.</p>
+
+  <div id="checkout-empty" class="hidden text-center py-16 card-surface">
+    <p class="text-lg mb-2">Giỏ hàng của bạn đang trống</p>
+    <a href="/cua-hang" class="btn-primary mt-4 inline-flex">Đến cửa hàng</a>
+  </div>
+
+  <div id="checkout-content" class="hidden grid lg:grid-cols-[1fr_360px] gap-8">
+    <form action="/dat-hang" method="POST" class="space-y-5 card-surface p-6">
+      <input type="hidden" name="items" id="items-field" value="[]" />
+
+      <div>
+        <label class="field-label" for="customer_name">Họ và tên <span class="text-terracotta">*</span></label>
+        <input type="text" id="customer_name" name="customer_name" required class="field-input" placeholder="Nguyễn Thị A" />
+      </div>
+      <div class="grid sm:grid-cols-2 gap-4">
+        <div>
+          <label class="field-label" for="phone">Số điện thoại <span class="text-terracotta">*</span></label>
+          <input type="tel" id="phone" name="phone" required class="field-input" placeholder="09xx xxx xxx" />
+        </div>
+        <div>
+          <label class="field-label" for="email">Email (tùy chọn)</label>
+          <input type="email" id="email" name="email" class="field-input" placeholder="ban@email.com" />
+        </div>
+      </div>
+      <div>
+        <label class="field-label" for="address">Địa chỉ nhận hàng <span class="text-terracotta">*</span></label>
+        <textarea id="address" name="address" required rows="2" class="field-input" placeholder="Số nhà, đường, phường/xã, quận/huyện, tỉnh/thành"></textarea>
+      </div>
+      <div>
+        <label class="field-label" for="note">Ghi chú</label>
+        <textarea id="note" name="note" rows="2" class="field-input" placeholder="Ví dụ: giao giờ hành chính, gọi trước khi giao..."></textarea>
+      </div>
+
+      <div class="rounded-xl bg-olive/5 border border-olive/20 p-4 text-sm space-y-1">
+        <p class="font-medium flex items-center gap-2"><%- icon('box', 'w-4 h-4') %> <%= payment.label %></p>
+        <% if (payment.bank.bankName) { %>
+          <p>Ngân hàng: <strong><%= payment.bank.bankName %></strong></p>
+          <p>Chủ tài khoản: <strong><%= payment.bank.accountName %></strong></p>
+          <p>Số tài khoản: <strong><%= payment.bank.accountNumber %></strong></p>
+        <% } %>
+        <p class="text-espresso-soft"><%= payment.codeNote %></p>
+        <p class="text-espresso-soft">Bạn cũng có thể chọn thanh toán khi nhận hàng (COD) tại nội thành.</p>
+      </div>
+
+      <button type="submit" class="btn-primary w-full">Xác nhận đặt hàng</button>
+    </form>
+
+    <aside class="card-surface p-6 h-fit lg:sticky lg:top-24">
+      <h2 class="font-serif text-xl mb-4">Đơn hàng của bạn</h2>
+      <ul id="checkout-items" class="space-y-3 mb-4"></ul>
+      <div class="flex justify-between text-lg font-medium pt-4 border-t border-border">
+        <span>Tổng cộng</span>
+        <span id="checkout-subtotal" class="text-terracotta">0đ</span>
+      </div>
+    </aside>
+  </div>
+</main>
+
+<%- include('../partials/footer') %>
+<script src="/js/main.js" defer></script>
+<script src="/js/cart.js" defer></script>
+<script>
+  document.addEventListener('DOMContentLoaded', () => window.TeoCart.renderCheckoutPage());
+</script>
+</body>
+</html>

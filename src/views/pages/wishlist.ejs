@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<%- include('../partials/head') %>
+</head>
+<body>
+<%- include('../partials/header') %>
+
+<main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10 min-h-[50vh]">
+  <h1 class="text-3xl sm:text-4xl mb-2">Sản phẩm yêu thích</h1>
+  <p class="text-espresso-soft mb-8">Những chiếc váy bạn đã lưu lại để cân nhắc.</p>
+
+  <div id="wishlist-loading" class="text-center py-16 text-espresso-soft">Đang tải...</div>
+
+  <div id="wishlist-empty" class="hidden text-center py-16 card-surface">
+    <span class="text-espresso-soft"><%- icon('heart', 'w-10 h-10 mx-auto mb-4') %></span>
+    <p class="text-lg mb-2">Bạn chưa lưu sản phẩm nào</p>
+    <p class="text-espresso-soft text-sm mb-6">Bấm biểu tượng trái tim trên sản phẩm bạn thích để lưu lại đây.</p>
+    <a href="/cua-hang" class="btn-primary">Đến cửa hàng</a>
+  </div>
+
+  <div id="wishlist-grid" class="hidden grid grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8"></div>
+</main>
+
+<%- include('../partials/footer') %>
+<script src="/js/main.js" defer></script>
+<script src="/js/cart.js" defer></script>
+<script>
+  document.addEventListener('DOMContentLoaded', () => window.TeoCart.renderWishlistPage());
+</script>
+</body>
+</html>

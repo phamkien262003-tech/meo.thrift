@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<%- include('../partials/head') %>
+</head>
+<body>
+<%- include('../partials/header') %>
+
+<main class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10 min-h-[50vh]">
+  <h1 class="text-3xl sm:text-4xl mb-2">Giỏ hàng</h1>
+  <p class="text-espresso-soft mb-8">Vì mỗi món chỉ có một chiếc, hãy hoàn tất đặt hàng sớm để không bỏ lỡ nhé.</p>
+
+  <div id="cart-loading" class="text-center py-16 text-espresso-soft">Đang tải giỏ hàng...</div>
+
+  <div id="cart-empty" class="hidden text-center py-16 card-surface">
+    <span class="text-espresso-soft"><%- icon('bag', 'w-10 h-10 mx-auto mb-4') %></span>
+    <p class="text-lg mb-2">Giỏ hàng của bạn đang trống</p>
+    <p class="text-espresso-soft text-sm mb-6">Khám phá bộ sưu tập để tìm chiếc váy dành riêng cho bạn.</p>
+    <a href="/cua-hang" class="btn-primary">Đến cửa hàng</a>
+  </div>
+
+  <div id="cart-content" class="hidden grid lg:grid-cols-[1fr_320px] gap-8">
+    <ul id="cart-items" class="space-y-4"></ul>
+
+    <aside class="card-surface p-6 h-fit lg:sticky lg:top-24">
+      <h2 class="font-serif text-xl mb-4">Tạm tính</h2>
+      <div class="flex justify-between text-sm mb-2">
+        <span class="text-espresso-soft">Số lượng</span>
+        <span id="cart-item-count">0 sản phẩm</span>
+      </div>
+      <div class="flex justify-between text-lg font-medium mb-6">
+        <span>Tổng cộng</span>
+        <span id="cart-subtotal" class="text-terracotta">0đ</span>
+      </div>
+      <a href="/dat-hang" class="btn-primary w-full">Tiến hành đặt hàng</a>
+      <a href="/cua-hang" class="btn-ghost w-full mt-2 justify-center">Tiếp tục xem thêm</a>
+    </aside>
+  </div>
+</main>
+
+<%- include('../partials/footer') %>
+<script src="/js/main.js" defer></script>
+<script src="/js/cart.js" defer></script>
+<script>
+  document.addEventListener('DOMContentLoaded', () => window.TeoCart.renderCartPage());
+</script>
+</body>
+</html>

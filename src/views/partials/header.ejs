@@ -1,0 +1,49 @@
+<header class="sticky top-0 z-40 bg-cream/90 backdrop-blur-md border-b border-border/70">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex items-center justify-between h-20">
+      <a href="/" class="flex items-center gap-2 shrink-0">
+        <span class="text-terracotta"><%- icon('leaf', 'w-6 h-6') %></span>
+        <span class="font-serif text-2xl tracking-wide text-espresso">teo<span class="text-terracotta">.</span>mhrift</span>
+      </a>
+
+      <nav class="hidden lg:flex items-center gap-8 font-sans text-sm tracking-wide">
+        <a href="/cua-hang" class="hover:text-terracotta transition-colors duration-250 <%= currentPath==='/cua-hang' ? 'text-terracotta' : 'text-espresso' %>">Cửa hàng</a>
+        <a href="/ve-chung-toi" class="hover:text-terracotta transition-colors duration-250 <%= currentPath==='/ve-chung-toi' ? 'text-terracotta' : 'text-espresso' %>">Về chúng tôi</a>
+        <a href="/nhat-ky" class="hover:text-terracotta transition-colors duration-250 <%= currentPath.startsWith('/nhat-ky') ? 'text-terracotta' : 'text-espresso' %>">Nhật ký</a>
+        <a href="/huong-dan-chon-size" class="hover:text-terracotta transition-colors duration-250 <%= currentPath==='/huong-dan-chon-size' ? 'text-terracotta' : 'text-espresso' %>">Hướng dẫn size</a>
+        <a href="/lien-he" class="hover:text-terracotta transition-colors duration-250 <%= currentPath==='/lien-he' ? 'text-terracotta' : 'text-espresso' %>">Liên hệ</a>
+      </nav>
+
+      <div class="flex items-center gap-1 sm:gap-2">
+        <form action="/cua-hang" method="GET" class="hidden md:flex items-center relative">
+          <span class="absolute left-3 text-espresso-soft"><%- icon('search', 'w-4 h-4') %></span>
+          <input type="text" name="q" placeholder="Tìm váy, thương hiệu..." class="w-48 lg:w-64 rounded-full border border-border bg-card pl-9 pr-4 py-2 text-sm focus:border-terracotta focus:ring-2 focus:ring-terracotta/20 outline-none transition-colors duration-250" />
+        </form>
+        <a href="/yeu-thich" class="p-2.5 rounded-full hover:bg-sand transition-colors duration-250 relative" aria-label="Sản phẩm yêu thích">
+          <%- icon('heart', 'w-5 h-5') %>
+          <span id="wishlist-count" class="hidden absolute top-0 right-0 bg-terracotta text-white text-[10px] leading-none rounded-full min-w-[16px] h-4 flex items-center justify-center px-1">0</span>
+        </a>
+        <a href="/gio-hang" class="p-2.5 rounded-full hover:bg-sand transition-colors duration-250 relative" aria-label="Giỏ hàng">
+          <%- icon('bag', 'w-5 h-5') %>
+          <span id="cart-count" class="hidden absolute top-0 right-0 bg-terracotta text-white text-[10px] leading-none rounded-full min-w-[16px] h-4 flex items-center justify-center px-1">0</span>
+        </a>
+        <button type="button" id="mobile-menu-btn" class="lg:hidden p-2.5 rounded-full hover:bg-sand transition-colors duration-250" aria-label="Mở menu" aria-expanded="false" aria-controls="mobile-menu">
+          <%- icon('menu', 'w-5 h-5') %>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <nav id="mobile-menu" class="lg:hidden hidden border-t border-border/70 bg-cream px-4 py-4 space-y-3 font-sans text-sm">
+    <a href="/cua-hang" class="block py-1.5">Cửa hàng</a>
+    <a href="/ve-chung-toi" class="block py-1.5">Về chúng tôi</a>
+    <a href="/nhat-ky" class="block py-1.5">Nhật ký</a>
+    <a href="/huong-dan-chon-size" class="block py-1.5">Hướng dẫn size</a>
+    <a href="/lien-he" class="block py-1.5">Liên hệ</a>
+    <form action="/cua-hang" method="GET" class="pt-2">
+      <input type="text" name="q" placeholder="Tìm váy, thương hiệu..." class="field-input" />
+    </form>
+  </nav>
+</header>
+
+<%- include('flash') %>

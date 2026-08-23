@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<%- include('../partials/head') %>
+</head>
+<body>
+<%- include('../partials/header') %>
+
+<main class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-16 grid lg:grid-cols-2 gap-12">
+  <div>
+    <h1 class="text-4xl sm:text-5xl mb-4">Liên hệ</h1>
+    <p class="text-espresso-soft leading-relaxed mb-8">Có câu hỏi về sản phẩm, số đo hay đơn hàng? Nhắn cho teo.mhrift, mình phản hồi trong vòng 24 giờ.</p>
+
+    <ul class="space-y-4 mb-8">
+      <li class="flex items-center gap-3"><span class="p-2.5 rounded-full bg-terracotta/10 text-terracotta"><%- icon('mail', 'w-4 h-4') %></span> hello@teomhrift.vn</li>
+      <li class="flex items-center gap-3"><span class="p-2.5 rounded-full bg-terracotta/10 text-terracotta"><%- icon('phone', 'w-4 h-4') %></span> 0900 000 000 (Zalo)</li>
+      <li class="flex items-center gap-3"><span class="p-2.5 rounded-full bg-terracotta/10 text-terracotta"><%- icon('instagram', 'w-4 h-4') %></span> @teo.mhrift</li>
+    </ul>
+
+    <div class="flex gap-3">
+      <a href="#" class="btn-secondary"><%- icon('zalo', 'w-4 h-4') %> Nhắn Zalo</a>
+      <a href="#" class="btn-secondary"><%- icon('instagram', 'w-4 h-4') %> Instagram</a>
+    </div>
+  </div>
+
+  <form action="/lien-he" method="POST" class="card-surface p-6 space-y-4 h-fit">
+    <div>
+      <label class="field-label" for="name">Họ và tên</label>
+      <input type="text" id="name" name="name" required class="field-input" />
+    </div>
+    <div>
+      <label class="field-label" for="contact-email">Email</label>
+      <input type="email" id="contact-email" name="email" required class="field-input" />
+    </div>
+    <div>
+      <label class="field-label" for="message">Nội dung</label>
+      <textarea id="message" name="message" rows="4" required class="field-input"></textarea>
+    </div>
+    <button type="submit" class="btn-primary w-full">Gửi tin nhắn</button>
+  </form>
+</main>
+
+<%- include('../partials/footer') %>
+<script src="/js/main.js" defer></script>
+<script src="/js/cart.js" defer></script>
+</body>
+</html>

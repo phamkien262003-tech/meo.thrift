@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<%- include('../partials/head') %>
+</head>
+<body>
+<%- include('../partials/header') %>
+
+<main class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-16 text-center">
+  <span class="text-olive"><%- icon('check', 'w-14 h-14 mx-auto mb-6 p-3 rounded-full bg-olive/10') %></span>
+  <h1 class="text-3xl sm:text-4xl mb-3">Cảm ơn bạn đã đặt hàng!</h1>
+  <p class="text-espresso-soft mb-8">Mã đơn hàng của bạn là <strong class="text-espresso"><%= order.order_code %></strong>. teo.mhrift sẽ liên hệ qua số điện thoại <strong><%= order.phone %></strong> để xác nhận trong vòng 24 giờ.</p>
+
+  <div class="card-surface p-6 text-left mb-8">
+    <h2 class="font-serif text-xl mb-4">Chi tiết đơn hàng</h2>
+    <ul class="space-y-2 mb-4">
+      <% items.forEach(it => { %>
+        <li class="flex justify-between text-sm">
+          <span><%= it.product_name %></span>
+          <span class="text-terracotta"><%= formatPrice(it.price) %></span>
+        </li>
+      <% }) %>
+    </ul>
+    <div class="flex justify-between font-medium pt-4 border-t border-border">
+      <span>Tổng cộng</span>
+      <span class="text-terracotta"><%= formatPrice(order.subtotal) %></span>
+    </div>
+  </div>
+
+  <div class="card-surface p-6 text-left mb-8 bg-olive/5 border-olive/20">
+    <p class="font-medium mb-2"><%= payment.label %></p>
+    <% if (payment.bank.bankName) { %>
+      <p class="text-sm">Ngân hàng: <strong><%= payment.bank.bankName %></strong> · Chủ TK: <strong><%= payment.bank.accountName %></strong> · STK: <strong><%= payment.bank.accountNumber %></strong></p>
+    <% } %>
+    <p class="text-sm text-espresso-soft mt-1"><%= payment.codeNote %></p>
+  </div>
+
+  <a href="/cua-hang" class="btn-primary">Tiếp tục khám phá</a>
+</main>
+
+<%- include('../partials/footer') %>
+<script src="/js/main.js" defer></script>
+<script src="/js/cart.js" defer></script>
+<script>
+  document.addEventListener('DOMContentLoaded', () => window.TeoCart.clearCart());
+</script>
+</body>
+</html>

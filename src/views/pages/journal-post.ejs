@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<%- include('../partials/head') %>
+</head>
+<body>
+<%- include('../partials/header') %>
+
+<main class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+  <a href="/nhat-ky" class="btn-ghost mb-6"><%- icon('chevronLeft', 'w-4 h-4') %> Tất cả bài viết</a>
+  <p class="text-xs text-espresso-soft mb-2"><%= new Date(post.published_at).toLocaleDateString('vi-VN') %></p>
+  <h1 class="text-3xl sm:text-4xl mb-6"><%= post.title %></h1>
+  <div class="aspect-[16/9] rounded-2xl overflow-hidden card-surface mb-8">
+    <%- placeholderArt(post.cover_color, post.id) %>
+  </div>
+  <div class="prose-vi text-espresso-soft leading-relaxed space-y-4">
+    <p><%= post.content %></p>
+  </div>
+</main>
+
+<%- include('../partials/footer') %>
+<script src="/js/main.js" defer></script>
+<script src="/js/cart.js" defer></script>
+</body>
+</html>

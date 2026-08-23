@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<%- include('../partials/head') %>
+</head>
+<body class="bg-cream">
+<%- include('../partials/admin-nav') %>
+
+  <a href="/admin/san-pham" class="btn-ghost mb-4"><%- icon('chevronLeft', 'w-4 h-4') %> Quay lại danh sách</a>
+  <h1 class="text-3xl mb-8"><%= product ? 'Sửa sản phẩm' : 'Thêm sản phẩm' %></h1>
+
+  <%- include('../partials/flash') %>
+
+  <form action="<%= product ? `/admin/san-pham/${product.id}` : '/admin/san-pham' %>" method="POST" enctype="multipart/form-data" class="card-surface p-6 space-y-6 mt-4 max-w-3xl">
+    <div class="grid sm:grid-cols-2 gap-4">
+      <div class="sm:col-span-2">
+        <label class="field-label" for="name">Tên sản phẩm <span class="text-terracotta">*</span></label>
+        <input type="text" id="name" name="name" required value="<%= product ? product.name : '' %>" class="field-input" />
+      </div>
+      <div>
+        <label class="field-label" for="category">Loại váy <span class="text-terracotta">*</span></label>
+        <select id="category" name="category" required class="field-select">
+          <% categories.forEach(c => { %>
+            <option value="<%= c %>" <%= product && product.category === c ? 'selected' : '' %>><%= c %></option>
+          <% }) %>
+        </select>
+      </div>
+      <div>
+        <label class="field-label" for="brand">Thương hiệu</label>
+        <input type="text" id="brand" name="brand" value="<%= product ? (product.brand || '') : '' %>" class="field-input" />
+      </div>
+      <div>
+        <label class="field-label" for="size_label">Size <span class="text-terracotta">*</span></label>
+        <select id="size_label" name="size_label" required class="field-select">
+          <% sizeLabels.forEach(s => { %>
+            <option value="<%= s %>" <%= product && product.size_label === s ? 'selected' : '' %>><%= s %></option>
+          <% }) %>
+        </select>
+      </div>
+      <div>
+        <label class="field-label" for="era_tag">Phong cách</label>
+        <select id="era_tag" name="era_tag" class="field-select">
+          <option value="">— Chọn —</option>
+          <% eraTags.forEach(e => { %>
+            <option value="<%= e %>" <%= product && product.era_tag === e ? 'selected' : '' %>><%= e %></option>
+          <% }) %>
+        </select>
+      </div>
+      <div class="sm:col-span-2">
+        <label class="field-label" for="measurements">Số đo thật</label>
+        <input type="text" id="measurements" name="measurements" value="<%= product ? (product.measurements || '') : '' %>" placeholder="Ngực 82cm · Eo 66cm · Hông 90cm · Dài 108cm" class="field-input" />
+      </div>
+      <div>
+        <label class="field-label" for="condition_grade">Tình trạng <span class="text-terracotta">*</span></label>
+        <select id="condition_grade" name="condition_grade" required class="field-select">
+          <% conditionGrades.forEach(c => { %>
+            <option value="<%= c %>" <%= product && product.condition_grade === c ? 'selected' : '' %>><%= c %></option>
+          <% }) %>
+        </select>
+      </div>
+      <div>
+        <label class="field-label" for="fabric">Chất liệu</label>
+        <input type="text" id="fabric" name="fabric" value="<%= product ? (product.fabric || '') : '' %>" class="field-input" />
+      </div>
+      <div class="sm:col-span-2">
+        <label class="field-label" for="condition_notes">Ghi chú tình trạng (nếu có lỗi/vết)</label>
+        <textarea id="condition_notes" name="condition_notes" rows="2" class="field-input"><%= product ? (product.condition_notes || '') : '' %></textarea>
+      </div>
+      <div>
+        <label class="field-label" for="price">Giá bán (VNĐ) <span class="text-terracotta">*</span></label>
+        <input type="number" id="price" name="price" required min="0" step="1000" value="<%= product ? product.price : '' %>" class="field-input" />
+      </div>
+      <div>
+        <label class="field-label" for="original_price">Giá gốc (tùy chọn, để hiện % giảm)</label>
+        <input type="number" id="original_price" name="original_price" min="0" step="1000" value="<%= product && product.original_price ? product.original_price : '' %>" class="field-input" />
+      </div>
+      <div class="sm:col-span-2">
+        <label class="field-label" for="description">Mô tả</label>
+        <textarea id="description" name="description" rows="4" class="field-input"><%= product ? (product.description || '') : '' %></textarea>
+      </div>
+      <% if (product) { %>
+        <div>
+          <label class="field-label" for="status">Trạng thái</label>
+          <select id="status" name="status" class="field-select">
+            <option value="available" <%= product.status === 'available' ? 'selected' : '' %>>Đang bán</option>
+            <option value="reserved" <%= product.status === 'reserved' ? 'selected' : '' %>>Đang giữ chỗ</option>
+            <option value="sold" <%= product.status === 'sold' ? 'selected' : '' %>>Đã bán</option>
+          </select>
+        </div>
+      <% } %>
+      <div class="flex items-center gap-2 pt-6">
+        <input type="checkbox" id="featured" name="featured" value="1" <%= product && product.featured ? 'checked' : '' %> class="w-4 h-4 rounded border-border text-terracotta focus:ring-terracotta/30" />
+        <label for="featured" class="text-sm">Hiển thị ở mục "Nổi bật" trang chủ</label>
+      </div>
+    </div>
+
+    <div>
+      <label class="field-label" for="images">Ảnh sản phẩm (tối đa 6 ảnh, JPG/PNG/WEBP)</label>
+      <input type="file" id="images" name="images" accept="image/jpeg,image/png,image/webp" multiple class="field-input" />
+      <% if (product && product.images.length) { %>
+        <p class="text-xs text-espresso-soft mt-2">Đã có <%= product.images.length %> ảnh. Tải ảnh mới sẽ thay thế toàn bộ ảnh cũ.</p>
+        <div class="flex gap-2 mt-2">
+          <% product.images.forEach((img, i) => { %>
+            <div class="w-14 h-16 rounded-lg overflow-hidden"><%- include('../partials/product-media', { product, variant: 'thumb', className: 'w-full h-full', imageIndex: i }) %></div>
+          <% }) %>
+        </div>
+      <% } %>
+    </div>
+
+    <div class="flex gap-3 pt-4 border-t border-border">
+      <button type="submit" class="btn-primary"><%= product ? 'Lưu thay đổi' : 'Thêm sản phẩm' %></button>
+      <a href="/admin/san-pham" class="btn-secondary">Hủy</a>
+    </div>
+  </form>
+
+<%- include('../partials/admin-nav-end') %>
+</body>
+</html>

@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<%- include('../partials/head') %>
+</head>
+<body class="bg-cream">
+<%- include('../partials/admin-nav') %>
+
+  <%- include('../partials/flash') %>
+  <h1 class="text-3xl mb-6">Quản lý đơn hàng</h1>
+
+  <div class="flex flex-wrap gap-2 mb-6">
+    <a href="/admin/don-hang" class="badge <%= !status ? 'bg-terracotta text-white' : 'bg-sand text-espresso' %>">Tất cả</a>
+    <% Object.entries(ORDER_STATUS).forEach(([key, label]) => { %>
+      <a href="/admin/don-hang?trang_thai=<%= key %>" class="badge <%= status === key ? 'bg-terracotta text-white' : 'bg-sand text-espresso' %>"><%= label %></a>
+    <% }) %>
+  </div>
+
+  <div class="card-surface overflow-x-auto">
+    <table class="w-full text-sm min-w-[640px]">
+      <thead>
+        <tr class="text-left border-b border-border">
+          <th class="py-3 px-4">Mã đơn</th>
+          <th class="py-3 px-4">Khách hàng</th>
+          <th class="py-3 px-4">Điện thoại</th>
+          <th class="py-3 px-4">Tổng tiền</th>
+          <th class="py-3 px-4">Trạng thái</th>
+          <th class="py-3 px-4">Ngày đặt</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-border">
+        <% if (orders.length === 0) { %>
+          <tr><td colspan="6" class="py-8 px-4 text-center text-espresso-soft">Không có đơn hàng nào.</td></tr>
+        <% } %>
+        <% orders.forEach(o => { %>
+          <tr class="hover:bg-sand/40 cursor-pointer" onclick="location.href='/admin/don-hang/<%= o.id %>'">
+            <td class="py-3 px-4 font-medium"><%= o.order_code %></td>
+            <td class="py-3 px-4"><%= o.customer_name %></td>
+            <td class="py-3 px-4"><%= o.phone %></td>
+            <td class="py-3 px-4"><%= formatPrice(o.subtotal) %></td>
+            <td class="py-3 px-4"><span class="badge bg-sand text-espresso"><%= ORDER_STATUS[o.status] %></span></td>
+            <td class="py-3 px-4 text-espresso-soft"><%= new Date(o.created_at).toLocaleDateString('vi-VN') %></td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+
+<%- include('../partials/admin-nav-end') %>
+</body>
+</html>

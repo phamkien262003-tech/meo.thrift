@@ -1,0 +1,76 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Montserrat:wght@300;400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    @apply bg-cream text-espresso font-sans antialiased;
+  }
+  h1, h2, h3, h4 {
+    @apply font-serif;
+  }
+  a {
+    @apply cursor-pointer;
+  }
+  button, [role="button"] {
+    @apply cursor-pointer;
+  }
+  ::selection {
+    @apply bg-terracotta/20;
+  }
+  :focus-visible {
+    outline: 2px solid #C67B5C;
+    outline-offset: 2px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 bg-terracotta text-white px-6 py-3 rounded-full
+           text-sm tracking-wide font-medium hover:bg-terracotta-dark transition-colors duration-250
+           focus-visible:outline-offset-2 min-h-[44px];
+  }
+  .btn-secondary {
+    @apply inline-flex items-center justify-center gap-2 bg-transparent border border-espresso/30 text-espresso px-6 py-3 rounded-full
+           text-sm tracking-wide font-medium hover:bg-espresso hover:text-cream hover:border-espresso transition-colors duration-250 min-h-[44px];
+  }
+  .btn-ghost {
+    @apply inline-flex items-center justify-center gap-2 text-espresso/80 hover:text-terracotta transition-colors duration-250 min-h-[44px];
+  }
+  .field-label {
+    @apply block text-sm font-medium text-espresso mb-1.5;
+  }
+  .field-input {
+    @apply w-full rounded-xl border border-border bg-card px-4 py-2.5 text-espresso placeholder:text-espresso-soft/50
+           focus:border-terracotta focus:ring-2 focus:ring-terracotta/20 outline-none transition-colors duration-250 min-h-[44px];
+  }
+  .field-select {
+    @apply field-input appearance-none bg-no-repeat;
+  }
+  .card-surface {
+    @apply bg-card border border-border/70 rounded-2xl shadow-card;
+  }
+  .badge {
+    @apply inline-flex items-center gap-1 rounded-full px-3 py-1 text-xs font-medium tracking-wide;
+  }
+  .reveal {
+    @apply opacity-0;
+  }
+  .reveal.is-visible {
+    @apply animate-fadeUp;
+  }
+}

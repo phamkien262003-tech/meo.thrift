@@ -1,0 +1,14 @@
+.claude/
+node_modules/
+.env
+data/*.db
+data/*.db-journal
+data/*.db-wal
+data/*.db-shm
+data/sessions/
+public/uploads/*
+!public/uploads/.gitkeep
+public/css/output.css
+npm-debug.log*
+.DS_Store
+Thumbs.db

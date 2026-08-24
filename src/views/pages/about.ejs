@@ -7,14 +7,16 @@
 <%- include('../partials/header') %>
 
 <main>
-  <section class="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16 text-center">
-    <%- include('../partials/leaf-branch', { corner: 'top-left', className: 'hidden xl:block top-0 -left-44 w-44 opacity-65' }) %>
-    <%- include('../partials/leaf-branch', { corner: 'bottom-right', className: 'hidden xl:block bottom-0 -right-44 w-44 opacity-65' }) %>
-    <span class="badge bg-olive/10 text-olive-dark mb-5"><%- icon('leaf', 'w-3.5 h-3.5') %> <%- edit('about', 'heroBadge', content.about.heroBadge) %></span>
-    <h1 class="text-4xl sm:text-5xl mb-6"><%- edit('about', 'heroTitle', content.about.heroTitle) %></h1>
-    <p class="text-espresso-soft text-lg leading-relaxed">
-      <%- edit('about', 'heroDesc', content.about.heroDesc, { multiline: true }) %>
-    </p>
+  <section class="relative overflow-hidden py-16">
+    <%- include('../partials/leaf-branch', { corner: 'top-left', className: 'top-0 left-0 w-16 sm:w-20 md:w-24 lg:w-32 xl:w-36 2xl:w-72 opacity-80' }) %>
+    <%- include('../partials/leaf-branch', { corner: 'bottom-right', className: 'hidden xl:block bottom-0 right-0 w-36 2xl:w-72 opacity-80' }) %>
+    <div class="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <span class="badge bg-olive/10 text-olive-dark mb-5"><%- icon('leaf', 'w-3.5 h-3.5') %> <%- edit('about', 'heroBadge', content.about.heroBadge) %></span>
+      <h1 class="text-4xl sm:text-5xl mb-6"><%- edit('about', 'heroTitle', content.about.heroTitle) %></h1>
+      <p class="text-espresso-soft text-lg leading-relaxed">
+        <%- edit('about', 'heroDesc', content.about.heroDesc, { multiline: true }) %>
+      </p>
+    </div>
   </section>
 
   <section class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 pb-16 space-y-10 text-espresso-soft leading-relaxed">
@@ -41,9 +43,13 @@
     </div>
   </section>
 
-  <section class="bg-terracotta/5 py-16 text-center">
-    <h2 class="text-2xl sm:text-3xl mb-5"><%- edit('about', 'ctaTitle', content.about.ctaTitle) %></h2>
-    <a href="/cua-hang" class="btn-primary"><%- edit('about', 'ctaButton', content.about.ctaButton) %></a>
+  <section class="relative overflow-hidden bg-terracotta/5 py-16 text-center">
+    <%- include('../partials/leaf-branch', { corner: 'top-left', className: 'top-0 left-0 w-12 sm:w-14 md:w-16 lg:w-20 xl:w-28 2xl:w-44 opacity-70' }) %>
+    <%- include('../partials/leaf-branch', { corner: 'bottom-right', className: 'bottom-0 right-0 w-12 sm:w-14 md:w-16 lg:w-20 xl:w-28 2xl:w-44 opacity-70' }) %>
+    <div class="relative max-w-xl mx-auto px-4">
+      <h2 class="text-2xl sm:text-3xl mb-5"><%- edit('about', 'ctaTitle', content.about.ctaTitle) %></h2>
+      <a href="/cua-hang" class="btn-primary inline-flex"><%- edit('about', 'ctaButton', content.about.ctaButton) %></a>
+    </div>
   </section>
 </main>
 

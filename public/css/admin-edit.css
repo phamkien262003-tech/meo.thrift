@@ -66,35 +66,94 @@
   }
 }
 
-.js-edit-position-popover {
+.js-crop-overlay {
   position: fixed;
-  z-index: 300;
-  display: grid;
-  grid-template-columns: repeat(3, 28px);
-  grid-template-rows: repeat(3, 28px);
-  gap: 4px;
-  padding: 6px;
-  background: #3a2e27;
+  inset: 0;
+  background: rgba(58, 46, 39, 0.72);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 400;
+  padding: 16px;
+}
+
+.js-crop-panel {
+  background: #fbf8f2;
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 20px 60px -12px rgba(58, 46, 39, 0.5);
+  max-width: calc(100vw - 32px);
+}
+
+.js-crop-title {
+  font-size: 13px;
+  color: #6b5d52;
+  margin: 0 0 12px;
+  text-align: center;
+}
+
+.js-crop-frame {
+  position: relative;
+  overflow: hidden;
   border-radius: 10px;
-  box-shadow: 0 8px 30px -8px rgba(58, 46, 39, 0.5);
+  border: 2px solid #c67b5c;
+  margin: 0 auto;
+  cursor: grab;
+  touch-action: none;
 }
 
-.js-edit-position-cell {
-  width: 28px;
-  height: 28px;
-  border-radius: 5px;
-  background: rgba(251, 248, 242, 0.14);
+.js-crop-frame:active,
+.js-crop-img.is-dragging {
+  cursor: grabbing;
+}
+
+.js-crop-img {
+  position: absolute;
+  max-width: none;
+  max-height: none;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+.js-crop-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.js-crop-cancel,
+.js-crop-save {
+  border: none;
+  border-radius: 999px;
+  padding: 8px 18px;
+  font-size: 13px;
+  font-weight: 500;
   cursor: pointer;
-  transition: background-color 0.12s ease, transform 0.12s ease;
+  transition: background-color 0.15s ease, opacity 0.15s ease;
 }
 
-.js-edit-position-cell:hover {
-  background: rgba(198, 123, 92, 0.55);
+.js-crop-cancel {
+  background: rgba(58, 46, 39, 0.08);
+  color: #3a2e27;
 }
 
-.js-edit-position-cell.is-active {
+.js-crop-cancel:hover {
+  background: rgba(58, 46, 39, 0.14);
+}
+
+.js-crop-save {
   background: #c67b5c;
-  transform: scale(1.08);
+  color: #fbf8f2;
+}
+
+.js-crop-save:hover {
+  background: #a85f45;
+}
+
+.js-crop-save[disabled] {
+  opacity: 0.6;
+  cursor: wait;
 }
 
 #admin-edit-toast {

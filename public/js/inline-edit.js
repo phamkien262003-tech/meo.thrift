@@ -166,63 +166,164 @@
       });
   }
 
-  // ---------- Image position (crop focal point) ----------
+  // ---------- Image position (free drag-to-crop, like a photo editor's fixed-frame crop) ----------
 
-  var POSITIONS = [
-    'left top', 'center top', 'right top',
-    'left center', 'center center', 'right center',
-    'left bottom', 'center bottom', 'right bottom',
-  ];
-
-  var openPositionBtn = null;
-
-  function closePositionPopover() {
-    var open = document.querySelector('.js-edit-position-popover');
-    if (open) open.remove();
-    openPositionBtn = null;
+  // Accepts both "NN% NN%" (what this picker now saves) and CSS keywords (what the old
+  // 9-point picker saved, and what every field still defaults to) so old values keep working.
+  function parsePosition(str) {
+    var KEYWORD_X = { left: 0, center: 50, right: 100 };
+    var KEYWORD_Y = { top: 0, center: 50, bottom: 100 };
+    var parts = (str || 'center center').trim().split(/\s+/);
+    function val(token, table) {
+      if (!token) return 50;
+      if (token.indexOf('%') !== -1) {
+        var n = parseFloat(token);
+        return isNaN(n) ? 50 : Math.min(Math.max(n, 0), 100);
+      }
+      return table.hasOwnProperty(token) ? table[token] : 50;
+    }
+    return { x: val(parts[0], KEYWORD_X), y: val(parts[1], KEYWORD_Y) };
   }
 
-  function openPositionPopover(wrap, btn) {
-    closePositionPopover();
+  function openCropModal(wrap) {
     var img = wrap.querySelector('.js-edit-image-img');
-    var current = img ? img.style.objectPosition : 'center center';
+    if (!img) return;
 
-    var pop = document.createElement('div');
-    pop.className = 'js-edit-position-popover';
-    POSITIONS.forEach(function (pos) {
-      var cell = document.createElement('button');
-      cell.type = 'button';
-      cell.className = 'js-edit-position-cell';
-      cell.setAttribute('data-position', pos);
-      cell.setAttribute('aria-label', pos);
-      if (pos === current) cell.classList.add('is-active');
-      cell.addEventListener('click', function (e) {
-        e.stopPropagation();
-        savePosition(wrap, pop, pos);
-      });
-      pop.appendChild(cell);
+    var frameAspect = wrap.clientWidth / wrap.clientHeight;
+    if (!isFinite(frameAspect) || frameAspect <= 0) frameAspect = 1;
+
+    var maxW = Math.min(420, window.innerWidth - 48);
+    var maxH = Math.min(520, window.innerHeight - 200);
+    var frameW = maxW;
+    var frameH = frameW / frameAspect;
+    if (frameH > maxH) {
+      frameH = maxH;
+      frameW = frameH * frameAspect;
+    }
+
+    var overlay = document.createElement('div');
+    overlay.className = 'js-crop-overlay';
+    var panel = document.createElement('div');
+    panel.className = 'js-crop-panel';
+    panel.innerHTML =
+      '<p class="js-crop-title">Kéo ảnh để chọn phần hiển thị</p>' +
+      '<div class="js-crop-frame" style="width:' + frameW + 'px;height:' + frameH + 'px;">' +
+      '<img class="js-crop-img" src="' + img.src + '" draggable="false" alt="" />' +
+      '</div>' +
+      '<div class="js-crop-actions">' +
+      '<button type="button" class="js-crop-cancel">Hủy</button>' +
+      '<button type="button" class="js-crop-save">Lưu vị trí</button>' +
+      '</div>';
+    overlay.appendChild(panel);
+    document.body.appendChild(overlay);
+    document.body.style.overflow = 'hidden';
+
+    var frame = panel.querySelector('.js-crop-frame');
+    var cropImg = panel.querySelector('.js-crop-img');
+    var saveBtn = panel.querySelector('.js-crop-save');
+    var cancelBtn = panel.querySelector('.js-crop-cancel');
+    var current = parsePosition(img.style.objectPosition);
+
+    var state = { imgW: 0, imgH: 0, left: 0, top: 0, dragging: false, startX: 0, startY: 0, startLeft: 0, startTop: 0 };
+
+    function layoutImage() {
+      var natW = cropImg.naturalWidth;
+      var natH = cropImg.naturalHeight;
+      if (!natW || !natH) return;
+      var imgAspect = natW / natH;
+      var w, h;
+      if (imgAspect > frameAspect) {
+        h = frameH;
+        w = h * imgAspect;
+      } else {
+        w = frameW;
+        h = w / imgAspect;
+      }
+      state.imgW = w;
+      state.imgH = h;
+      state.left = -(w - frameW) * (current.x / 100);
+      state.top = -(h - frameH) * (current.y / 100);
+      cropImg.style.width = w + 'px';
+      cropImg.style.height = h + 'px';
+      cropImg.style.left = state.left + 'px';
+      cropImg.style.top = state.top + 'px';
+    }
+
+    if (cropImg.complete && cropImg.naturalWidth) {
+      layoutImage();
+    } else {
+      cropImg.addEventListener('load', layoutImage);
+    }
+
+    function clamp(v, min, max) {
+      return Math.min(Math.max(v, min), max);
+    }
+
+    function onPointerDown(e) {
+      state.dragging = true;
+      var point = e.touches ? e.touches[0] : e;
+      state.startX = point.clientX;
+      state.startY = point.clientY;
+      state.startLeft = state.left;
+      state.startTop = state.top;
+      cropImg.classList.add('is-dragging');
+      e.preventDefault();
+    }
+
+    function onPointerMove(e) {
+      if (!state.dragging) return;
+      if (e.cancelable) e.preventDefault();
+      var point = e.touches ? e.touches[0] : e;
+      var dx = point.clientX - state.startX;
+      var dy = point.clientY - state.startY;
+      var minLeft = Math.min(0, frameW - state.imgW);
+      var minTop = Math.min(0, frameH - state.imgH);
+      state.left = clamp(state.startLeft + dx, minLeft, 0);
+      state.top = clamp(state.startTop + dy, minTop, 0);
+      cropImg.style.left = state.left + 'px';
+      cropImg.style.top = state.top + 'px';
+    }
+
+    function onPointerUp() {
+      state.dragging = false;
+      cropImg.classList.remove('is-dragging');
+    }
+
+    frame.addEventListener('mousedown', onPointerDown);
+    frame.addEventListener('touchstart', onPointerDown, { passive: false });
+    window.addEventListener('mousemove', onPointerMove);
+    window.addEventListener('touchmove', onPointerMove, { passive: false });
+    window.addEventListener('mouseup', onPointerUp);
+    window.addEventListener('touchend', onPointerUp);
+
+    function cleanup() {
+      window.removeEventListener('mousemove', onPointerMove);
+      window.removeEventListener('touchmove', onPointerMove);
+      window.removeEventListener('mouseup', onPointerUp);
+      window.removeEventListener('touchend', onPointerUp);
+      document.body.style.overflow = '';
+      overlay.remove();
+    }
+
+    cancelBtn.addEventListener('click', cleanup);
+    overlay.addEventListener('click', function (e) {
+      if (e.target === overlay) cleanup();
     });
 
-    // Appended to <body> (not `wrap`) and positioned fixed, since `wrap` has overflow-hidden
-    // to crop the image — an absolutely-positioned child would get clipped by that.
-    document.body.appendChild(pop);
-    var r = btn.getBoundingClientRect();
-    var popWidth = 108;
-    var left = Math.min(Math.max(8, r.right - popWidth), window.innerWidth - popWidth - 8);
-    var top = r.top - 8 - 108;
-    if (top < 8) top = r.bottom + 8;
-    pop.style.left = left + 'px';
-    pop.style.top = top + 'px';
-    openPositionBtn = btn;
+    saveBtn.addEventListener('click', function () {
+      var rangeX = state.imgW - frameW;
+      var rangeY = state.imgH - frameH;
+      var posX = rangeX > 0 ? Math.round((-state.left / rangeX) * 100) : 50;
+      var posY = rangeY > 0 ? Math.round((-state.top / rangeY) * 100) : 50;
+      savePosition(wrap, posX + '% ' + posY + '%', saveBtn, cleanup);
+    });
   }
 
-  function savePosition(wrap, pop, position) {
+  function savePosition(wrap, position, saveBtn, onDone) {
     var img = wrap.querySelector('.js-edit-image-img');
-    var previous = img ? img.style.objectPosition : '';
-    if (img) img.style.objectPosition = position;
-    Array.prototype.forEach.call(pop.children, function (cell) {
-      cell.classList.toggle('is-active', cell.getAttribute('data-position') === position);
-    });
+    var originalLabel = saveBtn.textContent;
+    saveBtn.setAttribute('disabled', 'disabled');
+    saveBtn.textContent = 'Đang lưu...';
 
     // Wraps declare where/what to POST via data attributes so this one picker works for
     // page-content images, product photos, and journal covers alike (see data-position-url).
@@ -247,34 +348,23 @@
     })
       .then(function (res) {
         if (!res.ok) throw new Error('save_failed');
+        if (img) img.style.objectPosition = position;
         showToast('Đã lưu vị trí');
-        closePositionPopover();
+        onDone();
       })
       .catch(function () {
-        if (img) img.style.objectPosition = previous;
         showToast('Lưu vị trí thất bại, vui lòng thử lại.', true);
+        saveBtn.removeAttribute('disabled');
+        saveBtn.textContent = originalLabel;
       });
   }
 
   document.addEventListener('click', function (e) {
     var btn = e.target.closest && e.target.closest('.js-edit-position-btn');
-    if (btn) {
-      e.preventDefault();
-      e.stopPropagation();
-      var wrap = btn.closest('.js-edit-image-wrap');
-      if (!wrap) return;
-      if (openPositionBtn === btn) {
-        closePositionPopover();
-      } else {
-        openPositionPopover(wrap, btn);
-      }
-      return;
-    }
-    if (!e.target.closest || !e.target.closest('.js-edit-position-popover')) {
-      closePositionPopover();
-    }
+    if (!btn) return;
+    e.preventDefault();
+    var wrap = btn.closest('.js-edit-image-wrap');
+    if (!wrap) return;
+    openCropModal(wrap);
   });
-
-  window.addEventListener('scroll', closePositionPopover, true);
-  window.addEventListener('resize', closePositionPopover);
 })();

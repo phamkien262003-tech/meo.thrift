@@ -23,11 +23,16 @@ const {
 } = require('../db/models');
 const { PAGE_CONTENT, getPageContent, savePageContent, updatePageContentField } = require('../services/page-content');
 
-const IMAGE_POSITIONS = new Set([
-  'left top', 'center top', 'right top',
-  'left center', 'center center', 'right center',
-  'left bottom', 'center bottom', 'right bottom',
-]);
+// The free-drag crop picker saves "NN% NN%" (0-100, either axis); old data saved before it
+// existed may still hold a CSS keyword pair like "left top" — those still render fine (the
+// value is only ever used as a CSS object-position), just no longer accepted as a new save.
+const IMAGE_POSITION_RE = /^(\d{1,3}(?:\.\d+)?)% (\d{1,3}(?:\.\d+)?)%$/;
+function isValidImagePosition(value) {
+  if (typeof value !== 'string') return false;
+  const match = IMAGE_POSITION_RE.exec(value.trim());
+  if (!match) return false;
+  return Number(match[1]) <= 100 && Number(match[2]) <= 100;
+}
 
 router.use(requireAdmin);
 
@@ -219,7 +224,7 @@ router.post('/san-pham/:id/anh/:imageId/xoa', async (req, res, next) => {
 router.post('/san-pham/:id/anh/:imageId/vi-tri', async (req, res, next) => {
   try {
     const { position } = req.body;
-    if (typeof position !== 'string' || !IMAGE_POSITIONS.has(position)) {
+    if (!isValidImagePosition(position)) {
       return res.status(400).json({ ok: false, error: 'invalid_position' });
     }
     const ok = await updateProductImagePosition(Number(req.params.id), Number(req.params.imageId), position);
@@ -551,7 +556,7 @@ router.post('/noi-dung/api/image-position', async (req, res, next) => {
     const schema = PAGE_CONTENT[page];
     const field = schema && schema.groups.flatMap((g) => g.fields).find((f) => f.key === key && f.type === 'imagePosition');
     if (!field) return res.status(400).json({ ok: false, error: 'unknown_field' });
-    if (typeof position !== 'string' || !IMAGE_POSITIONS.has(position)) {
+    if (!isValidImagePosition(position)) {
       return res.status(400).json({ ok: false, error: 'invalid_position' });
     }
     await updatePageContentField(page, key, position);
@@ -642,7 +647,7 @@ router.post('/nhat-ky/:id', upload.single('cover_image'), async (req, res, next)
 router.post('/nhat-ky/:id/anh-bia/vi-tri', async (req, res, next) => {
   try {
     const { position } = req.body;
-    if (typeof position !== 'string' || !IMAGE_POSITIONS.has(position)) {
+    if (!isValidImagePosition(position)) {
       return res.status(400).json({ ok: false, error: 'invalid_position' });
     }
     const ok = await updateJournalCoverPosition(Number(req.params.id), position);

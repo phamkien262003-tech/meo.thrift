@@ -46,6 +46,7 @@ const PAGE_CONTENT = {
           { key: 'hookDesc', label: 'Mô tả', type: 'textarea', default: 'Mỗi tuần một vài món đồ mới được tuyển chọn — khi hết là hết, không có chiếc thứ hai.' },
           { key: 'hookCta', label: 'Nút', type: 'text', default: 'Khám phá ngay' },
           { key: 'hookImage', label: 'Ảnh nền lớn', type: 'image', default: null },
+          { key: 'hookImagePosition', label: 'Vị trí hiển thị', type: 'imagePosition', default: 'center center' },
         ],
       },
       {
@@ -82,7 +83,9 @@ const PAGE_CONTENT = {
         title: 'Ảnh minh họa',
         fields: [
           { key: 'heroImage', label: 'Ảnh lớn', type: 'image', default: null },
+          { key: 'heroImagePosition', label: 'Vị trí hiển thị (ảnh lớn)', type: 'imagePosition', default: 'center center' },
           { key: 'heroImage2', label: 'Ảnh nhỏ nổi', type: 'image', default: null },
+          { key: 'heroImage2Position', label: 'Vị trí hiển thị (ảnh nhỏ)', type: 'imagePosition', default: 'center center' },
         ],
       },
     ],
@@ -101,7 +104,10 @@ const PAGE_CONTENT = {
       },
       {
         title: 'Ảnh minh họa',
-        fields: [{ key: 'heroImage', label: 'Ảnh banner', type: 'image', default: null }],
+        fields: [
+          { key: 'heroImage', label: 'Ảnh banner', type: 'image', default: null },
+          { key: 'heroImagePosition', label: 'Vị trí hiển thị', type: 'imagePosition', default: 'center center' },
+        ],
       },
       {
         title: 'Mục 1',
@@ -345,8 +351,13 @@ async function savePageContent(page, body) {
   const saved = JSON.parse((await getSetting(`content:${page}`, '{}')) || '{}');
   const data = {};
   fieldsOf(page).forEach((f) => {
-    // Image fields aren't part of the text form — leave whatever was uploaded via the inline editor untouched.
-    data[f.key] = f.type === 'image' ? (saved[f.key] !== undefined ? saved[f.key] : null) : (body[f.key] || '').trim();
+    // Image/imagePosition fields aren't part of the text form — leave whatever was set via the inline editor untouched.
+    data[f.key] =
+      f.type === 'image' || f.type === 'imagePosition'
+        ? saved[f.key] !== undefined
+          ? saved[f.key]
+          : f.default
+        : (body[f.key] || '').trim();
   });
   await setSetting(`content:${page}`, JSON.stringify(data));
 }

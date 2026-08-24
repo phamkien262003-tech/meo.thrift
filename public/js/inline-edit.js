@@ -143,14 +143,18 @@
       .then(function (data) {
         var existingSvg = wrap.querySelector('svg');
         if (existingSvg) existingSvg.remove();
-        var img = wrap.querySelector('img');
+        var btnRow = wrap.querySelector('.js-edit-btn-row');
+        var img = wrap.querySelector('.js-edit-image-img');
         if (!img) {
           img = document.createElement('img');
-          img.className = 'w-full h-full object-cover';
+          img.className = 'w-full h-full object-cover js-edit-image-img';
           img.alt = '';
-          wrap.insertBefore(img, btn);
+          img.style.objectPosition = 'center center';
+          wrap.insertBefore(img, btnRow || null);
         }
         img.src = data.src;
+        var positionBtn = wrap.querySelector('.js-edit-position-btn');
+        if (positionBtn) positionBtn.classList.remove('hidden');
         showToast('Đã cập nhật ảnh');
       })
       .catch(function () {
@@ -161,4 +165,101 @@
         btn.innerHTML = originalLabel;
       });
   }
+
+  // ---------- Image position (crop focal point) ----------
+
+  var POSITIONS = [
+    'left top', 'center top', 'right top',
+    'left center', 'center center', 'right center',
+    'left bottom', 'center bottom', 'right bottom',
+  ];
+
+  var openPositionBtn = null;
+
+  function closePositionPopover() {
+    var open = document.querySelector('.js-edit-position-popover');
+    if (open) open.remove();
+    openPositionBtn = null;
+  }
+
+  function openPositionPopover(wrap, btn) {
+    closePositionPopover();
+    var img = wrap.querySelector('.js-edit-image-img');
+    var current = img ? img.style.objectPosition : 'center center';
+
+    var pop = document.createElement('div');
+    pop.className = 'js-edit-position-popover';
+    POSITIONS.forEach(function (pos) {
+      var cell = document.createElement('button');
+      cell.type = 'button';
+      cell.className = 'js-edit-position-cell';
+      cell.setAttribute('data-position', pos);
+      cell.setAttribute('aria-label', pos);
+      if (pos === current) cell.classList.add('is-active');
+      cell.addEventListener('click', function (e) {
+        e.stopPropagation();
+        savePosition(wrap, pop, pos);
+      });
+      pop.appendChild(cell);
+    });
+
+    // Appended to <body> (not `wrap`) and positioned fixed, since `wrap` has overflow-hidden
+    // to crop the image — an absolutely-positioned child would get clipped by that.
+    document.body.appendChild(pop);
+    var r = btn.getBoundingClientRect();
+    var popWidth = 108;
+    var left = Math.min(Math.max(8, r.right - popWidth), window.innerWidth - popWidth - 8);
+    var top = r.top - 8 - 108;
+    if (top < 8) top = r.bottom + 8;
+    pop.style.left = left + 'px';
+    pop.style.top = top + 'px';
+    openPositionBtn = btn;
+  }
+
+  function savePosition(wrap, pop, position) {
+    var img = wrap.querySelector('.js-edit-image-img');
+    var previous = img ? img.style.objectPosition : '';
+    if (img) img.style.objectPosition = position;
+    Array.prototype.forEach.call(pop.children, function (cell) {
+      cell.classList.toggle('is-active', cell.getAttribute('data-position') === position);
+    });
+
+    fetch('/admin/noi-dung/api/image-position', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'same-origin',
+      body: JSON.stringify({ page: wrap.dataset.page, key: wrap.dataset.positionKey, position: position }),
+    })
+      .then(function (res) {
+        if (!res.ok) throw new Error('save_failed');
+        showToast('Đã lưu vị trí');
+        closePositionPopover();
+      })
+      .catch(function () {
+        if (img) img.style.objectPosition = previous;
+        showToast('Lưu vị trí thất bại, vui lòng thử lại.', true);
+      });
+  }
+
+  document.addEventListener('click', function (e) {
+    var btn = e.target.closest && e.target.closest('.js-edit-position-btn');
+    if (btn) {
+      e.preventDefault();
+      e.stopPropagation();
+      var wrap = btn.closest('.js-edit-image-wrap');
+      if (!wrap) return;
+      if (openPositionBtn === btn) {
+        closePositionPopover();
+      } else {
+        openPositionPopover(wrap, btn);
+      }
+      return;
+    }
+    if (!e.target.closest || !e.target.closest('.js-edit-position-popover')) {
+      closePositionPopover();
+    }
+  });
+
+  window.addEventListener('scroll', closePositionPopover, true);
+  window.addEventListener('resize', closePositionPopover);
 })();

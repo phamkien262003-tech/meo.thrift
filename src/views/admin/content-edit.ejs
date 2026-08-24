@@ -14,7 +14,7 @@
     <% schema.groups.forEach(group => { %>
       <div class="card-surface p-6 space-y-4">
         <h2 class="font-serif text-xl mb-2"><%= group.title %></h2>
-        <% group.fields.filter(f => f.type !== 'image').forEach(field => { %>
+        <% group.fields.filter(f => f.type !== 'image' && f.type !== 'imagePosition').forEach(field => { %>
           <div>
             <label class="field-label" for="field-<%= field.key %>"><%= field.label %></label>
             <% if (field.type === 'textarea') { %>
@@ -24,8 +24,8 @@
             <% } %>
           </div>
         <% }) %>
-        <% if (group.fields.every(f => f.type === 'image')) { %>
-          <p class="text-sm text-espresso-soft">Ảnh được đổi trực tiếp trên trang thật — xem trang này để đổi ảnh.</p>
+        <% if (group.fields.every(f => f.type === 'image' || f.type === 'imagePosition')) { %>
+          <p class="text-sm text-espresso-soft">Ảnh và vị trí hiển thị được chỉnh trực tiếp trên trang thật — xem trang này để đổi.</p>
         <% } %>
       </div>
     <% }) %>

@@ -28,9 +28,9 @@
         </div>
       </div>
       <div class="relative reveal" data-reveal>
-        <%- include('../partials/editable-image', { page: 'home', key: 'heroImage', value: content.home.heroImage, tone: 'olive', seed: 1, className: 'relative aspect-[4/5] rounded-organic shadow-soft' }) %>
+        <%- include('../partials/editable-image', { page: 'home', key: 'heroImage', value: content.home.heroImage, position: content.home.heroImagePosition, tone: 'olive', seed: 1, className: 'relative aspect-[4/5] rounded-organic shadow-soft' }) %>
         <div class="absolute -bottom-6 -left-6 w-32 h-40 hidden sm:block">
-          <%- include('../partials/editable-image', { page: 'home', key: 'heroImage2', value: content.home.heroImage2, tone: 'rose', seed: 2, className: 'relative w-full h-full rounded-2xl shadow-soft border-4 border-cream' }) %>
+          <%- include('../partials/editable-image', { page: 'home', key: 'heroImage2', value: content.home.heroImage2, position: content.home.heroImage2Position, tone: 'rose', seed: 2, className: 'relative w-full h-full rounded-2xl shadow-soft border-4 border-cream' }) %>
         </div>
       </div>
     </div>
@@ -39,7 +39,7 @@
   <!-- Hook: full-bleed statement image -->
   <section class="relative w-full overflow-hidden reveal" data-reveal>
     <div class="relative aspect-[4/3] sm:aspect-[16/9] lg:aspect-[21/9] min-h-[300px] sm:min-h-[380px] lg:min-h-[420px] w-full">
-      <%- include('../partials/editable-image', { page: 'home', key: 'hookImage', value: content.home.hookImage, tone: 'terracotta', seed: 3, className: 'absolute inset-0 w-full h-full' }) %>
+      <%- include('../partials/editable-image', { page: 'home', key: 'hookImage', value: content.home.hookImage, position: content.home.hookImagePosition, tone: 'terracotta', seed: 3, className: 'absolute inset-0 w-full h-full' }) %>
       <div class="absolute inset-0 bg-gradient-to-t from-espresso/85 via-espresso/25 to-transparent"></div>
       <div class="absolute inset-0 flex items-end">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-10 sm:pb-16 w-full text-cream">

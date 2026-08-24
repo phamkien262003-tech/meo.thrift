@@ -1,16 +1,23 @@
 <%
-/* locals: page, key, value (stored image id or null), tone, seed, className (position/size/rounding classes) */
+/* locals: page, key, value (stored image id or null), tone, seed, className (position/size/rounding classes),
+   position (current object-position, e.g. 'center center' — optional, only meaningful once a real image is set) */
 const _resolved = resolveImage(value);
+const _position = position || 'center center';
 %>
-<div class="overflow-hidden <%= className || '' %> <%= isAdmin ? 'js-edit-image-wrap' : '' %>"<% if (isAdmin) { %> data-page="<%= page %>" data-key="<%= key %>"<% } %>>
+<div class="overflow-hidden <%= className || '' %> <%= isAdmin ? 'js-edit-image-wrap' : '' %>"<% if (isAdmin) { %> data-page="<%= page %>" data-key="<%= key %>" data-position-key="<%= key %>Position"<% } %>>
   <% if (_resolved.isPlaceholder) { %>
     <%- placeholderArt(tone || 'terracotta', seed || 0) %>
   <% } else { %>
-    <img src="<%= _resolved.src %>" alt="" class="w-full h-full object-cover" />
+    <img src="<%= _resolved.src %>" alt="" class="w-full h-full object-cover js-edit-image-img" style="object-position: <%= _position %>;" />
   <% } %>
   <% if (isAdmin) { %>
-    <button type="button" class="js-edit-image-btn absolute bottom-2 right-2 z-10 inline-flex items-center gap-1.5 rounded-full bg-espresso/80 text-cream text-xs px-3 py-1.5 backdrop-blur-sm hover:bg-espresso transition-colors duration-250">
-      <%- icon('image', 'w-3.5 h-3.5') %> Đổi ảnh
-    </button>
+    <div class="js-edit-btn-row absolute bottom-2 right-2 z-10 flex items-center gap-1.5">
+      <button type="button" class="js-edit-position-btn inline-flex items-center gap-1.5 rounded-full bg-espresso/80 text-cream text-xs px-3 py-1.5 backdrop-blur-sm hover:bg-espresso transition-colors duration-250 <%= _resolved.isPlaceholder ? 'hidden' : '' %>">
+        <%- icon('dashboard', 'w-3.5 h-3.5') %> Chọn vị trí
+      </button>
+      <button type="button" class="js-edit-image-btn inline-flex items-center gap-1.5 rounded-full bg-espresso/80 text-cream text-xs px-3 py-1.5 backdrop-blur-sm hover:bg-espresso transition-colors duration-250">
+        <%- icon('image', 'w-3.5 h-3.5') %> Đổi ảnh
+      </button>
+    </div>
   <% } %>
 </div>

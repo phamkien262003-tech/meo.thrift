@@ -16,7 +16,7 @@
   </section>
 
   <section class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 pb-16 space-y-10 text-espresso-soft leading-relaxed">
-    <%- include('../partials/editable-image', { page: 'about', key: 'heroImage', value: content.about.heroImage, tone: 'sand', seed: 3, className: 'relative aspect-[21/9] rounded-2xl shadow-soft' }) %>
+    <%- include('../partials/editable-image', { page: 'about', key: 'heroImage', value: content.about.heroImage, position: content.about.heroImagePosition, tone: 'sand', seed: 3, className: 'relative aspect-[21/9] rounded-2xl shadow-soft' }) %>
 
     <div>
       <h2 class="font-serif text-2xl text-espresso mb-3"><%- edit('about', 'block1Title', content.about.block1Title) %></h2>

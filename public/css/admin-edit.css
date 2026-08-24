@@ -50,6 +50,53 @@
   cursor: wait;
 }
 
+.js-edit-position-btn {
+  opacity: 0;
+  transition: opacity 0.15s ease;
+}
+
+.js-edit-image-wrap:hover .js-edit-position-btn,
+.js-edit-position-btn:focus {
+  opacity: 1;
+}
+
+@media (hover: none) {
+  .js-edit-position-btn {
+    opacity: 1;
+  }
+}
+
+.js-edit-position-popover {
+  position: fixed;
+  z-index: 300;
+  display: grid;
+  grid-template-columns: repeat(3, 28px);
+  grid-template-rows: repeat(3, 28px);
+  gap: 4px;
+  padding: 6px;
+  background: #3a2e27;
+  border-radius: 10px;
+  box-shadow: 0 8px 30px -8px rgba(58, 46, 39, 0.5);
+}
+
+.js-edit-position-cell {
+  width: 28px;
+  height: 28px;
+  border-radius: 5px;
+  background: rgba(251, 248, 242, 0.14);
+  cursor: pointer;
+  transition: background-color 0.12s ease, transform 0.12s ease;
+}
+
+.js-edit-position-cell:hover {
+  background: rgba(198, 123, 92, 0.55);
+}
+
+.js-edit-position-cell.is-active {
+  background: #c67b5c;
+  transform: scale(1.08);
+}
+
 #admin-edit-toast {
   position: fixed;
   left: 50%;

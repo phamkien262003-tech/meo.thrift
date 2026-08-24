@@ -521,6 +521,29 @@ router.post('/noi-dung/api/image', upload.single('image'), async (req, res, next
   }
 });
 
+const IMAGE_POSITIONS = new Set([
+  'left top', 'center top', 'right top',
+  'left center', 'center center', 'right center',
+  'left bottom', 'center bottom', 'right bottom',
+]);
+
+// Sets which part of an oversized image stays visible under object-cover crop (see js-edit-position-btn).
+router.post('/noi-dung/api/image-position', async (req, res, next) => {
+  try {
+    const { page, key, position } = req.body;
+    const schema = PAGE_CONTENT[page];
+    const field = schema && schema.groups.flatMap((g) => g.fields).find((f) => f.key === key && f.type === 'imagePosition');
+    if (!field) return res.status(400).json({ ok: false, error: 'unknown_field' });
+    if (typeof position !== 'string' || !IMAGE_POSITIONS.has(position)) {
+      return res.status(400).json({ ok: false, error: 'invalid_position' });
+    }
+    await updatePageContentField(page, key, position);
+    res.json({ ok: true });
+  } catch (err) {
+    next(err);
+  }
+});
+
 // ---------- Nhật ký (Journal) ----------
 
 router.get('/nhat-ky', async (req, res, next) => {

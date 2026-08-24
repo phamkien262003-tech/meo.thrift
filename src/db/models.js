@@ -7,6 +7,12 @@ const CATEGORIES = [
   'Đầm ren',
   'Váy hoa nhí',
   'Đầm dự tiệc',
+  'Chân váy',
+  'Áo sơ mi',
+  'Áo len',
+  'Áo khoác',
+  'Phụ kiện',
+  'Set phối đồ',
 ];
 
 const ERA_TAGS = ['Y2K', 'Vintage 90s', 'Cổ điển Pháp', 'Mori nhẹ nhàng', 'Tối giản hiện đại'];

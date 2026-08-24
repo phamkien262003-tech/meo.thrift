@@ -7,7 +7,7 @@
 </div>
 <div class="bg-terracotta text-cream overflow-hidden py-[9px]">
   <div class="flex w-max animate-marquee">
-    <% const tickerItems = ['Tuyển chọn kỹ lưỡng', 'Độc bản, không đụng hàng', 'Váy secondhand chọn lọc', 'Giao hàng toàn quốc — đóng gói cẩn thận cho từng đơn hàng'];
+    <% const tickerItems = ['Tuyển chọn kỹ lưỡng', 'Độc bản, không đụng hàng', 'Trang phục & phụ kiện mori', 'Giao hàng toàn quốc — đóng gói cẩn thận cho từng đơn hàng'];
        const tickerLoop = tickerItems.concat(tickerItems); %>
     <% tickerLoop.forEach(function(item) { %>
       <span class="flex items-center gap-[9px] px-[30px] text-[15px] tracking-widest uppercase font-medium whitespace-nowrap">
@@ -36,7 +36,7 @@
       <div class="flex items-center gap-1 sm:gap-2">
         <form action="/cua-hang" method="GET" class="hidden md:flex items-center relative">
           <span class="absolute left-3 text-espresso-soft"><%- icon('search', 'w-4 h-4') %></span>
-          <input type="text" name="q" placeholder="Tìm váy, thương hiệu..." class="w-48 lg:w-64 rounded-full border border-border bg-card pl-9 pr-4 py-2 text-sm focus:border-terracotta focus:ring-2 focus:ring-terracotta/20 outline-none transition-colors duration-250" />
+          <input type="text" name="q" placeholder="Tìm sản phẩm, thương hiệu..." class="w-48 lg:w-64 rounded-full border border-border bg-card pl-9 pr-4 py-2 text-sm focus:border-terracotta focus:ring-2 focus:ring-terracotta/20 outline-none transition-colors duration-250" />
         </form>
         <a href="/yeu-thich" class="p-2.5 rounded-full hover:bg-sand transition-colors duration-250 relative" aria-label="Sản phẩm yêu thích">
           <%- icon('heart', 'w-5 h-5') %>
@@ -60,7 +60,7 @@
     <a href="/huong-dan-chon-size" class="block py-1.5">Hướng dẫn size</a>
     <a href="/lien-he" class="block py-1.5">Liên hệ</a>
     <form action="/cua-hang" method="GET" class="pt-2">
-      <input type="text" name="q" placeholder="Tìm váy, thương hiệu..." class="field-input" />
+      <input type="text" name="q" placeholder="Tìm sản phẩm, thương hiệu..." class="field-input" />
     </form>
   </nav>
 </header>

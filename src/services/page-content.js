@@ -13,9 +13,9 @@ const PAGE_CONTENT = {
         title: 'Banner đầu trang',
         fields: [
           { key: 'heroBadge', label: 'Nhãn nhỏ', type: 'text', default: 'Phong cách mori · độc bản' },
-          { key: 'heroTitleLine1', label: 'Tiêu đề (dòng 1)', type: 'text', default: 'Những chiếc váy cũ,' },
+          { key: 'heroTitleLine1', label: 'Tiêu đề (dòng 1)', type: 'text', default: 'Những món đồ cũ,' },
           { key: 'heroTitleEmphasis', label: 'Tiêu đề (dòng 2, nhấn mạnh)', type: 'text', default: 'tâm hồn mới.' },
-          { key: 'heroDesc', label: 'Mô tả', type: 'textarea', default: 'teo.mhrift tuyển chọn váy secondhand cao cấp cho cô gái trẻ, tự nhiên và có cá tính riêng. Mỗi chiếc chỉ có một — khi hết là hết.' },
+          { key: 'heroDesc', label: 'Mô tả', type: 'textarea', default: 'teo.mhrift tuyển chọn trang phục và phụ kiện secondhand phong cách mori cho cô gái trẻ, tự nhiên và có cá tính riêng. Mỗi chiếc chỉ có một — khi hết là hết.' },
           { key: 'heroCtaPrimary', label: 'Nút chính', type: 'text', default: 'Khám phá bộ sưu tập' },
           { key: 'heroCtaSecondary', label: 'Nút phụ', type: 'text', default: 'Câu chuyện của chúng tôi' },
         ],
@@ -24,7 +24,7 @@ const PAGE_CONTENT = {
         title: 'Vì sao chọn chúng tôi (3 mục)',
         fields: [
           { key: 'usp1Title', label: 'Mục 1 — tiêu đề', type: 'text', default: 'Tuyển chọn kỹ lưỡng' },
-          { key: 'usp1Desc', label: 'Mục 1 — mô tả', type: 'textarea', default: 'Từng chiếc váy được kiểm tra chất liệu, đường may và tình trạng trước khi lên kệ.' },
+          { key: 'usp1Desc', label: 'Mục 1 — mô tả', type: 'textarea', default: 'Từng món đồ được kiểm tra chất liệu, đường may và tình trạng trước khi lên kệ.' },
           { key: 'usp2Title', label: 'Mục 2 — tiêu đề', type: 'text', default: 'Độc bản, không đụng hàng' },
           { key: 'usp2Desc', label: 'Mục 2 — mô tả', type: 'textarea', default: 'Mỗi sản phẩm chỉ có đúng một chiếc — khi bạn thích, hãy đặt trước ngay.' },
           { key: 'usp3Title', label: 'Mục 3 — tiêu đề', type: 'text', default: 'Thời trang bền vững' },
@@ -43,7 +43,7 @@ const PAGE_CONTENT = {
         fields: [
           { key: 'hookEyebrow', label: 'Nhãn nhỏ', type: 'text', default: 'teo.mhrift' },
           { key: 'hookTitle', label: 'Tiêu đề lớn', type: 'text', default: 'Đồ cũ, tâm hồn mới.' },
-          { key: 'hookDesc', label: 'Mô tả', type: 'textarea', default: 'Mỗi tuần một vài chiếc váy mới được tuyển chọn — khi hết là hết, không có chiếc thứ hai.' },
+          { key: 'hookDesc', label: 'Mô tả', type: 'textarea', default: 'Mỗi tuần một vài món đồ mới được tuyển chọn — khi hết là hết, không có chiếc thứ hai.' },
           { key: 'hookCta', label: 'Nút', type: 'text', default: 'Khám phá ngay' },
           { key: 'hookImage', label: 'Ảnh nền lớn', type: 'image', default: null },
         ],
@@ -53,14 +53,14 @@ const PAGE_CONTENT = {
         fields: [
           { key: 'soldEyebrow', label: 'Nhãn nhỏ', type: 'text', default: 'Đã tìm được chủ nhân mới' },
           { key: 'soldTitle', label: 'Tiêu đề', type: 'text', default: 'Đã từng thuộc về ai đó' },
-          { key: 'soldDesc', label: 'Mô tả', type: 'textarea', default: 'Một vài chiếc váy đã được các bạn rước về nhà — minh chứng rằng đồ tốt luôn có người thương.' },
+          { key: 'soldDesc', label: 'Mô tả', type: 'textarea', default: 'Một vài món đồ đã được các bạn rước về nhà — minh chứng rằng đồ tốt luôn có người thương.' },
         ],
       },
       {
         title: 'Câu chuyện thương hiệu (đoạn giới thiệu)',
         fields: [
           { key: 'storyTitle', label: 'Tiêu đề', type: 'text', default: 'Sống chậm lại, mặc đẹp hơn' },
-          { key: 'storyBody', label: 'Nội dung', type: 'textarea', default: '"Mori" trong tiếng Nhật nghĩa là khu rừng — teo.mhrift lấy cảm hứng từ vẻ đẹp tự nhiên, mộc mạc và tinh thần sống chậm ấy. Chúng mình tin rằng một chiếc váy cũ, khi được yêu thương đúng người, sẽ đẹp hơn bất kỳ món đồ mới nào.' },
+          { key: 'storyBody', label: 'Nội dung', type: 'textarea', default: '"Mori" trong tiếng Nhật nghĩa là khu rừng — teo.mhrift lấy cảm hứng từ vẻ đẹp tự nhiên, mộc mạc và tinh thần sống chậm ấy. Chúng mình tin rằng một món đồ cũ, khi được yêu thương đúng người, sẽ đẹp hơn bất kỳ món đồ mới nào.' },
           { key: 'storyCta', label: 'Nút', type: 'text', default: 'Đọc câu chuyện của chúng tôi' },
         ],
       },
@@ -74,7 +74,7 @@ const PAGE_CONTENT = {
       {
         title: 'Đăng ký nhận tin',
         fields: [
-          { key: 'newsletterTitle', label: 'Tiêu đề', type: 'text', default: 'Đừng bỏ lỡ những chiếc váy mới' },
+          { key: 'newsletterTitle', label: 'Tiêu đề', type: 'text', default: 'Đừng bỏ lỡ những món đồ mới' },
           { key: 'newsletterDesc', label: 'Mô tả', type: 'textarea', default: 'Đăng ký để nhận thông báo khi có sản phẩm mới — mỗi item chỉ có một chiếc duy nhất.' },
         ],
       },
@@ -96,7 +96,7 @@ const PAGE_CONTENT = {
         fields: [
           { key: 'heroBadge', label: 'Nhãn nhỏ', type: 'text', default: 'Câu chuyện của chúng tôi' },
           { key: 'heroTitle', label: 'Tiêu đề', type: 'text', default: 'Về teo.mhrift' },
-          { key: 'heroDesc', label: 'Mô tả', type: 'textarea', default: 'teo.mhrift ra đời từ tình yêu với những chiếc váy đã có một đời sống riêng — và niềm tin rằng thời trang đẹp không cần phải mới hoàn toàn.' },
+          { key: 'heroDesc', label: 'Mô tả', type: 'textarea', default: 'teo.mhrift ra đời từ tình yêu với những món đồ đã có một đời sống riêng — và niềm tin rằng thời trang đẹp không cần phải mới hoàn toàn.' },
         ],
       },
       {
@@ -113,8 +113,8 @@ const PAGE_CONTENT = {
       {
         title: 'Mục 2',
         fields: [
-          { key: 'block2Title', label: 'Tiêu đề', type: 'text', default: 'Mỗi chiếc váy, một câu chuyện' },
-          { key: 'block2Body', label: 'Nội dung', type: 'textarea', default: 'Chúng mình tìm kiếm những chiếc váy chất lượng cao đã qua sử dụng — từ các thương hiệu được yêu thích — kiểm tra kỹ từng đường kim mũi chỉ, đo đạc số thật, và ghi chú trung thực mọi dấu vết thời gian. Vì mỗi chiếc chỉ có một, khi bạn chọn một chiếc váy ở đây, bạn đang chọn một điều thực sự riêng biệt.' },
+          { key: 'block2Title', label: 'Tiêu đề', type: 'text', default: 'Mỗi món đồ, một câu chuyện' },
+          { key: 'block2Body', label: 'Nội dung', type: 'textarea', default: 'Chúng mình tìm kiếm những trang phục và phụ kiện chất lượng cao đã qua sử dụng — váy, áo, chân váy và các món đồ mang tinh thần mori — từ các thương hiệu được yêu thích — kiểm tra kỹ từng đường kim mũi chỉ, đo đạc số thật, và ghi chú trung thực mọi dấu vết thời gian. Vì mỗi chiếc chỉ có một, khi bạn chọn một món đồ ở đây, bạn đang chọn một điều thực sự riêng biệt.' },
         ],
       },
       {
@@ -134,7 +134,7 @@ const PAGE_CONTENT = {
       {
         title: 'Lời kêu gọi cuối trang',
         fields: [
-          { key: 'ctaTitle', label: 'Tiêu đề', type: 'text', default: 'Sẵn sàng tìm chiếc váy của riêng bạn?' },
+          { key: 'ctaTitle', label: 'Tiêu đề', type: 'text', default: 'Sẵn sàng tìm món đồ của riêng bạn?' },
           { key: 'ctaButton', label: 'Nút', type: 'text', default: 'Khám phá cửa hàng' },
         ],
       },
@@ -158,7 +158,7 @@ const PAGE_CONTENT = {
       {
         title: 'Câu hỏi 2',
         fields: [
-          { key: 'q2', label: 'Câu hỏi', type: 'text', default: 'Làm sao để đặt một chiếc váy?' },
+          { key: 'q2', label: 'Câu hỏi', type: 'text', default: 'Làm sao để đặt một món đồ?' },
           { key: 'a2', label: 'Trả lời', type: 'textarea', default: 'Thêm sản phẩm vào giỏ hàng, sau đó vào mục "Đặt hàng" để điền thông tin. Vì hàng độc bản, đơn của bạn sẽ ở trạng thái "chờ xác nhận" cho đến khi shop liên hệ xác nhận thanh toán.' },
         ],
       },
@@ -179,7 +179,7 @@ const PAGE_CONTENT = {
       {
         title: 'Câu hỏi 5',
         fields: [
-          { key: 'q5', label: 'Câu hỏi', type: 'text', default: 'Làm sao biết tình trạng thật của váy?' },
+          { key: 'q5', label: 'Câu hỏi', type: 'text', default: 'Làm sao biết tình trạng thật của sản phẩm?' },
           { key: 'a5', label: 'Trả lời', type: 'textarea', default: 'Mỗi sản phẩm đều có ghi chú trung thực về tình trạng (thang điểm Như mới / Rất tốt / Tốt) kèm mô tả chi tiết nếu có vết mờ, lỗi nhỏ.' },
         ],
       },
@@ -282,7 +282,7 @@ const PAGE_CONTENT = {
         title: 'Còn phân vân?',
         fields: [
           { key: 'adviceTitle', label: 'Tiêu đề', type: 'text', default: 'Còn phân vân?' },
-          { key: 'adviceBody', label: 'Nội dung', type: 'textarea', default: 'Nhắn cho shop số đo của bạn, teo.mhrift sẽ tư vấn chiếc váy phù hợp nhất trong bộ sưu tập hiện có.' },
+          { key: 'adviceBody', label: 'Nội dung', type: 'textarea', default: 'Nhắn cho shop số đo của bạn, teo.mhrift sẽ tư vấn món đồ phù hợp nhất trong bộ sưu tập hiện có.' },
           { key: 'adviceButton', label: 'Nút', type: 'text', default: 'Liên hệ tư vấn' },
         ],
       },
@@ -308,8 +308,8 @@ const PAGE_CONTENT = {
       {
         title: 'Chân trang (hiển thị ở mọi trang)',
         fields: [
-          { key: 'tagline', label: 'Giới thiệu ngắn', type: 'textarea', default: 'Váy secondhand cao cấp, tuyển chọn kỹ lưỡng — mỗi chiếc váy là một câu chuyện riêng. Chỉ bán online.' },
-          { key: 'copyright', label: 'Dòng bản quyền (sau "© {năm} teo.mhrift.")', type: 'text', default: 'Yêu thương từng chiếc váy cũ, trân trọng từng câu chuyện.' },
+          { key: 'tagline', label: 'Giới thiệu ngắn', type: 'textarea', default: 'Thời trang secondhand phong cách mori — váy, áo, phụ kiện — tuyển chọn kỹ lưỡng, mỗi món đồ là một câu chuyện riêng. Chỉ bán online.' },
+          { key: 'copyright', label: 'Dòng bản quyền (sau "© {năm} teo.mhrift.")', type: 'text', default: 'Yêu thương từng món đồ cũ, trân trọng từng câu chuyện.' },
         ],
       },
     ],

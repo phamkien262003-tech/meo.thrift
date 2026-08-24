@@ -37,7 +37,7 @@
         <input type="text" id="name" name="name" required value="<%= product ? product.name : '' %>" class="field-input" />
       </div>
       <div>
-        <label class="field-label" for="category">Loại váy <span class="text-terracotta">*</span></label>
+        <label class="field-label" for="category">Loại sản phẩm <span class="text-terracotta">*</span></label>
         <select id="category" name="category" required class="field-select">
           <% categories.forEach(c => { %>
             <option value="<%= c %>" <%= product && product.category === c ? 'selected' : '' %>><%= c %></option>

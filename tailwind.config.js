@@ -40,7 +40,7 @@ module.exports = {
       },
       animation: {
         fadeUp: 'fadeUp 0.6s ease-out both',
-        marquee: 'marquee 24s linear infinite',
+        marquee: 'marquee 32s linear infinite',
       },
     },
   },

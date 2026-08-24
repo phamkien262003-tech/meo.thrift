@@ -8,8 +8,8 @@
 
 <main>
   <section class="relative overflow-hidden py-16">
-    <%- include('../partials/leaf-branch', { corner: 'top-left', className: 'top-0 left-0 -z-10 w-40 sm:w-48 md:w-56 lg:w-64 xl:w-72 2xl:w-96 opacity-80' }) %>
-    <%- include('../partials/leaf-branch', { corner: 'bottom-right', className: 'bottom-0 right-0 -z-10 w-36 sm:w-44 md:w-52 lg:w-56 xl:w-64 2xl:w-96 opacity-80' }) %>
+    <%- include('../partials/leaf-branch', { corner: 'top-left', className: 'top-0 left-0 -z-10 w-40 sm:w-48 md:w-56 lg:w-44 xl:w-48 2xl:w-64 opacity-80' }) %>
+    <%- include('../partials/leaf-branch', { corner: 'bottom-right', className: 'bottom-0 right-0 -z-10 w-36 sm:w-44 md:w-52 lg:w-36 xl:w-44 2xl:w-64 opacity-80' }) %>
     <div class="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
       <span class="badge bg-olive/10 text-olive-dark mb-5"><%- icon('leaf', 'w-3.5 h-3.5') %> <%- edit('about', 'heroBadge', content.about.heroBadge) %></span>
       <h1 class="text-4xl sm:text-5xl mb-6"><%- edit('about', 'heroTitle', content.about.heroTitle) %></h1>
@@ -44,8 +44,8 @@
   </section>
 
   <section class="relative overflow-hidden bg-terracotta/5 py-16 text-center">
-    <%- include('../partials/leaf-branch', { corner: 'top-left', className: 'top-0 left-0 -z-10 w-28 sm:w-32 md:w-36 lg:w-44 xl:w-56 opacity-70' }) %>
-    <%- include('../partials/leaf-branch', { corner: 'bottom-right', className: 'bottom-0 right-0 -z-10 w-28 sm:w-32 md:w-36 lg:w-44 xl:w-56 opacity-70' }) %>
+    <%- include('../partials/leaf-branch', { corner: 'top-left', className: 'top-0 left-0 -z-10 w-28 sm:w-32 md:w-36 lg:w-28 xl:w-36 opacity-70' }) %>
+    <%- include('../partials/leaf-branch', { corner: 'bottom-right', className: 'bottom-0 right-0 -z-10 w-28 sm:w-32 md:w-36 lg:w-28 xl:w-36 opacity-70' }) %>
     <div class="relative max-w-xl mx-auto px-4">
       <h2 class="text-2xl sm:text-3xl mb-5"><%- edit('about', 'ctaTitle', content.about.ctaTitle) %></h2>
       <a href="/cua-hang" class="btn-primary inline-flex"><%- edit('about', 'ctaButton', content.about.ctaButton) %></a>

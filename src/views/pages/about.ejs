@@ -7,7 +7,9 @@
 <%- include('../partials/header') %>
 
 <main>
-  <section class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16 text-center">
+  <section class="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16 text-center">
+    <%- include('../partials/leaf-branch', { className: 'hidden lg:block top-2 -left-20 w-44', opacity: 0.13 }) %>
+    <%- include('../partials/leaf-branch', { className: 'hidden lg:block bottom-2 -right-20 w-44', opacity: 0.13, flip: true }) %>
     <span class="badge bg-olive/10 text-olive-dark mb-5"><%- icon('leaf', 'w-3.5 h-3.5') %> <%- edit('about', 'heroBadge', content.about.heroBadge) %></span>
     <h1 class="text-4xl sm:text-5xl mb-6"><%- edit('about', 'heroTitle', content.about.heroTitle) %></h1>
     <p class="text-espresso-soft text-lg leading-relaxed">

@@ -38,7 +38,7 @@
 
   <!-- Hook: full-bleed statement image -->
   <section class="relative w-full overflow-hidden reveal" data-reveal>
-    <div class="relative aspect-[4/5] sm:aspect-[16/9] lg:aspect-[21/9] w-full">
+    <div class="relative aspect-[4/3] sm:aspect-[16/9] lg:aspect-[21/9] min-h-[300px] sm:min-h-[380px] lg:min-h-[420px] w-full">
       <%- include('../partials/editable-image', { page: 'home', key: 'hookImage', value: content.home.hookImage, tone: 'terracotta', seed: 3, className: 'absolute inset-0 w-full h-full' }) %>
       <div class="absolute inset-0 bg-gradient-to-t from-espresso/85 via-espresso/25 to-transparent"></div>
       <div class="absolute inset-0 flex items-end">

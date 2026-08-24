@@ -1,5 +1,4 @@
 require('dotenv').config();
-const fs = require('fs');
 const path = require('path');
 const express = require('express');
 const session = require('express-session');
@@ -29,14 +28,12 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Query-string version so a stale edge/host cache of output.css can't outlive a deploy
-// (Hostinger was still serving yesterday's CSS after a fresh push — HTML re-renders per
-// request so it looked deployed, but /css/output.css itself was cached under its bare URL).
-try {
-  app.locals.cssVersion = String(Math.floor(fs.statSync(path.join(__dirname, 'public/css/output.css')).mtimeMs));
-} catch {
-  app.locals.cssVersion = String(Date.now());
-}
+// Query-string version so a stale edge/host cache of a static JS/CSS file can't outlive a
+// deploy (Hostinger kept serving yesterday's file after a fresh push — HTML re-renders per
+// request so it looked deployed, but the static file itself stayed cached under its bare
+// URL). One shared stamp for every /js and /css reference, set once per process boot —
+// Hostinger restarts the process on every deploy, so this always changes when code does.
+app.locals.assetVersion = String(Date.now());
 
 // Images are served from the database (see src/services/images.js) so they survive a
 // redeploy — Hostinger's git auto-deploy wipes anything only living on local disk.

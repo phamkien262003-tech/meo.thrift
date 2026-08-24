@@ -12,10 +12,8 @@
     <div class="absolute inset-0 bg-gradient-to-br from-sand via-cream to-rose/20"></div>
     <div class="absolute -top-24 -right-24 w-96 h-96 rounded-full bg-olive/10 blur-3xl"></div>
     <div class="absolute -bottom-24 -left-24 w-96 h-96 rounded-full bg-terracotta/10 blur-3xl"></div>
-    <%- include('../partials/leaf-branch', { corner: 'top-left', className: 'top-0 left-0 w-16 sm:w-20 md:w-24 lg:w-44 xl:w-80 opacity-90' }) %>
-    <%# Bottom-left only makes sense once the hero is 2-column (lg+) — below that the image
-        stacks directly under the text with no gap for it to sit in. %>
-    <%- include('../partials/leaf-branch', { corner: 'bottom-left', className: 'hidden lg:block bottom-0 left-0 w-36 xl:w-72 opacity-80' }) %>
+    <%- include('../partials/leaf-branch', { corner: 'top-left', className: 'top-0 left-0 -z-10 w-40 sm:w-48 md:w-56 lg:w-64 xl:w-80 opacity-90' }) %>
+    <%- include('../partials/leaf-branch', { corner: 'bottom-left', className: 'bottom-0 left-0 -z-10 w-36 sm:w-44 md:w-52 lg:w-60 xl:w-72 opacity-80' }) %>
     <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-28 grid lg:grid-cols-2 gap-12 items-center">
       <div class="reveal" data-reveal>
         <span class="badge bg-olive/10 text-olive-dark mb-5"><%- icon('sparkle', 'w-3.5 h-3.5') %> <%- edit('home', 'heroBadge', content.home.heroBadge) %></span>
@@ -116,8 +114,8 @@
 
   <!-- Story teaser -->
   <section class="relative overflow-hidden bg-olive/5 py-20">
-    <%- include('../partials/leaf-branch', { corner: 'top-left', className: 'top-0 left-0 w-16 sm:w-20 md:w-24 lg:w-32 xl:w-36 2xl:w-72 opacity-80' }) %>
-    <%- include('../partials/leaf-branch', { corner: 'bottom-right', className: 'bottom-0 right-0 w-16 sm:w-20 md:w-24 lg:w-32 xl:w-36 2xl:w-72 opacity-80' }) %>
+    <%- include('../partials/leaf-branch', { corner: 'top-left', className: 'top-0 left-0 -z-10 w-40 sm:w-48 md:w-56 lg:w-64 xl:w-72 2xl:w-96 opacity-80' }) %>
+    <%- include('../partials/leaf-branch', { corner: 'bottom-right', className: 'bottom-0 right-0 -z-10 w-40 sm:w-48 md:w-56 lg:w-64 xl:w-72 2xl:w-96 opacity-80' }) %>
     <div class="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center reveal" data-reveal>
       <span class="text-olive"><%- icon('leaf', 'w-8 h-8 mx-auto mb-4') %></span>
       <h2 class="text-3xl sm:text-4xl mb-5"><%- edit('home', 'storyTitle', content.home.storyTitle) %></h2>
@@ -163,8 +161,8 @@
 
   <!-- Newsletter -->
   <section class="relative overflow-hidden py-20">
-    <%- include('../partials/leaf-branch', { corner: 'top-left', className: 'top-0 left-0 w-12 sm:w-14 md:w-16 lg:w-32 xl:w-44 opacity-70' }) %>
-    <%- include('../partials/leaf-branch', { corner: 'bottom-right', className: 'bottom-0 right-0 w-12 sm:w-14 md:w-16 lg:w-32 xl:w-44 opacity-70' }) %>
+    <%- include('../partials/leaf-branch', { corner: 'top-left', className: 'top-0 left-0 -z-10 w-28 sm:w-32 md:w-36 lg:w-44 xl:w-56 opacity-70' }) %>
+    <%- include('../partials/leaf-branch', { corner: 'bottom-right', className: 'bottom-0 right-0 -z-10 w-28 sm:w-32 md:w-36 lg:w-44 xl:w-56 opacity-70' }) %>
     <div class="relative max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center reveal" data-reveal>
       <h2 class="text-2xl sm:text-3xl mb-3"><%- edit('home', 'newsletterTitle', content.home.newsletterTitle) %></h2>
       <p class="text-espresso-soft mb-6"><%- edit('home', 'newsletterDesc', content.home.newsletterDesc, { multiline: true }) %></p>

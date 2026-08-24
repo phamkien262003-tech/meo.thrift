@@ -18,4 +18,4 @@ const _dims = {
 <%# Not loading="lazy" — these small (~20KB) decorative images sit at 0-height until their
     intrinsic size is known, which some browsers/automation contexts never resolve as "near
     viewport", so lazy-loading silently never fires them at all. Load eagerly instead. %>
-<img aria-hidden="true" alt="" src="/images/bg-leaf-<%= _corner %>.webp" width="<%= _dims[0] %>" height="<%= _dims[1] %>" style="aspect-ratio: <%= _dims[0] %> / <%= _dims[1] %>;" class="pointer-events-none select-none absolute h-auto <%= _className %>" />
+<img aria-hidden="true" alt="" src="/images/bg-leaf-<%= _corner %>.webp?v=<%= assetVersion %>" width="<%= _dims[0] %>" height="<%= _dims[1] %>" style="aspect-ratio: <%= _dims[0] %> / <%= _dims[1] %>;" class="pointer-events-none select-none absolute h-auto <%= _className %>" />

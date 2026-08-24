@@ -24,7 +24,7 @@
             <% if (resolved.isPlaceholder) { %>
               <%- placeholderArt(post.cover_color, post.id || i) %>
             <% } else { %>
-              <img src="<%= resolved.src %>" alt="" loading="lazy" class="w-full h-full object-cover" />
+              <img src="<%= resolved.src %>" alt="" loading="lazy" class="w-full h-full object-cover" style="object-position: <%= post.cover_image_position || 'center center' %>;" />
             <% } %>
           </div>
           <p class="text-xs text-espresso-soft mb-1"><%= new Date(post.published_at).toLocaleDateString('vi-VN') %></p>

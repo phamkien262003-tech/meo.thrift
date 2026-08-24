@@ -65,13 +65,21 @@ async function runInTransaction(fn) {
 
 /** MySQL has no "ADD COLUMN IF NOT EXISTS" (pre-8.0.29/MariaDB) — add newly-introduced
  * columns by hand so existing databases pick them up without a migration tool. */
-async function migrateSchema() {
+async function addColumnIfMissing(table, column, definition) {
   const cols = await query(
-    `SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'admin_users' AND COLUMN_NAME = 'role'`
+    `SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = ? AND COLUMN_NAME = ?`,
+    [table, column]
   );
   if (cols.length === 0) {
-    await run("ALTER TABLE admin_users ADD COLUMN role VARCHAR(20) NOT NULL DEFAULT 'level2'");
+    await run(`ALTER TABLE ${table} ADD COLUMN ${column} ${definition}`);
   }
+}
+
+async function migrateSchema() {
+  await addColumnIfMissing('admin_users', 'role', "VARCHAR(20) NOT NULL DEFAULT 'level2'");
+  // Lets an admin pick which part of an oversized photo stays visible under object-cover crop.
+  await addColumnIfMissing('product_images', 'position', "VARCHAR(20) NOT NULL DEFAULT 'center center'");
+  await addColumnIfMissing('journal_posts', 'cover_image_position', "VARCHAR(20) NOT NULL DEFAULT 'center center'");
 }
 
 async function ensureDatabase() {

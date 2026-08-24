@@ -16,6 +16,7 @@ const _resolved = resolveImage(_img ? _img.image_id : null);
     src="<%= _resolved.src %>"
     alt="<%= product.name %>"
     loading="lazy"
-    class="w-full h-full object-cover <%= className || '' %>"
+    class="w-full h-full object-cover js-edit-image-img <%= className || '' %>"
+    style="object-position: <%= (_img && _img.position) || 'center center' %>;"
   />
 <% } %>

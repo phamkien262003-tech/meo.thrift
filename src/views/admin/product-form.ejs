@@ -17,9 +17,15 @@
       <p class="text-xs text-espresso-soft mb-3">Xóa từng ảnh bằng nút ✕ — việc xóa áp dụng ngay, không cần bấm "Lưu thay đổi".</p>
       <div class="flex gap-2 flex-wrap">
         <% product.images.forEach((img, i) => { %>
-          <div class="relative w-16 h-20 rounded-lg overflow-hidden group">
+          <div class="relative w-16 h-20 rounded-lg overflow-hidden group <%= img.image_id ? 'js-edit-image-wrap' : '' %>"
+            <% if (img.image_id) { %>
+              data-position-url="/admin/san-pham/<%= product.id %>/anh/<%= img.id %>/vi-tri"
+              data-position-payload="{}"
+            <% } %>
+          >
             <%- include('../partials/product-media', { product, variant: 'thumb', className: 'w-full h-full', imageIndex: i }) %>
             <% if (img.image_id) { %>
+              <button type="button" class="js-edit-position-btn absolute bottom-0.5 left-0.5 w-5 h-5 flex items-center justify-center rounded-full bg-espresso/70 text-cream hover:bg-espresso transition-colors duration-250" aria-label="Chọn vị trí hiển thị"><%- icon('dashboard', 'w-3 h-3') %></button>
               <form action="/admin/san-pham/<%= product.id %>/anh/<%= img.id %>/xoa" method="POST" onsubmit="return confirm('Xóa ảnh này?');" class="absolute top-0.5 right-0.5">
                 <button type="submit" class="w-5 h-5 flex items-center justify-center rounded-full bg-espresso/70 text-cream hover:bg-red-600 transition-colors duration-250" aria-label="Xóa ảnh"><%- icon('close', 'w-3 h-3') %></button>
               </form>

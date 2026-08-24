@@ -33,7 +33,7 @@ async function attachImages(products) {
   const results = [];
   for (const p of products) {
     const images = await query(
-      'SELECT id, image_id, placeholder_tone, sort_order FROM product_images WHERE product_id = :id ORDER BY sort_order ASC, id ASC',
+      'SELECT id, image_id, placeholder_tone, sort_order, position FROM product_images WHERE product_id = :id ORDER BY sort_order ASC, id ASC',
       { id: p.id }
     );
     results.push({ ...p, images });
@@ -196,6 +196,17 @@ async function getJournalPostById(id) {
   return queryOne('SELECT * FROM journal_posts WHERE id = ?', [id]);
 }
 
+/** Scoped to productId too, so one product's image ids can't be used to edit another's. */
+async function updateProductImagePosition(productId, imageRowId, position) {
+  const result = await run('UPDATE product_images SET position = ? WHERE id = ? AND product_id = ?', [position, imageRowId, productId]);
+  return result.affectedRows > 0;
+}
+
+async function updateJournalCoverPosition(postId, position) {
+  const result = await run('UPDATE journal_posts SET cover_image_position = ? WHERE id = ?', [position, postId]);
+  return result.affectedRows > 0;
+}
+
 /** Contact/social links shown in the header/footer/contact page — editable via /admin/cai-dat, falling back to .env defaults. */
 async function getContactInfo() {
   const [email, phone, zaloUrl, instagramUrl, facebookUrl, instagramHandle] = await Promise.all([
@@ -228,5 +239,7 @@ module.exports = {
   listJournalPosts,
   getJournalPostBySlug,
   getJournalPostById,
+  updateProductImagePosition,
+  updateJournalCoverPosition,
   getContactInfo,
 };

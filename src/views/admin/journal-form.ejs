@@ -25,6 +25,26 @@
       <textarea id="content" name="content" rows="8" class="field-input"><%= post ? (post.content || '') : '' %></textarea>
     </div>
     <div>
+      <label class="field-label">Ảnh bìa hiện tại</label>
+      <% const _coverResolved = resolveImage(post && post.cover_image_id); %>
+      <div class="relative w-24 h-32 rounded-lg overflow-hidden card-surface mb-3 <%= post && post.cover_image_id ? 'js-edit-image-wrap' : '' %>"
+        <% if (post && post.cover_image_id) { %>
+          data-position-url="/admin/nhat-ky/<%= post.id %>/anh-bia/vi-tri"
+          data-position-payload="{}"
+        <% } %>
+      >
+        <% if (_coverResolved.isPlaceholder) { %>
+          <%- placeholderArt((post && post.cover_color) || 'terracotta', (post && post.id) || 0) %>
+          <span class="absolute bottom-1 right-1 badge bg-espresso/70 text-cream backdrop-blur-sm text-[10px]">Chưa có ảnh</span>
+        <% } else { %>
+          <img src="<%= _coverResolved.src %>" alt="" class="w-full h-full object-cover js-edit-image-img" style="object-position: <%= post.cover_image_position || 'center center' %>;" />
+          <button type="button" class="js-edit-position-btn absolute bottom-1 right-1 inline-flex items-center gap-1 rounded-full bg-espresso/80 text-cream text-xs px-2 py-1 backdrop-blur-sm hover:bg-espresso transition-colors duration-250">
+            <%- icon('dashboard', 'w-3 h-3') %> Vị trí
+          </button>
+        <% } %>
+      </div>
+    </div>
+    <div>
       <label class="field-label" for="cover_image">Ảnh bìa (JPG/PNG/WEBP)</label>
       <input type="file" id="cover_image" name="cover_image" accept="image/jpeg,image/png,image/webp" class="field-input" />
       <% if (post && post.cover_image_id) { %>

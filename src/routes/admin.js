@@ -18,8 +18,16 @@ const {
   setSetting,
   listJournalPosts,
   getJournalPostById,
+  updateProductImagePosition,
+  updateJournalCoverPosition,
 } = require('../db/models');
 const { PAGE_CONTENT, getPageContent, savePageContent, updatePageContentField } = require('../services/page-content');
+
+const IMAGE_POSITIONS = new Set([
+  'left top', 'center top', 'right top',
+  'left center', 'center center', 'right center',
+  'left bottom', 'center bottom', 'right bottom',
+]);
 
 router.use(requireAdmin);
 
@@ -202,6 +210,21 @@ router.post('/san-pham/:id/anh/:imageId/xoa', async (req, res, next) => {
     }
     req.session.flash = { type: 'success', message: 'Đã xóa ảnh.' };
     res.redirect(`/admin/san-pham/${id}/sua`);
+  } catch (err) {
+    next(err);
+  }
+});
+
+// AJAX from the position picker on each product thumbnail (see js-edit-position-btn).
+router.post('/san-pham/:id/anh/:imageId/vi-tri', async (req, res, next) => {
+  try {
+    const { position } = req.body;
+    if (typeof position !== 'string' || !IMAGE_POSITIONS.has(position)) {
+      return res.status(400).json({ ok: false, error: 'invalid_position' });
+    }
+    const ok = await updateProductImagePosition(Number(req.params.id), Number(req.params.imageId), position);
+    if (!ok) return res.status(404).json({ ok: false, error: 'not_found' });
+    res.json({ ok: true });
   } catch (err) {
     next(err);
   }
@@ -521,12 +544,6 @@ router.post('/noi-dung/api/image', upload.single('image'), async (req, res, next
   }
 });
 
-const IMAGE_POSITIONS = new Set([
-  'left top', 'center top', 'right top',
-  'left center', 'center center', 'right center',
-  'left bottom', 'center bottom', 'right bottom',
-]);
-
 // Sets which part of an oversized image stays visible under object-cover crop (see js-edit-position-btn).
 router.post('/noi-dung/api/image-position', async (req, res, next) => {
   try {
@@ -616,6 +633,21 @@ router.post('/nhat-ky/:id', upload.single('cover_image'), async (req, res, next)
 
     req.session.flash = { type: 'success', message: 'Đã cập nhật bài viết.' };
     res.redirect('/admin/nhat-ky');
+  } catch (err) {
+    next(err);
+  }
+});
+
+// AJAX from the position picker on the cover image preview (see js-edit-position-btn).
+router.post('/nhat-ky/:id/anh-bia/vi-tri', async (req, res, next) => {
+  try {
+    const { position } = req.body;
+    if (typeof position !== 'string' || !IMAGE_POSITIONS.has(position)) {
+      return res.status(400).json({ ok: false, error: 'invalid_position' });
+    }
+    const ok = await updateJournalCoverPosition(Number(req.params.id), position);
+    if (!ok) return res.status(404).json({ ok: false, error: 'not_found' });
+    res.json({ ok: true });
   } catch (err) {
     next(err);
   }

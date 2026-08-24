@@ -15,7 +15,7 @@
     <% if (resolvedCover.isPlaceholder) { %>
       <%- placeholderArt(post.cover_color, post.id) %>
     <% } else { %>
-      <img src="<%= resolvedCover.src %>" alt="" class="w-full h-full object-cover" />
+      <img src="<%= resolvedCover.src %>" alt="" class="w-full h-full object-cover" style="object-position: <%= post.cover_image_position || 'center center' %>;" />
     <% } %>
   </div>
   <div class="prose-vi text-espresso-soft leading-relaxed space-y-4">

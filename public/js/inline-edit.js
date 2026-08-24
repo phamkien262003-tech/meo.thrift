@@ -224,11 +224,26 @@
       cell.classList.toggle('is-active', cell.getAttribute('data-position') === position);
     });
 
-    fetch('/admin/noi-dung/api/image-position', {
+    // Wraps declare where/what to POST via data attributes so this one picker works for
+    // page-content images, product photos, and journal covers alike (see data-position-url).
+    var url = wrap.dataset.positionUrl || '/admin/noi-dung/api/image-position';
+    var payload = { position: position };
+    if (wrap.dataset.positionPayload) {
+      try {
+        Object.assign(payload, JSON.parse(wrap.dataset.positionPayload));
+      } catch (err) {
+        /* malformed payload attribute — fall back to just { position } */
+      }
+    } else {
+      payload.page = wrap.dataset.page;
+      payload.key = wrap.dataset.positionKey;
+    }
+
+    fetch(url, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       credentials: 'same-origin',
-      body: JSON.stringify({ page: wrap.dataset.page, key: wrap.dataset.positionKey, position: position }),
+      body: JSON.stringify(payload),
     })
       .then(function (res) {
         if (!res.ok) throw new Error('save_failed');

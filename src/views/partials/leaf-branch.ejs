@@ -1,21 +1,21 @@
 <%
-/* Decorative hand-drawn branch motif for empty background areas — never place over product
-   photos or text. locals: className (position/size utility classes, e.g. "-bottom-6 -left-6
-   w-56"), opacity (0-1, default 0.12), flip (bool, mirrors horizontally to lean the other way). */
-const _opacity = typeof opacity === 'number' ? opacity : 0.12;
+/* Decorative botanical corner image (cropped from the owner's reference illustration) for
+   empty background areas — never place over product photos or text. locals:
+   corner ('top-left'|'top-right'|'bottom-left'|'bottom-right'), className (position/size
+   utility classes, e.g. "-bottom-6 -left-6 w-72"). */
+const _corner = ['top-left', 'top-right', 'bottom-left', 'bottom-right'].includes(corner) ? corner : 'top-left';
 const _className = typeof className === 'string' ? className : '';
-const _flip = typeof flip === 'boolean' ? flip : false;
+// Real pixel dimensions of each cropped asset, so the browser can reserve layout space
+// before the image loads — without this, loading="lazy" never fires (the element has no
+// height yet, so it never intersects the viewport) and the image silently never appears.
+const _dims = {
+  'top-left': [480, 380],
+  'top-right': [480, 380],
+  'bottom-left': [460, 420],
+  'bottom-right': [470, 420],
+}[_corner];
 %>
-<svg aria-hidden="true" class="pointer-events-none absolute text-olive <%= _className %> <%= _flip ? '-scale-x-100' : '' %>" style="opacity: <%= _opacity %>;" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-  <path d="M8,4 C25,8 45,25 55,55 C62,75 68,90 82,98" />
-  <g transform="translate(10,10) rotate(-35) scale(1.4)"><path d="M0,0 C3.2,-1.4 4.1,-5 1.8,-8.2 C1,-9.2 -1,-9.2 -1.8,-8.2 C-4.1,-5 -3.2,-1.4 0,0 Z" /><path d="M0,-0.5 L0,-7.3" /></g>
-  <g transform="translate(22,14) rotate(50) scale(1.15)"><path d="M0,0 C3.2,-1.4 4.1,-5 1.8,-8.2 C1,-9.2 -1,-9.2 -1.8,-8.2 C-4.1,-5 -3.2,-1.4 0,0 Z" /><path d="M0,-0.5 L0,-7.3" /></g>
-  <g transform="translate(33,26) rotate(-25) scale(1.25)"><path d="M0,0 C3.2,-1.4 4.1,-5 1.8,-8.2 C1,-9.2 -1,-9.2 -1.8,-8.2 C-4.1,-5 -3.2,-1.4 0,0 Z" /><path d="M0,-0.5 L0,-7.3" /></g>
-  <g transform="translate(42,40) rotate(45) scale(1.05)"><path d="M0,0 C3.2,-1.4 4.1,-5 1.8,-8.2 C1,-9.2 -1,-9.2 -1.8,-8.2 C-4.1,-5 -3.2,-1.4 0,0 Z" /><path d="M0,-0.5 L0,-7.3" /></g>
-  <g transform="translate(52,58) rotate(-20) scale(1.0)"><path d="M0,0 C3.2,-1.4 4.1,-5 1.8,-8.2 C1,-9.2 -1,-9.2 -1.8,-8.2 C-4.1,-5 -3.2,-1.4 0,0 Z" /><path d="M0,-0.5 L0,-7.3" /></g>
-  <g transform="translate(63,74) rotate(40) scale(0.85)"><path d="M0,0 C3.2,-1.4 4.1,-5 1.8,-8.2 C1,-9.2 -1,-9.2 -1.8,-8.2 C-4.1,-5 -3.2,-1.4 0,0 Z" /><path d="M0,-0.5 L0,-7.3" /></g>
-  <g transform="translate(76,90) rotate(-15) scale(0.7)"><path d="M0,0 C3.2,-1.4 4.1,-5 1.8,-8.2 C1,-9.2 -1,-9.2 -1.8,-8.2 C-4.1,-5 -3.2,-1.4 0,0 Z" /><path d="M0,-0.5 L0,-7.3" /></g>
-  <circle cx="70" cy="15" r="1.2" fill="currentColor" stroke="none" />
-  <circle cx="78" cy="22" r="0.8" fill="currentColor" stroke="none" />
-  <circle cx="85" cy="30" r="1.5" fill="currentColor" stroke="none" />
-</svg>
+<%# Not loading="lazy" — these small (~20KB) decorative images sit at 0-height until their
+    intrinsic size is known, which some browsers/automation contexts never resolve as "near
+    viewport", so lazy-loading silently never fires them at all. Load eagerly instead. %>
+<img aria-hidden="true" alt="" src="/images/bg-leaf-<%= _corner %>.webp" width="<%= _dims[0] %>" height="<%= _dims[1] %>" style="aspect-ratio: <%= _dims[0] %> / <%= _dims[1] %>;" class="pointer-events-none select-none absolute h-auto <%= _className %>" />

@@ -36,6 +36,22 @@
     </div>
   </section>
 
+  <!-- Hook: full-bleed statement image -->
+  <section class="relative w-full overflow-hidden reveal" data-reveal>
+    <div class="relative aspect-[4/5] sm:aspect-[16/9] lg:aspect-[21/9] w-full">
+      <%- include('../partials/editable-image', { page: 'home', key: 'hookImage', value: content.home.hookImage, tone: 'terracotta', seed: 3, className: 'absolute inset-0 w-full h-full' }) %>
+      <div class="absolute inset-0 bg-gradient-to-t from-espresso/85 via-espresso/25 to-transparent"></div>
+      <div class="absolute inset-0 flex items-end">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-10 sm:pb-16 w-full text-cream">
+          <span class="badge bg-cream/15 text-cream backdrop-blur-sm mb-4"><%- icon('sparkle', 'w-3.5 h-3.5') %> <%- edit('home', 'hookEyebrow', content.home.hookEyebrow) %></span>
+          <h2 class="text-3xl sm:text-5xl lg:text-6xl leading-[1.1] mb-3 sm:mb-4 max-w-2xl"><%- edit('home', 'hookTitle', content.home.hookTitle) %></h2>
+          <p class="text-cream/85 text-sm sm:text-lg leading-relaxed mb-5 sm:mb-6 max-w-md"><%- edit('home', 'hookDesc', content.home.hookDesc, { multiline: true }) %></p>
+          <a href="/cua-hang" class="btn-primary"><%- edit('home', 'hookCta', content.home.hookCta) %> <%- icon('chevronRight', 'w-4 h-4') %></a>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- USP -->
   <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 grid sm:grid-cols-3 gap-8">
     <div class="text-center reveal" data-reveal>
@@ -76,6 +92,24 @@
     <a href="/cua-hang" class="btn-secondary mt-10 sm:hidden w-full">Xem tất cả sản phẩm</a>
   </section>
 
+  <!-- Sold showcase -->
+  <% if (sold && sold.length > 0) { %>
+    <section class="bg-rose/10 py-16">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-10 reveal" data-reveal>
+          <p class="text-xs tracking-widest uppercase text-terracotta mb-2"><%- edit('home', 'soldEyebrow', content.home.soldEyebrow) %></p>
+          <h2 class="text-3xl sm:text-4xl mb-3"><%- edit('home', 'soldTitle', content.home.soldTitle) %></h2>
+          <p class="text-espresso-soft max-w-xl mx-auto"><%- edit('home', 'soldDesc', content.home.soldDesc, { multiline: true }) %></p>
+        </div>
+        <div class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
+          <% sold.forEach(product => { %>
+            <%- include('../partials/product-card', { product }) %>
+          <% }) %>
+        </div>
+      </div>
+    </section>
+  <% } %>
+
   <!-- Story teaser -->
   <section class="bg-olive/5 py-20">
     <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center reveal" data-reveal>
@@ -87,6 +121,39 @@
       <a href="/ve-chung-toi" class="btn-primary"><%- edit('home', 'storyCta', content.home.storyCta) %></a>
     </div>
   </section>
+
+  <!-- Journal highlights -->
+  <% if (journalPosts && journalPosts.length > 0) { %>
+    <section class="bg-sand/40 py-20">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-end justify-between mb-10 reveal" data-reveal>
+          <div>
+            <p class="text-xs tracking-widest uppercase text-terracotta mb-2"><%- edit('home', 'journalEyebrow', content.home.journalEyebrow) %></p>
+            <h2 class="text-3xl sm:text-4xl"><%- edit('home', 'journalTitle', content.home.journalTitle) %></h2>
+          </div>
+          <a href="/nhat-ky" class="btn-ghost hidden sm:inline-flex">Xem tất cả <%- icon('chevronRight', 'w-4 h-4') %></a>
+        </div>
+        <div class="grid sm:grid-cols-3 gap-8">
+          <% journalPosts.forEach((post, i) => { %>
+            <% const jResolved = resolveImage(post.cover_image_id); %>
+            <a href="/nhat-ky/<%= post.slug %>" class="group reveal" data-reveal>
+              <div class="aspect-[4/3] rounded-2xl overflow-hidden card-surface mb-4">
+                <% if (jResolved.isPlaceholder) { %>
+                  <%- placeholderArt(post.cover_color, post.id || i) %>
+                <% } else { %>
+                  <img src="<%= jResolved.src %>" alt="" loading="lazy" class="w-full h-full object-cover" />
+                <% } %>
+              </div>
+              <p class="text-xs text-espresso-soft mb-1"><%= new Date(post.published_at).toLocaleDateString('vi-VN') %></p>
+              <h3 class="font-serif text-xl group-hover:text-terracotta transition-colors duration-250"><%= post.title %></h3>
+              <p class="text-sm text-espresso-soft mt-2 leading-relaxed line-clamp-2"><%= post.excerpt %></p>
+            </a>
+          <% }) %>
+        </div>
+        <a href="/nhat-ky" class="btn-secondary mt-10 sm:hidden w-full block text-center">Xem tất cả bài viết</a>
+      </div>
+    </section>
+  <% } %>
 
   <!-- Newsletter -->
   <section class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-20 text-center reveal" data-reveal>

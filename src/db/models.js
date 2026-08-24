@@ -161,6 +161,14 @@ async function getFeaturedProducts(limitCount = 8) {
   return attachImages(rows);
 }
 
+async function getSoldProducts(limitCount = 4) {
+  const rows = await query(
+    `SELECT * FROM products WHERE status = 'sold' ORDER BY updated_at DESC LIMIT :limit`,
+    { limit: limitCount }
+  );
+  return attachImages(rows);
+}
+
 async function getSetting(key, fallback = null) {
   const row = await queryOne('SELECT value FROM settings WHERE `key` = ?', [key]);
   return row ? row.value : fallback;
@@ -208,6 +216,7 @@ module.exports = {
   getProductById,
   getRelatedProducts,
   getFeaturedProducts,
+  getSoldProducts,
   getSetting,
   setSetting,
   listJournalPosts,

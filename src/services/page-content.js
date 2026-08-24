@@ -39,11 +39,36 @@ const PAGE_CONTENT = {
         ],
       },
       {
+        title: 'Ảnh lớn tạo điểm nhấn (hook)',
+        fields: [
+          { key: 'hookEyebrow', label: 'Nhãn nhỏ', type: 'text', default: 'teo.mhrift' },
+          { key: 'hookTitle', label: 'Tiêu đề lớn', type: 'text', default: 'Đồ cũ, tâm hồn mới.' },
+          { key: 'hookDesc', label: 'Mô tả', type: 'textarea', default: 'Mỗi tuần một vài chiếc váy mới được tuyển chọn — khi hết là hết, không có chiếc thứ hai.' },
+          { key: 'hookCta', label: 'Nút', type: 'text', default: 'Khám phá ngay' },
+          { key: 'hookImage', label: 'Ảnh nền lớn', type: 'image', default: null },
+        ],
+      },
+      {
+        title: 'Đã từng thuộc về ai đó (sản phẩm đã bán)',
+        fields: [
+          { key: 'soldEyebrow', label: 'Nhãn nhỏ', type: 'text', default: 'Đã tìm được chủ nhân mới' },
+          { key: 'soldTitle', label: 'Tiêu đề', type: 'text', default: 'Đã từng thuộc về ai đó' },
+          { key: 'soldDesc', label: 'Mô tả', type: 'textarea', default: 'Một vài chiếc váy đã được các bạn rước về nhà — minh chứng rằng đồ tốt luôn có người thương.' },
+        ],
+      },
+      {
         title: 'Câu chuyện thương hiệu (đoạn giới thiệu)',
         fields: [
           { key: 'storyTitle', label: 'Tiêu đề', type: 'text', default: 'Sống chậm lại, mặc đẹp hơn' },
           { key: 'storyBody', label: 'Nội dung', type: 'textarea', default: '"Mori" trong tiếng Nhật nghĩa là khu rừng — teo.mhrift lấy cảm hứng từ vẻ đẹp tự nhiên, mộc mạc và tinh thần sống chậm ấy. Chúng mình tin rằng một chiếc váy cũ, khi được yêu thương đúng người, sẽ đẹp hơn bất kỳ món đồ mới nào.' },
           { key: 'storyCta', label: 'Nút', type: 'text', default: 'Đọc câu chuyện của chúng tôi' },
+        ],
+      },
+      {
+        title: 'Câu chuyện & cảm hứng (bài viết mới nhất)',
+        fields: [
+          { key: 'journalEyebrow', label: 'Nhãn nhỏ', type: 'text', default: 'Nhật ký' },
+          { key: 'journalTitle', label: 'Tiêu đề', type: 'text', default: 'Câu chuyện & cảm hứng' },
         ],
       },
       {

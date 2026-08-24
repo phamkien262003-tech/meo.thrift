@@ -1,11 +1,15 @@
 const express = require('express');
 const router = express.Router();
-const { getFeaturedProducts, listJournalPosts, getJournalPostBySlug } = require('../db/models');
+const { getFeaturedProducts, getSoldProducts, listJournalPosts, getJournalPostBySlug } = require('../db/models');
 
 router.get('/', async (req, res, next) => {
   try {
-    const featured = await getFeaturedProducts(8);
-    res.render('pages/home', { title: 'Trang chủ', featured });
+    const [featured, sold, journalPosts] = await Promise.all([
+      getFeaturedProducts(8),
+      getSoldProducts(4),
+      listJournalPosts(),
+    ]);
+    res.render('pages/home', { title: 'Trang chủ', featured, sold, journalPosts: journalPosts.slice(0, 3) });
   } catch (err) {
     next(err);
   }
